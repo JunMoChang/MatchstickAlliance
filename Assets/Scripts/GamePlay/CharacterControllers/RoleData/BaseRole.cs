@@ -9,7 +9,7 @@ namespace GamePlay.CharacterControllers.RoleData
         public float defaultHealth = 100f;
         public float defaultSpeed = 2f;
         public float defaultDamage = 10f;
-        
+        public float speed = 3.5f;
         public abstract Sprite Skill1 {get; protected set;}
         public abstract Sprite Skill2 {get; protected set;}
         public abstract Sprite Skill3 {get; protected set;}
