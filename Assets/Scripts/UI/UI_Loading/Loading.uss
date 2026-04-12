@@ -1,0 +1,40 @@
+#root {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    overflow: hidden;
+    background-image: none;
+}
+
+#background {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    -unity-background-scale-mode: scale-and-crop;
+    background-image: url("project://database/Assets/Settings/Lit2DSceneTemplate.scenetemplate?fileID=-3604256930052969394&guid=d03ed43fc9d8a4f2e9fa70c1c7916eb9&type=2#Lit 2D");
+}
+
+#progress-bar {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    translate: -50% 0;
+    width: 800px;
+    height: 20px;
+    transform-origin: center;
+    border-radius: 5px;
+}
+.unity-progress-bar__background{
+    background-image: none;
+    background-color: rgb(255, 0, 0);
+    border-radius: 5px;
+}
+.unity-progress-bar__progress  {
+    background-image: none;
+    background-color: rgb(0, 135, 255);
+    border-radius: 5px;
+}

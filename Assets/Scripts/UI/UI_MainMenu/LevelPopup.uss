@@ -1,0 +1,135 @@
+.level-popup {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0);
+    align-items: center;
+    justify-content: center;
+}
+
+#level-bg {
+    width: 1350px;
+    height: 450px;
+    background-color: rgb(30, 30, 30);
+    border-radius: 16px;
+    padding: 24px;
+    position: relative;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.chapter-label {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 200px;
+    height: 50px;
+    -unity-font-style: bold;
+    -unity-text-align: middle-center;
+    white-space: normal;
+    text-overflow: clip;
+    font-size: 25px;
+    color: rgba(255, 255, 255, 0.78);
+}
+
+#level-content {
+    flex-direction: row;
+    width: auto;
+    height: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    align-items: center;
+    justify-content: space-evenly;
+}
+
+.level-icon {
+    width: 190px;
+    height: 190px;
+    position: relative;
+}
+
+#close-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+    background-image: url("project://database/Assets/UI/UI_Levels/%E6%8C%89%E9%92%AE%20x.png?fileID=2800000&guid=10e7b79d92927814aaf6be3ea00efd1b&type=3#按钮 x");
+}
+
+.close-btn:active {
+    scale: 0.92;
+}
+
+#level-middle {
+    flex-direction: row;
+    align-items: center;
+    flex-grow: 1;
+    justify-content: space-between;
+}
+
+.arrow-btn {
+    width: 40px;
+    height: 40px;
+    background-color: rgb(30, 30, 30);
+    border-radius: 0;
+    border-left-color: rgba(0, 0, 0, 0);
+    border-right-color: rgba(0, 0, 0, 0);
+    border-top-color: rgba(0, 0, 0, 0);
+    border-bottom-color: rgba(0, 0, 0, 0);
+}
+
+.arrow-btn:active {
+    scale: 0.92;
+}
+
+#btn-prev {
+    background-image: url("project://database/Assets/UI/Switch.png?fileID=2800000&guid=bc819d0d0acc98f499857891414c10b8&type=3#Switch");
+    rotate: 180deg;
+    margin: 0 1260px 0 -20px;
+    padding-right: 0;
+    padding-left: 0;
+    -unity-background-image-tint-color: rgb(255, 255, 255);
+}
+
+#btn-next {
+    background-image: url("project://database/Assets/UI/Switch.png?fileID=2800000&guid=bc819d0d0acc98f499857891414c10b8&type=3#Switch");
+}
+
+#level-dots {
+    flex-direction: row;
+    justify-content: center;
+    margin-top: 12px;
+    bottom: auto;
+    width: 1080px;
+    height: 20px;
+    top: 415px;
+    align-items: center;
+    left: auto;
+    right: 130px;
+    position: absolute;
+}
+
+.chapter-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 5px;
+    background-color: rgba(255, 255, 255, 0.3);
+    margin-left: 6px;
+    margin-right: 6px;
+    background-image: none;
+}
+
+.chapter-dot--active {
+    background-color: white;
+    width: 24px;
+}

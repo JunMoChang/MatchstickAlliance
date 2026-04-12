@@ -1,0 +1,22 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d54c31b7be2b485d943a4facca523ea2, type: 3}
+  m_Name: Chapter_3
+  m_EditorClassIdentifier: Assembly-CSharp::GamePlay.GameModel.Level.ChapterData
+  chapter: 3
+  levelData:
+  - {fileID: 11400000, guid: 6de37ca18c8ff3a478b6a94ae439744b, type: 2}
+  - {fileID: 11400000, guid: 3959167f92cd2a24aa6322b8f9530819, type: 2}
+  - {fileID: 11400000, guid: 5c185afafb034574aaf16d24547e1915, type: 2}
+  - {fileID: 11400000, guid: 414580fb1d3cb514da094a2e3bebc51b, type: 2}
+  - {fileID: 11400000, guid: e0abe0f5a2bd7ea4ea310d84a466a83f, type: 2}
+  - {fileID: 11400000, guid: fa54d7389c11bfd4ba7bf68568238d42, type: 2}
