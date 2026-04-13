@@ -1,9 +1,9 @@
 ﻿using System.IO;
 using GamePlay.CharacterControllers;
-using UnityEngine;
 using Newtonsoft.Json;
+using UnityEngine;
 
-namespace PlayerDataHandle
+namespace GamePlay.PlayerDataHandle
 {
     public class SaveManager
     {

@@ -1,11 +1,12 @@
 ﻿using System.Collections.Generic;
 using GamePlay.CharacterControllers.RoleData;
+using GamePlay.CharacterControllers.RoleStrategy;
 
 namespace GamePlay.CharacterControllers
 {
     public class PlayerData
     {
-        public List<BaseRole> ownedRoles = new(); //解锁的角色
+        public List<RoleBaseData> ownedRoles = new(); //解锁的角色
 
         public class GameProps
         {

@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace CharacterControllers
+namespace GamePlay.CharacterControllers
 {
     public static class AnimationParameters
     {

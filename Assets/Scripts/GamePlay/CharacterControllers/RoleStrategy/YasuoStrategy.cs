@@ -1,20 +1,27 @@
-﻿using GamePlay.CharacterControllers.RoleControllers;
+﻿using GamePlay.CharacterControllers.RoleData;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
-namespace GamePlay.CharacterControllers.RoleData
+namespace GamePlay.CharacterControllers.RoleStrategy
 {
-    public class YasuoStrategy : BaseRole, IRoleStrategy
+    public class YasuoStrategy : IRoleStrategy
     {
-        public override Sprite Skill1 { get; protected set; }
-        public override Sprite Skill2 { get; protected set; }
-        public override Sprite Skill3 { get; protected set; }
-        public override Sprite Skill4 { get; protected set; }
-        public void Move(Vector2 direction, Rigidbody2D rb)
+        public void Initialize(RoleBaseData data, Animator animator, Rigidbody2D rb)
         {
             throw new System.NotImplementedException();
         }
 
-        public void Attack()
+        public void Tick()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Move(Vector2 direction)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void Attack(InputAction.CallbackContext context)
         {
             throw new System.NotImplementedException();
         }
@@ -39,6 +46,6 @@ namespace GamePlay.CharacterControllers.RoleData
             throw new System.NotImplementedException();
         }
 
-        public BaseRole RoleData { get; }
+        public RoleBaseData DataData { get; }
     }
 }

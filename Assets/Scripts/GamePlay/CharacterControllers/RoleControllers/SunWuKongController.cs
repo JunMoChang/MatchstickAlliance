@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using GamePlay.CharacterControllers;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -84,7 +85,6 @@ namespace CharacterControllers.RoleControllers
             //CheckGrounded();
             HandelAttackWindow();
             UpdateCooldownTimers();
-            UpdateAnimatorParams();
         }
 
         private void FixedUpdate()
@@ -115,35 +115,6 @@ namespace CharacterControllers.RoleControllers
             }
 
             anim.SetBool("IsGrounded", isGrounded);
-        }
-        
-        public void OnMove(InputAction.CallbackContext context)
-        {
-            moveInput = context.ReadValue<Vector2>(); 
-            rb.linearVelocity = new Vector2(moveInput.x * moveSpeed,  rb.linearVelocity.y);
-            
-            if (moveInput.x > 0 && !facingRight) Flip();
-            else if (moveInput.x < 0 && facingRight) Flip();
-            
-            anim.SetFloat(AnimationParameters.Speed, Mathf.Abs(moveInput.x));
-            
-        }
-
-        private void Flip()
-        {
-            facingRight = !facingRight;
-            Vector3 scale = transform.localScale;
-            scale.x *= -1;
-            transform.localScale = scale;
-        }
-        
-        private void HandleJump()
-        {
-            if (Input.GetButtonDown("Jump") && isGrounded)
-            {
-                rb.linearVelocity = new Vector2(rb.linearVelocity.x, jumpForce);
-                anim.SetTrigger("Jump");
-            }
         }
 
         private void HandelAttackWindow()
@@ -181,6 +152,7 @@ namespace CharacterControllers.RoleControllers
                 }
             }
         }
+        
         
         public void OnSkills(InputAction.CallbackContext context)
         {
@@ -248,45 +220,6 @@ namespace CharacterControllers.RoleControllers
             }
         }
 
-        // ─────────────────────────────────────────────
-        //  ANIMATOR PARAMETER SYNC
-        // ─────────────────────────────────────────────
-
-        private void UpdateAnimatorParams()
-        {
-            // Vertical velocity can drive Jump/Fall blend tree if you use one
-            // anim.SetFloat("VerticalVelocity", rb.linearVelocity.y);
-        }
-
-        // ─────────────────────────────────────────────
-        //  DAMAGE / DEATH  (call from external script)
-        // ─────────────────────────────────────────────
-
-        /// <summary>Called by enemy hit detection or projectile scripts.</summary>
-        public void TakeDamage(float amount)
-        {
-            // TODO: reduce HP, update health bar UI
-            anim.SetTrigger("Hurt");
-            Debug.Log($"Player took {amount} damage.");
-        }
-
-        public void Die()
-        {
-            anim.SetBool("IsDead", true);
-            inputLocked = true;
-            rb.linearVelocity = Vector2.zero;
-            // TODO: trigger death screen / game over
-        }
-
-        // ─────────────────────────────────────────────
-        //  COROUTINES
-        // ─────────────────────────────────────────────
-
-        /// <summary>
-        /// Locks player input for the duration of a skill animation.
-        /// Relies on OnSkillAnimationEnd() being called via Animation Event,
-        /// OR falls back to a timer if you haven't set up Animation Events yet.
-        /// </summary>
         private IEnumerator LockInputForSkill(int skillIndex)
         {
             inputLocked = true;
@@ -297,10 +230,6 @@ namespace CharacterControllers.RoleControllers
 
             if (inputLocked) inputLocked = false;
         }
-
-        // ─────────────────────────────────────────────
-        //  GIZMOS (Editor helper)
-        // ─────────────────────────────────────────────
 
         private void OnDrawGizmosSelected()
         {

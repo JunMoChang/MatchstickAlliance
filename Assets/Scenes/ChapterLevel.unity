@@ -1431,7 +1431,6 @@ GameObject:
   - component: {fileID: 789161844}
   - component: {fileID: 789161847}
   - component: {fileID: 789161846}
-  - component: {fileID: 789161845}
   - component: {fileID: 789161848}
   - component: {fileID: 789161849}
   m_Layer: 0
@@ -1450,47 +1449,13 @@ Transform:
   m_GameObject: {fileID: 789161843}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -1.1, y: -4.691, z: 0}
+  m_LocalPosition: {x: -1.413, y: -4.286, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1246290001}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &789161845
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 789161843}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc36a6e155464aceb3f49ccc8511bab5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::CharacterControllers.RoleControllers.SunWuKongController
-  visualTransform: {fileID: 1246290001}
-  moveSpeed: 2
-  jumpForce: 14
-  dashSpeed: 18
-  dashDuration: 0.18
-  dashCooldown: 0.8
-  groundCheck: {fileID: 1672326658}
-  groundCheckRadius: 0.15
-  groundLayer:
-    serializedVersion: 2
-    m_Bits: 0
-  attackComboWindow: 5
-  skill1Cooldown: 5
-  skill2Cooldown: 8
-  skill3Cooldown: 12
-  skill4Cooldown: 20
-  skill1CooldownUI: {fileID: 1158881669}
-  skill2CooldownUI: {fileID: 1221915223}
-  skill3CooldownUI: {fileID: 717807307}
-  skill4CooldownUI: {fileID: 2082918409}
-  anim: {fileID: 1246290002}
-  sr: {fileID: 1246289997}
 --- !u!114 &789161846
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1518,8 +1483,8 @@ MonoBehaviour:
   m_ActionEvents:
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 789161845}
-        m_TargetAssemblyTypeName: CharacterControllers.RoleControllers.SunWuKongController,
+      - m_Target: {fileID: 789161848}
+        m_TargetAssemblyTypeName: GamePlay.CharacterControllers.PlayerController,
           Assembly-CSharp
         m_MethodName: OnMove
         m_Mode: 0
@@ -1535,10 +1500,10 @@ MonoBehaviour:
     m_ActionName: 'Player/Move[/Keyboard/a,/Keyboard/d]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 789161845}
-        m_TargetAssemblyTypeName: CharacterControllers.RoleControllers.SunWuKongController,
+      - m_Target: {fileID: 789161848}
+        m_TargetAssemblyTypeName: GamePlay.CharacterControllers.PlayerController,
           Assembly-CSharp
-        m_MethodName: OnNormalAttack
+        m_MethodName: OnAttack
         m_Mode: 0
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1552,7 +1517,7 @@ MonoBehaviour:
     m_ActionName: 'Player/NormalAttack[/Mouse/leftButton]'
   - m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 789161845}
+      - m_Target: {fileID: 0}
         m_TargetAssemblyTypeName: CharacterControllers.RoleControllers.SunWuKongController,
           Assembly-CSharp
         m_MethodName: OnSkills
@@ -1611,6 +1576,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d233148def294e15ae6f79b0beec1ccf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterControllers.PlayerController
+  playerDataManager: {fileID: 789161849}
+  visualTransform: {fileID: 1246290001}
 --- !u!114 &789161849
 MonoBehaviour:
   m_ObjectHideFlags: 0

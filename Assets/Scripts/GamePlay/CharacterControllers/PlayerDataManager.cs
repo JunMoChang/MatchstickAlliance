@@ -1,20 +1,21 @@
-﻿using PlayerDataHandle;
+﻿using GamePlay.PlayerDataHandle;
 using UnityEngine;
 
 namespace GamePlay.CharacterControllers
 {
-    public class PlayerDataManager :  MonoBehaviour
+    public class PlayerDataManager : MonoBehaviour
     {
         private readonly SaveManager saveManager =  new ();
-        private PlayerData playerData; //玩家数据
+        public PlayerData PlayerData { get; private set; } //玩家数据
         void Awake()
         {
-            playerData = saveManager.LoadData();
+            PlayerData = saveManager.LoadData();
         }
         
-        void OnApplicationQuit() 
+        void OnApplicationQuit()
         {
-            saveManager.Save(playerData);
+            PlayerData.ownedRoles[0].defaultSpeed = 3.5f;
+            saveManager.Save(PlayerData);
             Debug.Log("退出保存完成");
         }
     }
