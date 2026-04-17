@@ -1,14 +1,34 @@
 ﻿using System.IO;
-using GamePlay.CharacterControllers;
+using System.Reflection;
+using GamePlay.Role;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
 using UnityEngine;
 
 namespace GamePlay.PlayerDataHandle
 {
     public class SaveManager
     {
+        private class IgnoreVector2NormalizedResolver : DefaultContractResolver
+        {
+            protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
+            {
+                JsonProperty property = base.CreateProperty(member, memberSerialization);
+        
+                if (property.DeclaringType == typeof(Vector2) && property.PropertyName == "normalized")
+                {
+                    property.ShouldSerialize = instance => false;
+                }
+        
+                return property;
+            }
+        }
         private string SavePath => Application.persistentDataPath + "/saveData.json";
-        private readonly JsonSerializerSettings setting = new () { TypeNameHandling = TypeNameHandling.Auto };
+        private readonly JsonSerializerSettings setting = new ()
+        {
+            ContractResolver = new IgnoreVector2NormalizedResolver(),
+            TypeNameHandling = TypeNameHandling.Auto
+        };
         
         public void Save(PlayerData data) 
         {
@@ -16,14 +36,11 @@ namespace GamePlay.PlayerDataHandle
             
             string json = JsonConvert.SerializeObject(data, Formatting.Indented, setting);
             File.WriteAllText(SavePath, json);
-
-            Debug.Log($"已保存到: {SavePath}");
         }
         
         public PlayerData LoadData() 
         {
             if (!File.Exists(SavePath)) {
-                Debug.Log("未找到存档");
                 return new PlayerData();
             }
 
