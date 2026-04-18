@@ -11,6 +11,5 @@ namespace GamePlay.Role.RoleStrategy
         void Move(Vector2 direction);
         void Attack(UnityEngine.InputSystem.InputAction.CallbackContext context);
         void UseSkill(int index);
-        RoleData.  RoleBaseData RoleData { get; }  
     }
 }

@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using GamePlay.CharacterControllers;
-using GamePlay.Role.RoleBoxCollider;
-using GamePlay.Role.RoleData;
 using UnityEngine;
+using GamePlay.CharacterControllers;
+using GamePlay.Role.RoleData;
 
 namespace GamePlay.Role.RoleStrategy
 {
@@ -10,8 +9,8 @@ namespace GamePlay.Role.RoleStrategy
     public class SunWuKongStrategy : IRoleStrategy
     {
         private RoleContext roleContext;
-        private SunWuKongData roleData;
-        private BoxColliderManager boxColliderManager;
+        private SunWuKongData template;
+        private RoleBoxCollider.BoxColliderManager boxColliderManager;
         private Animator animator;
         private Rigidbody2D rb;
         
@@ -23,17 +22,17 @@ namespace GamePlay.Role.RoleStrategy
         
         private float[] skillTimers = new float[4];
         private bool skill2Active;
-        public RoleBaseData RoleData => roleData;
+ 
         Dictionary<RoleBaseData.MotionName, RoleBaseData.MotionData[]> motionData = new ();
         public void Initialize(RoleContext _context)
         {
             roleContext = _context;
-            roleData = roleContext.roleData as SunWuKongData;
+            template = (SunWuKongData)roleContext.Template;
             animator = roleContext.animator;
             rb = roleContext.rb;
             boxColliderManager = roleContext.boxColliderManager;
 
-            foreach (RoleBaseData.MotionCommand command in roleData.motionCommands)
+            foreach (RoleBaseData.MotionCommand command in template.motionCommands)
             {
                 motionData.Add(command.motionName, command.motionData);
             }
@@ -70,7 +69,7 @@ namespace GamePlay.Role.RoleStrategy
         private void ApplyMove()
         {
             if (moveInput.x != 0)
-                rb.MovePosition(new Vector2(rb.position.x + moveInput.x * roleData.defaultSpeed * Time.fixedDeltaTime, rb.position.y));
+                rb.MovePosition(new Vector2(rb.position.x + moveInput.x * template.defaultSpeed * Time.fixedDeltaTime, rb.position.y));
         }
         
         public void Attack(UnityEngine.InputSystem.InputAction.CallbackContext context)
@@ -105,9 +104,9 @@ namespace GamePlay.Role.RoleStrategy
                 case > 0.75f and <= 1f when pendingAttack:
                 {
                     pendingAttack = false;
-                    if (combosStep < roleData.maxCombos - 1)
+                    if (combosStep < template.maxCombos - 1)
                     {
-                        boxColliderManager.DisableBox((BoxColliderManager.BoxColliderName)combosStep);
+                        boxColliderManager.DisableBox((RoleBoxCollider.BoxColliderManager.BoxColliderName)combosStep);
                         combosStep++;
                         animator.SetInteger(AnimationParameters.NormalCombos, combosStep);
                     }
@@ -127,7 +126,7 @@ namespace GamePlay.Role.RoleStrategy
         public void UseSkill(int index)
         {
             if (skillTimers[index] > 0f) return;
-            skillTimers[index] = roleData.skillCooldowns[index];
+            skillTimers[index] = template.skillCooldowns[index];
             switch (index)
             {
                 case 0:
@@ -146,15 +145,15 @@ namespace GamePlay.Role.RoleStrategy
         }
         private void Skill1Logic(int index)
         {
-            skillTimers[index] = roleData.skillCooldowns[index];
+            skillTimers[index] = template.skillCooldowns[index];
             animator.SetTrigger(AnimationParameters.Skill_1);
         }
         private void Skill2Logic(int index)
         {
             skill2Active = true;
-            skillTimers[index] = roleData.skillCooldowns[index];
+            skillTimers[index] = template.skillCooldowns[index];
             animator.SetTrigger(AnimationParameters.Skill_2);
-            rb.linearVelocity = new Vector2(roleData.skill2JumpForceX, roleData.skill2JumpForceY);
+            rb.linearVelocity = new Vector2(template.skill2JumpForceX, template.skill2JumpForceY);
         }
         private void UpdateSkill2()
         {
@@ -168,20 +167,20 @@ namespace GamePlay.Role.RoleStrategy
                 if (stateInfo.normalizedTime >= 0.6f)
                 {
                     rb.gravityScale = 1;
-                    rb.linearVelocity = new Vector2(0, -roleData.skill2JumpForceY);
+                    rb.linearVelocity = new Vector2(0, -template.skill2JumpForceY);
                     skill2Active = false;
                 }
             }
         }
         private void Skill3Logic(int index)
         {
-            skillTimers[index] = roleData.skillCooldowns[index];
+            skillTimers[index] = template.skillCooldowns[index];
             animator.SetTrigger(AnimationParameters.Skill_3);
         }
         private void Skill4Logic(int index)
         {
-            skillTimers[index] = roleData.skillCooldowns[index];
-            boxColliderManager.EnableBox(BoxColliderManager.BoxColliderName.HitBox_Skill_4);
+            skillTimers[index] = template.skillCooldowns[index];
+            boxColliderManager.EnableBox(RoleBoxCollider.BoxColliderManager.BoxColliderName.HitBox_Skill_4);
             animator.SetTrigger(AnimationParameters.Skill_4);
         }
         

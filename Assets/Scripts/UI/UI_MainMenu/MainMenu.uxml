@@ -1,4 +1,5 @@
 <UI:UXML xmlns:UI="UnityEngine.UIElements" editor-extension-mode="False">
+    <UI:Template name="EquipmentPopup" src="project://database/Assets/Scripts/UI/UI_MainMenu/EquipmentPopup.uxml?fileID=9197481963319205126&amp;guid=69e2c81c0f0546c4089ad9ade70e1ef7&amp;type=3#EquipmentPopup"/>
     <UI:Template name="LevelPopup" src="project://database/Assets/Scripts/UI/UI_MainMenu/LevelPopup.uxml?fileID=9197481963319205126&amp;guid=76f2a2e7604d3dd47924215a26dc5ffb&amp;type=3#LevelPopup"/>
     <Style src="project://database/Assets/Scripts/UI/UI_MainMenu/MainMenu.uss?fileID=7433441132597879392&amp;guid=f7f6f345480ea3d4ab554bf627d25bb6&amp;type=3#MainMenu"/>
     <Style src="project://database/Assets/Scripts/UI/UI_MainMenu/LevelPopup.uss?fileID=7433441132597879392&amp;guid=340471d29db7cfb409d80376056494be&amp;type=3#LevelPopup"/>
@@ -28,5 +29,6 @@
         </UI:VisualElement>
         <UI:VisualElement name="nav-bar" class="nav-bar"/>
         <UI:Instance template="LevelPopup" name="level-popup" class="level-popup"/>
+        <UI:Instance template="EquipmentPopup" name="equipment-popup" class="equipment-popup"/>
     </UI:VisualElement>
 </UI:UXML>

@@ -1,0 +1,172 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" xmlns:UI="UnityEngine.UIElements" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" schemaLocation="UnityEngine.UIElements file:/E:/unityproject/火柴人联盟/UIElementsSchema/UnityEngine.UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/UI/UI_MainMenu/EquipmentPopup.uss?fileID=7433441132597879392&amp;guid=383ebe31deed7304ba5e451fe76fb879&amp;type=3#EquipmentPopup"/>
+    <ui:VisualElement name="equipment-popup" class="equipment-popup">
+        <ui:VisualElement name="popup-root" class="popup-root">
+            <ui:VisualElement name="panel-left" class="panel panel-left">
+                <ui:VisualElement name="panel-title-bar" class="panel-title-bar">
+                    <ui:Label name="title-label" text="装备" class="panel-title-text"/>
+                </ui:VisualElement>
+                <ui:VisualElement name="hero-body" class="hero-body">
+                    <ui:VisualElement name="hero-portrait-area" class="hero-portrait-area">
+                        <ui:Label name="hero-name" text="猴子 LV.52" class="hero-name-label"/>
+                        <ui:VisualElement name="hero-sprite" class="hero-sprite"/>
+                        <ui:Label name="star-display" text="★★★★★" class="star-display"/>
+                        <ui:Button name="btn-upgrade-star" text="升星" class="btn-upgrade-star"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="equipment-bag" class="equipment-bag">
+                        <ui:Label name="bag-label" text="一星装备背包" class="bag-label"/>
+                        <ui:VisualElement name="equip-view" class="equip-view">
+                            <ui:VisualElement name="equip-slot-0" class="equip-slot">
+                                <ui:VisualElement name="equip-icon-0" class="equip-icon"/>
+                                <ui:Label name="enhance-0" text="+25" class="enhance-badge"/>
+                                <ui:VisualElement name="star-bar-0" class="star-bar">
+                                    <ui:Label text="★x1" class="star-text"/>
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                            <ui:VisualElement name="equip-slot-1" class="equip-slot">
+                                <ui:VisualElement name="equip-icon-1" class="equip-icon"/>
+                                <ui:Label name="enhance-1" text="+25" class="enhance-badge"/>
+                                <ui:VisualElement name="star-bar-1" class="star-bar">
+                                    <ui:Label text="★x1" class="star-text"/>
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                            <ui:VisualElement name="equip-slot-2" class="equip-slot">
+                                <ui:VisualElement name="equip-icon-2" class="equip-icon"/>
+                                <ui:Label name="enhance-2" text="+20" class="enhance-badge"/>
+                                <ui:VisualElement name="star-bar-2" class="star-bar">
+                                    <ui:Label text="★x1" class="star-text"/>
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                            <ui:VisualElement name="equip-slot-3" class="equip-slot">
+                                <ui:VisualElement name="equip-icon-3" class="equip-icon"/>
+                                <ui:Label name="enhance-3" text="+20" class="enhance-badge"/>
+                                <ui:VisualElement name="star-bar-3" class="star-bar">
+                                    <ui:Label text="★x1" class="star-text"/>
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                            <ui:VisualElement name="equip-slot-4" class="equip-slot">
+                                <ui:VisualElement name="equip-icon-4" class="equip-icon"/>
+                                <ui:Label name="enhance-4" text="+20" class="enhance-badge"/>
+                                <ui:VisualElement name="star-bar-4" class="star-bar">
+                                    <ui:Label text="★x1" class="star-text"/>
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                            <ui:VisualElement name="equip-slot-5" class="equip-slot">
+                                <ui:VisualElement name="equip-icon-5" class="equip-icon"/>
+                                <ui:Label name="enhance-5" text="+25" class="enhance-badge"/>
+                                <ui:VisualElement name="star-bar-5" class="star-bar">
+                                    <ui:Label text="★x1" class="star-text"/>
+                                </ui:VisualElement>
+                            </ui:VisualElement>
+                        </ui:VisualElement>
+                        <ui:Label name="arrow-next" text="▶" class="arrow-next"/>
+                        <ui:VisualElement name="page-dots" class="page-dots">
+                            <ui:VisualElement class="dot dot--active"/>
+                            <ui:VisualElement class="dot"/>
+                            <ui:VisualElement class="dot"/>
+                            <ui:VisualElement class="dot"/>
+                            <ui:VisualElement class="dot"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+                <ui:VisualElement name="stats-panel" class="stats-panel">
+                    <ui:VisualElement name="stats-row-1" class="stats-row">
+                        <ui:Label name="stat-power" text="战力: 6447" class="stat-label"/>
+                        <ui:Label name="stat-exp" text="经验: 195万/336万" class="stat-label"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="stats-row-2" class="stats-row">
+                        <ui:VisualElement class="stats-cell">
+                            <ui:Label text="生命: 35720" class="stat-label"/>
+                            <ui:Label text="+101733" class="stat-bonus"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement class="stats-cell">
+                            <ui:Label text="防御: 870" class="stat-label"/>
+                            <ui:Label text="+3232" class="stat-bonus stat-bonus--blue"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="stats-row-3" class="stats-row">
+                        <ui:VisualElement class="stats-cell">
+                            <ui:Label text="攻击: 3514" class="stat-label"/>
+                            <ui:Label text="+21148" class="stat-bonus"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement class="stats-cell">
+                            <ui:Label text="暴击:" class="stat-label"/>
+                            <ui:Label text="+47.98%" class="stat-bonus stat-bonus--blue"/>
+                        </ui:VisualElement>
+                    </ui:VisualElement>
+                </ui:VisualElement>
+            </ui:VisualElement>
+            <ui:VisualElement name="panel-right" class="panel panel-right">
+                <ui:VisualElement name="tab-bar" class="tab-bar">
+                    <ui:Button name="tab-equip" text="装备" class="tab-btn tab-btn--active"/>
+                    <ui:Button name="tab-enhance" text="强化" class="tab-btn"/>
+                    <ui:Button name="tab-skill" text="技能" class="tab-btn"/>
+                </ui:VisualElement>
+                <ui:ScrollView name="equip-list" class="equip-list">
+                    <ui:VisualElement name="equip-item-0" class="equip-item">
+                        <ui:VisualElement class="equip-item-icon-wrap">
+                            <ui:VisualElement name="item-icon-0" class="equip-item-icon"/>
+                            <ui:Label text="x1" class="item-count"/>
+                            <ui:Label text="1" class="item-rarity"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement class="equip-item-stats">
+                            <ui:Label text="攻击: 36" class="item-stat"/>
+                            <ui:Label text="防御: 93" class="item-stat"/>
+                        </ui:VisualElement>
+                        <ui:Button name="btn-equip-0" text="装备" class="btn-equip"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="equip-item-1" class="equip-item">
+                        <ui:VisualElement class="equip-item-icon-wrap">
+                            <ui:VisualElement name="item-icon-1" class="equip-item-icon equip-item-icon--sword"/>
+                            <ui:Label text="x1" class="item-count"/>
+                            <ui:Label text="1" class="item-rarity"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement class="equip-item-stats">
+                            <ui:Label text="攻击: 81" class="item-stat"/>
+                            <ui:Label text="防御: 9" class="item-stat"/>
+                            <ui:Label text="生命: 180" class="item-stat"/>
+                            <ui:Label text="暴击: 0.70%" class="item-stat item-stat--crit"/>
+                        </ui:VisualElement>
+                        <ui:Button name="btn-equip-1" text="装备" class="btn-equip"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="equip-item-2" class="equip-item">
+                        <ui:VisualElement class="equip-item-icon-wrap">
+                            <ui:VisualElement name="item-icon-2" class="equip-item-icon equip-item-icon--shield"/>
+                            <ui:Label text="x1" class="item-count"/>
+                            <ui:Label text="1" class="item-rarity"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement class="equip-item-stats">
+                            <ui:Label text="防御: 59" class="item-stat"/>
+                        </ui:VisualElement>
+                        <ui:Button name="btn-equip-2" text="装备" class="btn-equip"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="equip-item-3" class="equip-item">
+                        <ui:VisualElement class="equip-item-icon-wrap">
+                            <ui:VisualElement name="item-icon-3" class="equip-item-icon equip-item-icon--gem">
+                                <ui:Label text="+15" class="item-enhance-badge"/>
+                            </ui:VisualElement>
+                            <ui:Label text="x1" class="item-count"/>
+                            <ui:Label text="1" class="item-rarity"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement class="equip-item-stats">
+                            <ui:Label text="生命: 2232" class="item-stat"/>
+                        </ui:VisualElement>
+                        <ui:Button name="btn-equip-3" text="装备" class="btn-equip"/>
+                    </ui:VisualElement>
+                    <ui:VisualElement name="equip-item-4" class="equip-item">
+                        <ui:VisualElement class="equip-item-icon-wrap">
+                            <ui:VisualElement name="item-icon-4" class="equip-item-icon equip-item-icon--gem2"/>
+                            <ui:Label text="x1" class="item-count"/>
+                            <ui:Label text="1" class="item-rarity"/>
+                        </ui:VisualElement>
+                        <ui:VisualElement class="equip-item-stats">
+                            <ui:Label text="生命: 1116" class="item-stat"/>
+                        </ui:VisualElement>
+                        <ui:Button name="btn-equip-4" text="装备" class="btn-equip"/>
+                    </ui:VisualElement>
+                </ui:ScrollView>
+                <ui:Button name="btn-close" text="✕" class="btn-close"/>
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

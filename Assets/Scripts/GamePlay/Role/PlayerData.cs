@@ -5,17 +5,34 @@ namespace GamePlay.Role
 {
     public class PlayerData
     {
-        public List<RoleSaveData> ownedRoles = new(); //解锁的角色
+        /// <summary>
+        /// 解锁的角色
+        /// </summary>
+        public List<RoleSaveData> ownedRoles = new ()
+        {
+            new RoleSaveData{roleName = RoleName.孙悟空, roleLevel = 1}
+        };
 
+        /// <summary>
+        /// 游戏货币数量
+        /// </summary>
         public class GameProps
         {
             public int coins;
             public int diamonds;
         }
         
-        public int level; //当前章节已完成的关卡数
-        public int levelChapter; //以为完成的章节数
-        
-        public long saveTimestamp; //存档时间
+        /// <summary>
+        /// 以完成的章节数
+        /// </summary>
+        public int levelChapter;
+        /// <summary>
+        /// 当前章节已完成的关卡数
+        /// </summary>
+        public int level;
+        /// <summary>
+        /// 存档时间
+        /// </summary>
+        public long saveTimestamp;
     }
 }

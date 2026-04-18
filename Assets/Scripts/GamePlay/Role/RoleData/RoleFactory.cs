@@ -1,17 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using GamePlay.Role.RoleStrategy;
 
 namespace GamePlay.Role.RoleData
 {
     public static class RoleFactory
     {
-        
-        private static Dictionary<RoleName, RoleSaveData> roleSaveData;
-        
-        public static RoleSaveData GetRoleSaveData(RoleName roleName)
+        public static IRoleStrategy CreateRoleStrategy(RoleName roleName, RoleContext context)
         {
-            return roleSaveData[roleName];
+            IRoleStrategy strategy = roleName switch
+            {
+                RoleName.孙悟空 => new SunWuKongStrategy(),
+                RoleName.亚索   => new YasuoStrategy(),
+                _               => throw new System.Exception($"未注册的角色: {roleName}")
+            };
+            
+            strategy.Initialize(context);
+            return strategy;
         }
-        
-        
     }
 }

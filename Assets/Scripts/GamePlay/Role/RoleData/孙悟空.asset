@@ -12,26 +12,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67fbdcad37aa49b58ffa73b02099a254, type: 3}
   m_Name: "\u5B59\u609F\u7A7A"
   m_EditorClassIdentifier: Assembly-CSharp::GamePlay.Role.RoleData.SunWuKongData
-  roleName: "\u5B59\u609F\u7A7A"
+  roleName: 0
   defaultHealth: 200
   defaultSpeed: 3.5
   defaultDamage: 20
-  skill1: {fileID: 21300000, guid: 4ea86551c7c85be49a881adefd0c3b2e, type: 3}
-  skill2: {fileID: 21300000, guid: 0262a8b2e08647641ae3e1e17e1e0da2, type: 3}
-  skill3: {fileID: 21300000, guid: 885ccba29c78c634fba001c0e0625704, type: 3}
-  skill4: {fileID: 21300000, guid: ba01c4f78398c4f478815528892cf675, type: 3}
+  healthGrowth: 0
+  damageGrowth: 0
+  skills:
+  - icon: {fileID: 21300000, guid: 4ea86551c7c85be49a881adefd0c3b2e, type: 3}
+    baseDamage: 15
+    baseCooldown: 3
+  - icon: {fileID: 21300000, guid: 0262a8b2e08647641ae3e1e17e1e0da2, type: 3}
+    baseDamage: 20
+    baseCooldown: 5
+  - icon: {fileID: 21300000, guid: 885ccba29c78c634fba001c0e0625704, type: 3}
+    baseDamage: 12
+    baseCooldown: 8
+  - icon: {fileID: 21300000, guid: ba01c4f78398c4f478815528892cf675, type: 3}
+    baseDamage: 10
+    baseCooldown: 14
   maxCombos: 5
-  skill1TeleportDistance: 0.1
   skill2JumpForceX: 0.6
   skill2JumpForceY: 4.6
-  skill3TeleportDistance: 2.2
-  skill3TeleportForceX: 1.5
-  skill3TeleportForceY: 2.6
-  finalComboJumpForce: 0
-  finalComboExtraFallSpeed: 0
-  finalComboDefaultHorizontal: 0
-  finalComboFastHorizontal: 0
-  finalComboSlowHorizontal: 0
   motionCommands:
   - motionName: 0
     motionData:

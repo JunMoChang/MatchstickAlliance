@@ -3,9 +3,8 @@
     public class RoleSaveData
     {
         public RoleName roleName;
-        public int level;
-        public float health;
-        public float damage;
+        public int roleLevel;
         
+        public int[] skillsLevel = new []{1,1,1,1};
     }
 }

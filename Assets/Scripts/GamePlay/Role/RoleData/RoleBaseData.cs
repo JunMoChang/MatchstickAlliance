@@ -5,6 +5,34 @@ namespace GamePlay.Role.RoleData
     [System.Serializable]
     public abstract class RoleBaseData : ScriptableObject
     {
+        public RoleName roleName;
+        public float defaultHealth = 100f;
+        public float defaultSpeed = 3.5f;
+        public float defaultDamage = 10f;
+        public float healthGrowth;
+        public float damageGrowth;
+        
+        public SkillData[] skills;
+        /// <summary>
+        /// 技能数据
+        /// </summary>
+        [System.Serializable]
+        public struct SkillData
+        {
+            /// <summary>
+            /// 技能图标
+            /// </summary>
+            public Sprite icon;
+            /// <summary>
+            /// 基础伤害
+            /// </summary>
+            public float baseDamage;
+            /// <summary>
+            /// 基础冷却
+            /// </summary>
+            public float baseCooldown;
+        }
+        
         /// <summary>
         /// 瞬间攻击碰撞检测数据
         /// </summary>
@@ -93,22 +121,5 @@ namespace GamePlay.Role.RoleData
                 AddForce,
             }
         }
-        
-        public string roleName;
-        public float defaultHealth = 100f;
-        public float defaultSpeed = 3.5f;
-        public float defaultDamage = 10f;
-        public float healthGrowth;
-        public float damageGrowth;
-        
-        [SerializeField] private Sprite skill1;
-        [SerializeField] private Sprite skill2;
-        [SerializeField] private Sprite skill3;
-        [SerializeField] private Sprite skill4;
-    
-        public Sprite Skill1 => skill1;
-        public Sprite Skill2 => skill2;
-        public Sprite Skill3 => skill3;
-        public Sprite Skill4 => skill4;
     }
 }

@@ -1727,7 +1727,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d233148def294e15ae6f79b0beec1ccf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterControllers.PlayerController
-  playerDataManager: {fileID: 789161849}
+  playerDataManager: {fileID: 0}
+  roleRegistry: {fileID: 0}
 --- !u!114 &789161849
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2655,7 +2656,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44a397330c024e2cb991c6408d3a62ca, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GamePlay.Role.RoleContext
-  roleData: {fileID: 11400000, guid: f845ec98e4498f14086e389f2db5458f, type: 2}
   animator: {fileID: 1246290002}
   rb: {fileID: 789161847}
   boxColliderManager: {fileID: 1246290004}
@@ -4862,8 +4862,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2129532949}
-  - component: {fileID: 2129532948}
   - component: {fileID: 2129532946}
+  - component: {fileID: 2129532948}
+  - component: {fileID: 2129532950}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -5009,7 +5010,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d233148def294e15ae6f79b0beec1ccf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CharacterControllers.PlayerController
-  playerDataManager: {fileID: 0}
+  playerDataManager: {fileID: 2129532950}
+  roleRegistry: {fileID: 11400000, guid: 3f8ee2ab47faa1444bafdbea0f9a9123, type: 2}
 --- !u!4 &2129532949
 Transform:
   m_ObjectHideFlags: 0
@@ -5026,6 +5028,18 @@ Transform:
   - {fileID: 1297095916}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &2129532950
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2129532945}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa8dec86bf6241f8a7643f91964f8c78, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GamePlay.Role.PlayerDataManager
 --- !u!1001 &4726016733130498224
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -5034,21 +5048,13 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 2129532949}
     m_Modifications:
-    - target: {fileID: 1089239038856527137, guid: a55f34be1f63b0c4e91a3af1aea9dd6e, type: 3}
-      propertyPath: m_Enabled
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 1089239038856527137, guid: a55f34be1f63b0c4e91a3af1aea9dd6e, type: 3}
-      propertyPath: m_Offset.x
-      value: -0.46
-      objectReference: {fileID: 0}
-    - target: {fileID: 1954295177290003997, guid: a55f34be1f63b0c4e91a3af1aea9dd6e, type: 3}
-      propertyPath: instantBoxesConfig.Array.data[6].offset.x
-      value: -0.46
-      objectReference: {fileID: 0}
     - target: {fileID: 4010939859288580430, guid: a55f34be1f63b0c4e91a3af1aea9dd6e, type: 3}
       propertyPath: m_Name
       value: "\u5B59\u609F\u7A7A"
+      objectReference: {fileID: 0}
+    - target: {fileID: 4010939859288580430, guid: a55f34be1f63b0c4e91a3af1aea9dd6e, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7513774595400382903, guid: a55f34be1f63b0c4e91a3af1aea9dd6e, type: 3}
       propertyPath: m_LocalPosition.x

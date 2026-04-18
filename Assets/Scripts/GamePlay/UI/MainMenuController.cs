@@ -26,6 +26,7 @@ namespace GamePlay.UI
         private VisualElement mainRoot;
         private VisualElement cardTrack;
         private VisualElement levelPopup;
+        private VisualElement equipmentPopup;
         private VisualElement currentActive;
         
         private VisualElement levelBg;
@@ -44,7 +45,7 @@ namespace GamePlay.UI
         
             cardTrack = SafeQuery<VisualElement>("card-track");
             levelPopup = SafeQuery<VisualElement>("level-popup");
-        
+            equipmentPopup =  SafeQuery<VisualElement>("equipment-popup");
             if (backgroundSprite != null)
             {
                 VisualElement bg = mainRoot.Q<VisualElement>("background");
@@ -54,6 +55,7 @@ namespace GamePlay.UI
             BuildCards();
             BuildNavBar();
             BuildLevel();
+            BuildEquipmentPopup();
         }
 
         private void BuildCards()
@@ -189,7 +191,66 @@ namespace GamePlay.UI
                 navBar.Add(btn);
             }
         }
-    
+        
+        private void BuildEquipmentPopup()
+        {
+            equipmentPopup.style.display = DisplayStyle.None;
+            
+            equipmentPopup.RegisterCallback<ClickEvent>(_ => HideEquipmentPopup());
+            
+            VisualElement popupRoot = equipmentPopup.Q<VisualElement>("popup-root");
+            popupRoot?.RegisterCallback<ClickEvent>(e => e.StopPropagation());
+            
+            Button cloBtn = equipmentPopup.Q<Button>("btn-close");
+            cloBtn?.RegisterCallback<ClickEvent>(e =>
+            {
+                e.StopPropagation();
+                HideEquipmentPopup();
+            });
+            
+            Button tabEquip   = equipmentPopup.Q<Button>("tab-equip");
+            Button tabEnhance = equipmentPopup.Q<Button>("tab-enhance");
+            Button tabSkill   = equipmentPopup.Q<Button>("tab-skill");
+
+            tabEquip?.RegisterCallback<ClickEvent>(e =>
+            {
+                e.StopPropagation();
+                SwitchEquipTab("equip", tabEquip, tabEnhance, tabSkill);
+            });
+            tabEnhance?.RegisterCallback<ClickEvent>(e =>
+            {
+                e.StopPropagation();
+                SwitchEquipTab("enhance", tabEquip, tabEnhance, tabSkill);
+            });
+            tabSkill?.RegisterCallback<ClickEvent>(e =>
+            {
+                e.StopPropagation();
+                SwitchEquipTab("skill", tabEquip, tabEnhance, tabSkill);
+            });
+        }
+
+        private void SwitchEquipTab(string tab, params Button[] tabs)
+        {
+            foreach (Button t in tabs) t.RemoveFromClassList("tab-btn--active");
+            
+            switch (tab)
+            {
+                case "equip":   tabs[0].AddToClassList("tab-btn--active"); break;
+                case "enhance": tabs[1].AddToClassList("tab-btn--active"); break;
+                case "skill":   tabs[2].AddToClassList("tab-btn--active"); break;
+            }
+        }
+
+        private void ShowEquipmentPopup()
+        {
+            equipmentPopup.style.display = DisplayStyle.Flex;
+        }
+
+        private void HideEquipmentPopup()
+        {
+            equipmentPopup.style.display = DisplayStyle.None;
+        }
+        
         private T SafeQuery<T>(string elementName) where T : VisualElement
         {
             T element = mainRoot.Q<T>(elementName);
@@ -217,7 +278,7 @@ namespace GamePlay.UI
         }
         void OnNavClick(string label)
         { 
-            Debug.Log($"导航点击: {label}");
+            if (label == "装备") ShowEquipmentPopup();
         }
     }
 }

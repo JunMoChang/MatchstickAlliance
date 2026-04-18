@@ -7,7 +7,8 @@ namespace GamePlay.Role
 {
     public class RoleContext : MonoBehaviour
     {
-        [SerializeField] public RoleBaseData roleData;
+        public RoleBaseData Template { get; private set; }
+        public RoleSaveData SaveData { get; private set; }
         [SerializeField] public Animator animator;
         [SerializeField] public Rigidbody2D rb;
         [SerializeField] public BoxColliderManager boxColliderManager;
@@ -19,7 +20,12 @@ namespace GamePlay.Role
             Vector3 offset = transform.GetComponent<SpriteRenderer>().sprite.bounds.center;
             transform.localPosition = new Vector3(-offset.x, -offset.y / 2, 0);
         }
-        
+
+        public void Init(RoleBaseData _template, RoleSaveData _saveData)
+        {
+            Template =  _template;
+            SaveData = _saveData;
+        }
         public void SetStrategy(IRoleStrategy s)
         {
             strategy = s;
