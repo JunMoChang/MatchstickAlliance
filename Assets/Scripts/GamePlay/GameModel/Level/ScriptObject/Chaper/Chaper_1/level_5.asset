@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fbf1ce682c43c14c986d519dd818a6c, type: 3}
   m_Name: level_5
   m_EditorClassIdentifier: Assembly-CSharp::GamePlay.GameModel.Level.LevelData
-  chapter: 1
-  sprite: {fileID: 11400000, guid: 0c272c14aa23d5848bc701417991dd4c, type: 2}
+  levelIndex: 0
+  sprite: {fileID: 11400000, guid: b86d9874ecfd14e47ac286f0a2e0528d, type: 2}
   enemy:
   - enemyData: {fileID: 0}
     chapterOverride: 0

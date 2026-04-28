@@ -7,7 +7,7 @@ namespace GamePlay.Scene
     {
         [SerializeField] UIDocument uiDocument;
         private ProgressBar progressBar;
-
+        
         private void OnEnable()
         {
             progressBar = uiDocument.rootVisualElement.Q<ProgressBar>("progress-bar");

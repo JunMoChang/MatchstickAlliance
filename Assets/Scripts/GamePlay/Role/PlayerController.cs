@@ -1,23 +1,39 @@
-﻿using System;
+﻿using System.Collections.Generic;
+using GamePlay.GameModel.Level;
 using GamePlay.Role.RoleData;
 using GamePlay.Role.RoleStrategy;
+using GamePlay.Scene;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 namespace GamePlay.Role
 {
     public class PlayerController : MonoBehaviour
     {
+        public static PlayerController Instance {get; private set;}
+        
         [SerializeField] private PlayerDataManager playerDataManager;
         [SerializeField] private RoleRegistry roleRegistry; 
+        [SerializeField] private PlayerInputHandler playerInputHandler;
+        [SerializeField] private LevelContext  levelContext;
+        private readonly List<GameObject> roleInstances = new ();
         
-        private readonly IRoleStrategy[] strategies = new IRoleStrategy[2];
-        private IRoleStrategy currentStrategy;
-        private int currentIndex;
-
+        private void Awake()
+        {
+            if (Instance == null)
+            {
+                Instance = this;
+                DontDestroyOnLoad(gameObject);
+            }
+            else Destroy(gameObject);
+        }
+        
         private void Start()
         {
-            RoleSaveData saveData = playerDataManager.PlayerData.ownedRoles[0];
+            playerInputHandler.enabled = false;
+            SceneLoader.OnPrepareLevel += InitSelectedRoles;
+            SceneLoader.OnLevelLoaded += SceneLoaded;
+            SceneLoader.OnLevelExit += Cleanup;
+            /*RoleSaveData saveData = playerDataManager.PlayerData.ownedRoles[0];
             RoleRegistry.RoleEntry? entry = roleRegistry.GetEntry(saveData.roleName);
             GameObject instance = Instantiate(entry.Value.prefab, transform);
             RoleContext context = instance.GetComponentInChildren<RoleContext>();
@@ -25,74 +41,51 @@ namespace GamePlay.Role
             currentIndex = 0;
             strategies[0] = RoleFactory.CreateRoleStrategy(saveData.roleName, context);
             currentStrategy = strategies[0];
-            Debug.Log(strategies[0]);
+            Debug.Log(strategies[0]);*/
         }
-
-        public void InitSelectedRoles(RoleSaveData[] selectedRoles)
+        
+        private void InitSelectedRoles()
         {
-            for (int i = 0; i < selectedRoles.Length; i++)
+            List<RoleRegistry.RoleEntry> selectedRole = levelContext.selectedHeroes;
+            
+            IRoleStrategy[] strategies = new IRoleStrategy[selectedRole.Count];
+            for (int i = 0; i < selectedRole.Count; i++)
             {
-                RoleSaveData saveData = selectedRoles[i];
-                RoleRegistry.RoleEntry? entry = roleRegistry.GetEntry(saveData.roleName);
-                if (entry == null) continue;
+                RoleRegistry.RoleEntry? entry = selectedRole[i];
                 
                 GameObject instance = Instantiate(entry.Value.prefab, transform);
-                RoleContext context = instance.GetComponent<RoleContext>();
+                roleInstances.Add(instance);
+                RoleContext context = instance.GetComponentInChildren<RoleContext>();
+                RoleSaveData saveData = playerDataManager.PlayerData.ownedRoles[entry.Value.template.roleName];
                 context.Init(entry.Value.template, saveData);
-                
-                strategies[i] = RoleFactory.CreateRoleStrategy(saveData.roleName, context);
+                strategies[i] = RoleFactory.CreateRoleStrategy(entry.Value.roleName, context);
             }
             
-            currentIndex = 0;
-            currentStrategy = strategies[0];
+            playerInputHandler.Init(strategies);
+            
+        }
+
+        private void SceneLoaded()
+        {
+            if(SpawnPoint.Instance != null) transform.position = SpawnPoint.Instance.transform.position;
         }
 
         public void UnlockRole(RoleSaveData saveData)
         {
-            playerDataManager.PlayerData.ownedRoles.Add(saveData);
-        }
-        private void SwitchStrategy()
-        {
-            currentIndex = 1 - currentIndex;
-            currentStrategy = strategies[currentIndex];
+            bool isRepeat = playerDataManager.PlayerData.ownedRoles.TryAdd(saveData.roleName, saveData);
+            Debug.Log($"是否重复添加:{isRepeat}");
         }
         
-        private void Update()
+        private void Cleanup()
         {
-            currentStrategy.Tick();
-        }
-
-        private void FixedUpdate()
-        {
-            currentStrategy.FixedTick();
-        }
-        
-        public void OnMove(InputAction.CallbackContext context)
-        {
-            Vector2 direction = context.ReadValue<Vector2>();
-            currentStrategy.Move(direction);
-        }
-        
-        public void OnAttack(InputAction.CallbackContext context)
-        {
-            currentStrategy.Attack(context);
-        }
-        public void OnSkill1(InputAction.CallbackContext context)
-        {
-            currentStrategy.UseSkill(0);
-        }
-        
-        public void OnSkill2(InputAction.CallbackContext context)
-        {
-            currentStrategy.UseSkill(1);
-        }
-        public void OnSkill3(InputAction.CallbackContext context)
-        {
-            currentStrategy.UseSkill(2);
-        }
-        public void OnSkill4(InputAction.CallbackContext context)
-        {
-            currentStrategy.UseSkill(3);
+            if(roleInstances.Count <= 0) return;
+            
+            foreach (GameObject instance in roleInstances)
+            {
+                if (instance != null) Destroy(instance);
+            }
+            roleInstances.Clear();
+            playerInputHandler.Cleanup();
         }
     }
 }

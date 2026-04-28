@@ -1,6 +1,5 @@
 using GamePlay.EnemyConfiguration;
 using UnityEngine;
-using UnityEngine.Serialization;
 
 namespace GamePlay.GameModel.Level
 {
@@ -9,6 +8,7 @@ namespace GamePlay.GameModel.Level
     {
         public int levelIndex;
         public LevelSprite sprite;
-        public LevelEnemyConfiguration[] enemy;
+        public WaveData[] waves;
+        
     }
 }

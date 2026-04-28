@@ -47,6 +47,9 @@ namespace GamePlay.Role.RoleStrategy
             throw new System.NotImplementedException();
         }
 
-        public RoleBaseData RoleData { get; }
+        public void Destroy()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

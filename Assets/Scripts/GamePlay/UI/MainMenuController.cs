@@ -1,7 +1,9 @@
+using System;
 using System.Collections.Generic;
 using GamePlay.GameModel.Level;
+using GamePlay.Role;
 using GamePlay.Scene;
-using UI;
+using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -19,14 +21,18 @@ namespace GamePlay.UI
         [Header("玩法数据")]
         [SerializeField] List<GameModeData> gameModes = new();
         [SerializeField] private List<ChapterData> levelChapters;
+        [SerializeField] private LevelContext levelContext;
         
         [Header("导航按钮")]
         [SerializeField] List<NavButtonData> navButtons = new();
+
+        [SerializeField] RoleRegistry roleRegistry;
         
         private VisualElement mainRoot;
         private VisualElement cardTrack;
         private VisualElement levelPopup;
         private VisualElement equipmentPopup;
+        private VisualElement roleSelectPopup;
         private VisualElement currentActive;
         
         private VisualElement levelBg;
@@ -38,6 +44,7 @@ namespace GamePlay.UI
         private Button btnNext;
         
         private int currentChapter;
+        private int currentLevel;
         
         private void OnEnable()
         {
@@ -46,6 +53,7 @@ namespace GamePlay.UI
             cardTrack = SafeQuery<VisualElement>("card-track");
             levelPopup = SafeQuery<VisualElement>("level-popup");
             equipmentPopup =  SafeQuery<VisualElement>("equipment-popup");
+            roleSelectPopup = SafeQuery<VisualElement>("roleSelect-popup");
             if (backgroundSprite != null)
             {
                 VisualElement bg = mainRoot.Q<VisualElement>("background");
@@ -56,6 +64,7 @@ namespace GamePlay.UI
             BuildNavBar();
             BuildLevel();
             BuildEquipmentPopup();
+            BuildHeroes(roleRegistry.entries);
         }
 
         private void BuildCards()
@@ -107,6 +116,17 @@ namespace GamePlay.UI
             btnPrev = levelBg.Q<Button>("btn-prev");
             btnNext = levelBg.Q<Button>("btn-next");
             
+            List<Button> levelButtons = levelContent.Query<Button>("level-icon").ToList();
+            for (int i = 0; i < levelChapters[0].levelData.Length; i++)
+            {
+                int index = i;
+                levelButtons[i].RegisterCallback<ClickEvent>(_ =>
+                {
+                    SetRoleSelectPopup(DisplayStyle.Flex);
+                    currentLevel = levelChapters[0].levelData[index].levelIndex;
+                });
+            }
+            
             levelPopup.RegisterCallback<ClickEvent>(_ => HideLevelPopup());
             levelBg.RegisterCallback<ClickEvent>(e => e.StopPropagation());
             closeBtn.RegisterCallback<ClickEvent>(e =>
@@ -135,17 +155,6 @@ namespace GamePlay.UI
             
             btnPrev.SetEnabled(chapter > 0);
             btnNext.SetEnabled(chapter < levelChapters.Count - 1);
-            
-            levelContent.Clear();
-            foreach (LevelData level in levelChapters[chapter].levelData)
-            {
-                int index = 0;
-                VisualElement icon = new VisualElement();
-                icon.AddToClassList("level-icon");
-                icon.style.backgroundImage = new StyleBackground(level.sprite.levelSprite);
-                icon.RegisterCallback<ClickEvent>(_ => OnLevelSelected(levelChapters[chapter], levelChapters[chapter].levelData[index++]));
-                levelContent.Add(icon);
-            }
             
             levelDots.Clear();
             for (int i = 0; i < levelChapters.Count; i++)
@@ -241,6 +250,111 @@ namespace GamePlay.UI
             }
         }
 
+        private Label selectedRoleNumsHint;
+        private void BuildHeroes(RoleRegistry.RoleEntry[] heroes)
+        {
+            roleSelectPopup.style.display = DisplayStyle.None;
+            roleSelectPopup.RegisterCallback<ClickEvent>(e => roleSelectPopup.style.display = DisplayStyle.None );
+            
+            VisualElement bgSelected = mainRoot.Q<VisualElement>("bg-selected");
+            bgSelected.pickingMode = PickingMode.Ignore;
+            bgSelected.RegisterCallback<ClickEvent>(e => e.StopPropagation());
+            
+            Button cancelBtn = mainRoot.Q<Button>("bt-cancel");
+            cancelBtn.RegisterCallback<ClickEvent>(_ => roleSelectPopup.style.display = DisplayStyle.None);
+            Button ensureBtn = mainRoot.Q<Button>("bt-ensure");
+            ensureBtn.RegisterCallback<ClickEvent>(_ => EnterLevel(levelChapters[currentChapter], levelChapters[currentChapter].levelData[currentLevel]));
+            
+            ScrollView scrollView = mainRoot.Q<ScrollView>("hero-scroll");
+            
+            VisualElement track = mainRoot.Q<VisualElement>("hero-track");
+            track.pickingMode = PickingMode.Ignore;
+            track.Clear();
+            Dictionary<VisualElement, RoleRegistry.RoleEntry> cardHeroMap = new ();
+            
+            Vector2 pointerDownPos = Vector2.zero;
+            const float dragThreshold = 1f;
+            scrollView.RegisterCallback<PointerDownEvent>(e =>
+            {
+                pointerDownPos = e.position;
+            }, TrickleDown.TrickleDown);   
+
+            scrollView.RegisterCallback<PointerUpEvent>(e =>
+            {
+                if (Vector2.Distance(e.position, pointerDownPos) > dragThreshold)
+                    return;
+                
+                VisualElement target = e.target as VisualElement;
+                while (target != null && !target.ClassListContains("hero-card"))
+                    target = target.parent;
+
+                if (target != null && cardHeroMap.TryGetValue(target, out RoleRegistry.RoleEntry hero))
+                {
+                    OnHeroSelected(hero, target);
+                }
+            }, TrickleDown.TrickleDown);
+            
+            foreach (RoleRegistry.RoleEntry hero in heroes)
+            {
+                VisualElement heroCard = new VisualElement();
+                heroCard.AddToClassList("hero-card");
+                heroCard.style.backgroundImage = new StyleBackground(hero.template.unSelectedIcon);
+
+                Label nameLabel = new Label($"{hero.template.roleName} Lv.{hero.template.roleLevel}");
+                nameLabel.AddToClassList("hero-card-name");
+                nameLabel.pickingMode = PickingMode.Ignore;
+                heroCard.Add(nameLabel);
+
+                cardHeroMap[heroCard] = hero;
+
+                track.Add(heroCard);
+            }
+            
+            selectedRoleNumsHint = mainRoot.Q<Label>("lab-hintRoleNum");
+
+#if UNITY_EDITOR
+            Vector2 editorScrollStart = Vector2.zero;
+            Vector2 editorOffsetStart = Vector2.zero;
+            scrollView.RegisterCallback<MouseDownEvent>(e =>
+            {
+                if (e.button != 0) return;
+                editorScrollStart = e.mousePosition;
+                editorOffsetStart = scrollView.scrollOffset;
+            });
+            scrollView.RegisterCallback<MouseMoveEvent>(e =>
+            {
+                if ((e.pressedButtons & 1) == 0) return;
+                float deltaX = editorScrollStart.x - e.mousePosition.x;
+                scrollView.scrollOffset = new Vector2(editorOffsetStart.x + deltaX, editorOffsetStart.y);
+            });
+#endif
+        }
+        
+        private const int MaxSelectedRoleNums = 2;
+        private readonly List<RoleRegistry.RoleEntry> selectedHeroes = new (MaxSelectedRoleNums);
+        private void OnHeroSelected(RoleRegistry.RoleEntry hero, VisualElement heroCard)
+        {
+            bool isUnSelected = hero.template.selectedIcon != heroCard.style.backgroundImage.value.sprite;
+            
+            if (isUnSelected)
+            {
+                if(MaxSelectedRoleNums <= selectedHeroes.Count)
+                {
+                    Debug.Log("上场英雄已满！");
+                    return;
+                }
+                
+                selectedHeroes.Add(hero);
+                heroCard.style.backgroundImage = new StyleBackground(hero.template.selectedIcon);
+            }
+            else
+            {
+                heroCard.style.backgroundImage = new StyleBackground(hero.template.unSelectedIcon);
+                selectedHeroes.Remove(hero);
+            }
+            
+            selectedRoleNumsHint.text = $"人数限制:{selectedHeroes.Count}/{MaxSelectedRoleNums}";
+        }
         private void ShowEquipmentPopup()
         {
             equipmentPopup.style.display = DisplayStyle.Flex;
@@ -266,10 +380,21 @@ namespace GamePlay.UI
         {
             levelPopup.style.display = DisplayStyle.Flex;
         }
-        
-        private void OnLevelSelected(ChapterData chapter, LevelData level)
+        void SetRoleSelectPopup(DisplayStyle style)
         {
-            SceneLoader.Instance.LoadLevel(chapter, level);
+            roleSelectPopup.style.display = style;
+        }
+        private void EnterLevel(ChapterData chapter, LevelData level)
+        {
+            if (selectedHeroes.Count > 0)
+            {
+                levelContext.selectedHeroes = selectedHeroes;
+                SceneLoader.Instance.LoadLevel(chapter, level);
+            }
+            else
+            {
+                Debug.Log("至少选择一个上场的英雄！");
+            }
         }
         
         void OnEnterMode(GameModeData d)

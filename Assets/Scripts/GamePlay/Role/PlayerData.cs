@@ -1,18 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using GamePlay.Role.RoleData;
+using Newtonsoft.Json;
 
 namespace GamePlay.Role
 {
     public class PlayerData
     {
+        
         /// <summary>
         /// 解锁的角色
         /// </summary>
-        public List<RoleSaveData> ownedRoles = new ()
+        [JsonProperty(ObjectCreationHandling = ObjectCreationHandling.Replace)]
+        public Dictionary<RoleName, RoleSaveData> ownedRoles = new ()
         {
-            new RoleSaveData{roleName = RoleName.孙悟空, roleLevel = 1}
+            { RoleName.孙悟空,  new RoleSaveData{ roleName = RoleName.孙悟空, roleLevel = 1} }
         };
-
+        
         /// <summary>
         /// 游戏货币数量
         /// </summary>
@@ -34,5 +38,11 @@ namespace GamePlay.Role
         /// 存档时间
         /// </summary>
         public long saveTimestamp;
+        
+        [JsonProperty("saveTime")]
+        public string SaveTimeReadable => 
+            DateTimeOffset.FromUnixTimeSeconds(saveTimestamp)
+                .ToLocalTime()
+                .ToString("yyyy-MM-dd HH:mm:ss");
     }
 }

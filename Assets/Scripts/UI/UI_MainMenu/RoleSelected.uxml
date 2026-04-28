@@ -1,0 +1,22 @@
+<ui:UXML xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" noNamespaceSchemaLocation="../../../../UIElementsSchema/UIElements.xsd" editor-extension-mode="False">
+    <Style src="project://database/Assets/Scripts/UI/UI_MainMenu/RolSelected.uss?fileID=7433441132597879392&amp;guid=ddf23ebc2512cdb44824120fcb1bc26c&amp;type=3#RolSelected"/>
+    <ui:VisualElement name="roleSelect-popup" class="roleSelect-popup">
+        <ui:VisualElement name="bg-selected" class="bg-selected">
+            <ui:Label name="lab-hint" text="请选择上场的英雄" class="lab-hint"/>
+            <ui:VisualElement name="bg-roleExhibition" class="bg-roleExhibition">
+                <ui:ScrollView name="hero-scroll" mode="Horizontal" horizontal-scroller-visibility="Hidden" vertical-scroller-visibility="Hidden" class="hero-scroll">
+                    <ui:VisualElement name="hero-track" class="hero-track"/>
+                </ui:ScrollView>
+            </ui:VisualElement>
+            <ui:VisualElement name="scroll-bar" class="scroll-bar">
+                <ui:Button name="scroll-left" class="bt-scrollLeft"/>
+                <ui:Button name="scroll-right" class="bt-scrollRight"/>
+            </ui:VisualElement>
+            <ui:VisualElement name="bt-panel" class="bt-panel">
+                <ui:Button name="bt-cancel" text="取消" class="bt-cancel"/>
+                <ui:Button name="bt-ensure" text="确定" class="bt-ensure"/>
+            </ui:VisualElement>
+            <ui:Label name="lab-hintRoleNum" text="人数限制:2" class="lab-HintRoleNum"/>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

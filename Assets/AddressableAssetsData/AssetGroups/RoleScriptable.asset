@@ -14,13 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
   m_GroupName: RoleScriptable
   m_GUID: 63f06087a5c6299458406994747f7291
-  m_SerializeEntries:
-  - m_GUID: f845ec98e4498f14086e389f2db5458f
-    m_Address: "Assets/Scripts/GamePlay/Role/RoleData/\u5B59\u609F\u7A7A.asset"
-    m_ReadOnly: 0
-    m_SerializedLabels:
-    - RoleScriptable
-    FlaggedDuringContentUpdateRestriction: 0
+  m_SerializeEntries: []
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: a51ced51aba0d9f46824787ae4fb8678, type: 2}
   m_SchemaSet:

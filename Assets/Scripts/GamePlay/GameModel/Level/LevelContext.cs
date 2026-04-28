@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using GamePlay.Role;
 using UnityEngine;
 
 namespace GamePlay.GameModel.Level
@@ -7,5 +9,6 @@ namespace GamePlay.GameModel.Level
     {
         public ChapterData currentChapter;
         public LevelData currentLevel;
+        public List<RoleRegistry.RoleEntry> selectedHeroes;
     }
 }

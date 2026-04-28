@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using GamePlay.GameModel;
 using GamePlay.Role.RoleData;
 using UnityEditor;
 using UnityEngine;
@@ -46,9 +47,11 @@ namespace GamePlay.Role.RoleBoxCollider
         [SerializeField] private RoleBaseData.InstantHitData[] instantBoxesConfig;
         private readonly Dictionary<BoxColliderName, HitBoxData> colliderBoxes = new ();
         private readonly Dictionary<InstantBoxColliderName, RoleBaseData.InstantHitData> instantBoxes = new ();
+        
+        Collider2D[] enemies = new Collider2D[5];
+        ContactFilter2D filter;
         private void Start()
         {
-            enemyLayer = LayerMask.GetMask("Enemy");
             foreach (HitBoxData hitBox in hitBoxes)
             {
                 colliderBoxes.Add(hitBox.boxColliderName, hitBox);
@@ -61,20 +64,24 @@ namespace GamePlay.Role.RoleBoxCollider
             {
                 instantBoxes.Add(instantBox.instantBoxName, instantBox);
             }
+            
+            enemyLayer = LayerMask.GetMask("Enemy");
+            filter.SetLayerMask(enemyLayer);
+            filter.useLayerMask = true;
         }
 
-        public void EnableBox(BoxColliderName nm)
+        public void EnableBox(BoxColliderName boxName)
         {
             targets.Clear();
-            Collider2D c = GetCollider(nm);
-            if (c != null) c.enabled = true;
+            Collider2D coll2D = GetCollider(boxName);
+            if (coll2D != null) coll2D.enabled = true;
         }
 
-        public void DisableBox(BoxColliderName nm)
+        public void DisableBox(BoxColliderName boxName)
         {
             targets.Clear();
-            Collider2D c = GetCollider(nm);
-            if (c != null) c.enabled = false;
+            Collider2D coll2D = GetCollider(boxName);
+            if (coll2D != null) coll2D.enabled = false;
         }
         
         public void InstantHit(InstantBoxColliderName instantBoxName)
@@ -83,17 +90,27 @@ namespace GamePlay.Role.RoleBoxCollider
             if (instantData == null) return;
             
             Vector2 center = (Vector2)transform.position + new Vector2(instantData.Value.offset.x, instantData.Value.offset.y);
-            Collider2D[] hits = instantData.Value.useCircle
-                ? Physics2D.OverlapCircleAll(center, instantData.Value.radius, enemyLayer)
-                : Physics2D.OverlapBoxAll(center, instantData.Value.size, 0, enemyLayer);
-            if (hits.Length > 0)
+            int count = instantData.Value.useCircle
+                ? Physics2D.OverlapCircle(center, instantData.Value.radius, filter, enemies)
+                : Physics2D.OverlapBox(center, instantData.Value.size, 0f, filter, enemies);
+
+            for (int i = 0; i < count; i++)
+            {
+                if (enemies[i].TryGetComponent(out IDamageable target))
+                {
+                    target.TakeDamage(10000);
+                }
+            }
+#if UNITY_EDITOR            
+            if (count > 0)
             {
                 c = center;
                 s = instantData.Value.radius;
                 Debug.Log(instantData.Value.instantBoxName);
             }
+#endif
         }
-
+#if UNITY_EDITOR
         private Vector2 c;
         private float s;
         void OnDrawGizmos()
@@ -104,6 +121,7 @@ namespace GamePlay.Role.RoleBoxCollider
                 Handles.DrawWireDisc(c, Vector3.forward, s);
             }
         }
+#endif
         public void TriggerEnter2D(Collider2D other)
         {
             if (other.CompareTag("Enemy"))
@@ -120,9 +138,9 @@ namespace GamePlay.Role.RoleBoxCollider
             }
         }
         
-        private Collider2D GetCollider(BoxColliderName nm)
+        private Collider2D GetCollider(BoxColliderName boxName)
         {
-            return colliderBoxes.TryGetValue(nm, out HitBoxData data) ? data.collider : null;
+            return colliderBoxes.TryGetValue(boxName, out HitBoxData data) ? data.collider : null;
         }
         private RoleBaseData.InstantHitData? GetInstantBoxCollider(InstantBoxColliderName nm)
         {

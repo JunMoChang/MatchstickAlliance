@@ -1,4 +1,4 @@
-﻿namespace UI
+﻿namespace GamePlay.UI
 {
     [System.Serializable]
     public class NavButtonData

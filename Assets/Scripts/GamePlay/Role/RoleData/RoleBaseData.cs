@@ -6,6 +6,9 @@ namespace GamePlay.Role.RoleData
     public abstract class RoleBaseData : ScriptableObject
     {
         public RoleName roleName;
+        public Sprite unSelectedIcon;
+        public Sprite selectedIcon;
+        public int roleLevel;
         public float defaultHealth = 100f;
         public float defaultSpeed = 3.5f;
         public float defaultDamage = 10f;

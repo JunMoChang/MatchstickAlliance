@@ -3,9 +3,15 @@
     <UI:VisualElement name="level-bg">
         <UI:Label name="level-chapter-label" class="chapter-label"/>
         <UI:Button name="close-btn" class="close-btn"/>
-        <UI:VisualElement name="level-middle">
+        <UI:VisualElement name="level-middle" class="level-middle">
+            <UI:VisualElement name="level-content">
+                <UI:Button name="level-icon" class="levelNormal-icon"/>
+                <UI:Button name="level-icon" class="levelNormal-icon"/>
+                <UI:Button name="level-icon" class="levelNormal-icon"/>
+                <UI:Button name="level-icon" class="levelTower-icon"/>
+                <UI:Button name="level-icon" class="levelBoss-icon"/>
+            </UI:VisualElement>
             <UI:Button name="btn-prev" class="arrow-btn"/>
-            <UI:VisualElement name="level-content"/>
             <UI:Button name="btn-next" class="arrow-btn"/>
         </UI:VisualElement>
         <UI:VisualElement name="level-dots"/>

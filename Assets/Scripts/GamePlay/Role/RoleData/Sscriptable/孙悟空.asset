@@ -1,0 +1,74 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67fbdcad37aa49b58ffa73b02099a254, type: 3}
+  m_Name: "\u5B59\u609F\u7A7A"
+  m_EditorClassIdentifier: Assembly-CSharp::GamePlay.Role.RoleData.SunWuKongData
+  roleName: 0
+  unSelectedIcon: {fileID: 21300000, guid: 9e917782210c1364c9af3f6569d60354, type: 3}
+  selectedIcon: {fileID: 21300000, guid: d56fd9bf2cf0532469a089baa48f32a1, type: 3}
+  roleLevel: 1
+  defaultHealth: 200
+  defaultSpeed: 3.5
+  defaultDamage: 20
+  healthGrowth: 0
+  damageGrowth: 0
+  skills:
+  - icon: {fileID: 21300000, guid: 4ea86551c7c85be49a881adefd0c3b2e, type: 3}
+    baseDamage: 15
+    baseCooldown: 3
+  - icon: {fileID: 21300000, guid: 0262a8b2e08647641ae3e1e17e1e0da2, type: 3}
+    baseDamage: 20
+    baseCooldown: 5
+  - icon: {fileID: 21300000, guid: 885ccba29c78c634fba001c0e0625704, type: 3}
+    baseDamage: 12
+    baseCooldown: 8
+  - icon: {fileID: 21300000, guid: ba01c4f78398c4f478815528892cf675, type: 3}
+    baseDamage: 10
+    baseCooldown: 14
+  maxCombos: 5
+  skill2JumpForceX: 0.6
+  skill2JumpForceY: 4.6
+  motionCommands:
+  - motionName: 0
+    motionData:
+    - motionType: 1
+      velocity: {x: 0, y: 0}
+      offset: {x: 0.25, y: 0.1}
+      force: {x: 0, y: 0}
+  - motionName: 1
+    motionData:
+    - motionType: 0
+      velocity: {x: 0, y: -4.6}
+      offset: {x: 0, y: 0}
+      force: {x: 0, y: 0}
+  - motionName: 2
+    motionData:
+    - motionType: 1
+      velocity: {x: 0, y: 0}
+      offset: {x: 2.2, y: 0}
+      force: {x: 0, y: 0}
+    - motionType: 0
+      velocity: {x: 1.5, y: 2.6}
+      offset: {x: 0, y: 0}
+      force: {x: 0, y: 0}
+  - motionName: 8
+    motionData:
+    - motionType: 2
+      velocity: {x: 0, y: 0}
+      offset: {x: 0, y: 0}
+      force: {x: 2.1, y: 3.6}
+  - motionName: 9
+    motionData:
+    - motionType: 0
+      velocity: {x: 2.3, y: -2}
+      offset: {x: 0, y: 0}
+      force: {x: 0, y: 0}

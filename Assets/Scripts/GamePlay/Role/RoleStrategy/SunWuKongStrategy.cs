@@ -143,6 +143,7 @@ namespace GamePlay.Role.RoleStrategy
                     break;
             }
         }
+        
         private void Skill1Logic(int index)
         {
             skillTimers[index] = template.skillCooldowns[index];
