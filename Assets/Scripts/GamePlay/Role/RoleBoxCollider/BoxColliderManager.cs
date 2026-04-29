@@ -1,7 +1,9 @@
 ﻿using System.Collections.Generic;
 using GamePlay.GameModel;
 using GamePlay.Role.RoleData;
+#if UNITY_EDITOR
 using UnityEditor;
+#endif
 using UnityEngine;
 
 namespace GamePlay.Role.RoleBoxCollider

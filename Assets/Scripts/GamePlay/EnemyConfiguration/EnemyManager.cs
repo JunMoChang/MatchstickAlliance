@@ -10,7 +10,6 @@ namespace GamePlay.EnemyConfiguration
 {
     public class EnemyManager : MonoBehaviour
     {
-        [SerializeField] private LevelContext levelContext;
         [SerializeField] private float maxOffset;
         private Transform player;
         
@@ -36,7 +35,7 @@ namespace GamePlay.EnemyConfiguration
         
         private IEnumerator WaveSequenceLoop()
         {
-            WaveData[] waves = levelContext.currentLevel.waves;
+            WaveData[] waves = LevelContext.Instance.currentLevel.waves;
 
             while (currentWaveIndex < waves.Length)
             {
@@ -78,7 +77,7 @@ namespace GamePlay.EnemyConfiguration
         
         private void SpawnWave(WaveData wave)
         {
-            int chapter = levelContext.currentChapter.chapter;
+            int chapter = LevelContext.Instance.currentChapter.chapter;
 
             foreach (LevelEnemyConfiguration cfg in wave.enemies)
             {

@@ -12,9 +12,8 @@ namespace GamePlay.Role
         public static PlayerController Instance {get; private set;}
         
         [SerializeField] private PlayerDataManager playerDataManager;
-        [SerializeField] private RoleRegistry roleRegistry; 
+        [SerializeField] private RoleRegistry roleRegistry;
         [SerializeField] private PlayerInputHandler playerInputHandler;
-        [SerializeField] private LevelContext  levelContext;
         private readonly List<GameObject> roleInstances = new ();
         
         private void Awake()
@@ -46,19 +45,22 @@ namespace GamePlay.Role
         
         private void InitSelectedRoles()
         {
-            List<RoleRegistry.RoleEntry> selectedRole = levelContext.selectedHeroes;
-            
+            List<RoleRegistry.RoleEntry> selectedRole = LevelContext.Instance.selectedHeroes;
+
             IRoleStrategy[] strategies = new IRoleStrategy[selectedRole.Count];
             for (int i = 0; i < selectedRole.Count; i++)
             {
-                RoleRegistry.RoleEntry? entry = selectedRole[i];
-                
-                GameObject instance = Instantiate(entry.Value.prefab, transform);
+                RoleRegistry.RoleEntry entry = selectedRole[i];
+
+                GameObject instance = Instantiate(entry.prefab, transform);
                 roleInstances.Add(instance);
                 RoleContext context = instance.GetComponentInChildren<RoleContext>();
-                RoleSaveData saveData = playerDataManager.PlayerData.ownedRoles[entry.Value.template.roleName];
-                context.Init(entry.Value.template, saveData);
-                strategies[i] = RoleFactory.CreateRoleStrategy(entry.Value.roleName, context);
+                if (!playerDataManager.PlayerData.ownedRoles.TryGetValue(entry.template.roleName, out RoleSaveData saveData))
+                {
+                    saveData = new RoleSaveData { roleName = entry.template.roleName, roleLevel = 1 };
+                }
+                context.Init(entry.template, saveData);
+                strategies[i] = RoleFactory.CreateRoleStrategy(entry.roleName, context);
             }
             
             playerInputHandler.Init(strategies);

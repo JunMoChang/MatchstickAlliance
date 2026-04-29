@@ -11,8 +11,6 @@ namespace GamePlay.UI
         [SerializeField] private Button btPause;
         [SerializeField] private Button btExit;
         [SerializeField] private Button btReset;
-        
-        [SerializeField] private LevelContext levelContext;
         void OnEnable()
         {
             btPause.onClick.AddListener(PauseButtonOnClick);
@@ -29,17 +27,21 @@ namespace GamePlay.UI
         
         private void PauseButtonOnClick()
         {
-            pauseGo.SetActive(!pauseGo.activeInHierarchy);
+            bool isPaused = !pauseGo.activeInHierarchy;
+            pauseGo.SetActive(isPaused);
+            Time.timeScale = isPaused ? 0f : 1f;
         }
-        
+
         private void ExitButtonOnClick()
         {
+            Time.timeScale = 1f;
             SceneLoader.Instance.LoadMainMenu();
         }
 
         private void ResetButtonOnClick()
         {
-            SceneLoader.Instance.LoadLevel(levelContext.currentChapter, levelContext.currentLevel);
+            Time.timeScale = 1f;
+            SceneLoader.Instance.LoadLevel(LevelContext.Instance.currentChapter, LevelContext.Instance.currentLevel);
         }
     }
 }

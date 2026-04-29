@@ -12,6 +12,8 @@ namespace GamePlay.GameModel.Level
         
         public static Action<Action> OnLevelEnded;
 
+        private bool levelEndInProgress;
+
         void Awake()
         {
             if(Instance == null)
@@ -25,18 +27,20 @@ namespace GamePlay.GameModel.Level
         }
         private void FindObject()
         {
+            levelEndInProgress = false;
             EnemyManager enemyManager = FindAnyObjectByType<EnemyManager>();
             if(enemyManager != null)
                 enemyManager.OnAllWavesCleared += TriggerLevelEnd;
         }
         private void TriggerLevelEnd()
         {
+            if (levelEndInProgress) return;
+            levelEndInProgress = true;
             Debug.Log("LevelEnd");
             OnLevelEnded?.Invoke(OnRewardFinished);
         }
         private void OnRewardFinished()
         {
-            // 奖励系统回调到这里，此时才弹窗
             UIManager.ShowLevelEndedPanel();
         }
         public static class LevelScaler

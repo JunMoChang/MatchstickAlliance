@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using GamePlay.GameModel.Level;
 using GamePlay.Role;
 using GamePlay.Scene;
-using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -21,7 +20,6 @@ namespace GamePlay.UI
         [Header("玩法数据")]
         [SerializeField] List<GameModeData> gameModes = new();
         [SerializeField] private List<ChapterData> levelChapters;
-        [SerializeField] private LevelContext levelContext;
         
         [Header("导航按钮")]
         [SerializeField] List<NavButtonData> navButtons = new();
@@ -117,13 +115,13 @@ namespace GamePlay.UI
             btnNext = levelBg.Q<Button>("btn-next");
             
             List<Button> levelButtons = levelContent.Query<Button>("level-icon").ToList();
-            for (int i = 0; i < levelChapters[0].levelData.Length; i++)
+            for (int i = 0; i < levelButtons.Count; i++)
             {
                 int index = i;
                 levelButtons[i].RegisterCallback<ClickEvent>(_ =>
                 {
                     SetRoleSelectPopup(DisplayStyle.Flex);
-                    currentLevel = levelChapters[0].levelData[index].levelIndex;
+                    currentLevel = levelChapters[currentChapter].levelData[index].levelIndex;
                 });
             }
             
@@ -163,6 +161,15 @@ namespace GamePlay.UI
                 dot.AddToClassList("chapter-dot");
                 if (i == chapter) dot.AddToClassList("chapter-dot--active");
                 levelDots.Add(dot);
+            }
+
+            ChapterData currentChapterData = levelChapters[chapter];
+            List<Button> levelButtons = levelContent.Query<Button>("level-icon").ToList();
+            for (int i = 0; i < levelButtons.Count; i++)
+            {
+                levelButtons[i].style.display = i < currentChapterData.levelData.Length
+                    ? DisplayStyle.Flex
+                    : DisplayStyle.None;
             }
         }
         
@@ -388,7 +395,7 @@ namespace GamePlay.UI
         {
             if (selectedHeroes.Count > 0)
             {
-                levelContext.selectedHeroes = selectedHeroes;
+                LevelContext.Instance.selectedHeroes = selectedHeroes;
                 SceneLoader.Instance.LoadLevel(chapter, level);
             }
             else

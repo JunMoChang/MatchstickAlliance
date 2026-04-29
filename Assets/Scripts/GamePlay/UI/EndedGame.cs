@@ -11,8 +11,6 @@ namespace GamePlay.UI
         [SerializeField] private Button exitButton;
         [SerializeField] private Button againButton;
         [SerializeField] private Button nextButton;
-        
-        [SerializeField] private LevelContext levelContext;
 
         public void Show()
         {
@@ -40,16 +38,16 @@ namespace GamePlay.UI
 
         private void AgainButtonOnClick()
         {
-            SceneLoader.Instance.LoadLevel(levelContext.currentChapter, levelContext.currentLevel);
+            SceneLoader.Instance.LoadLevel(LevelContext.Instance.currentChapter, LevelContext.Instance.currentLevel);
         }
 
         private void NextButtonOnClick()
         {
-            LevelData nextLevel = GetNextLevel(levelContext.currentChapter, levelContext.currentLevel);
-                
-            if (nextLevel != null) 
-                SceneLoader.Instance.LoadLevel(levelContext.currentChapter, nextLevel);
-            else 
+            LevelData nextLevel = GetNextLevel(LevelContext.Instance.currentChapter, LevelContext.Instance.currentLevel);
+
+            if (nextLevel != null)
+                SceneLoader.Instance.LoadLevel(LevelContext.Instance.currentChapter, nextLevel);
+            else
                 SceneLoader.Instance.LoadMainMenu();
         }
         
@@ -57,7 +55,7 @@ namespace GamePlay.UI
         {
             int currentIndex = currentLevel.levelIndex + 1;
 
-            return currentIndex <= currentChapter.levelData.Length ? currentChapter.levelData[currentIndex] : null;
+            return currentIndex < currentChapter.levelData.Length ? currentChapter.levelData[currentIndex] : null;
         }
         
     }

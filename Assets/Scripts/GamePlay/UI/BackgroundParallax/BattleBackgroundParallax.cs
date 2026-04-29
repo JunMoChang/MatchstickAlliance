@@ -11,10 +11,9 @@ namespace GamePlay.UI.BackgroundParallax
 
         [Header("云")]
         [SerializeField] RectTransform[] clouds;
-        [SerializeField] float[] cloudSpeeds = { 80f, 60f, 50f, 100f };
-        
+        [SerializeField] float[] cloudSpeeds;
+
         private const float FarActor  = 0.15f;
-        private const float MiddleActor = 0.25f;
         private const float NearActor = 0.35f;
 
         private float canvasWidth;
@@ -44,12 +43,13 @@ namespace GamePlay.UI.BackgroundParallax
         {
             for (int i = 0; i < clouds.Length; i++)
             {
-                cloudX[i] -= cloudSpeeds[i] * Time.deltaTime;
-                
+                float speed = i < cloudSpeeds.Length ? cloudSpeeds[i] : 60f;
+                cloudX[i] -= speed * Time.deltaTime;
+
                 float halfCanvas = canvasWidth * 0.5f;
                 float cloudWidth = clouds[i].rect.width;
                 if (cloudX[i] + cloudWidth * 0.5f < -halfCanvas)
-                    cloudX[i] = cloudWidth + halfCanvas;
+                    cloudX[i] = halfCanvas + cloudWidth * 0.5f;
 
                 clouds[i].anchoredPosition = new Vector2(cloudX[i], clouds[i].anchoredPosition.y);
             }

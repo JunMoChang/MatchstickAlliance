@@ -9,8 +9,7 @@ namespace GamePlay.Scene
     public class SceneLoader : MonoBehaviour
     {
         public static SceneLoader Instance { get; private set; }
-        
-        [SerializeField] private LevelContext levelContext;
+
         [SerializeField] string loadingSceneName = "LoadingScene";
         
         /// <summary>
@@ -94,8 +93,8 @@ namespace GamePlay.Scene
         {
             OnLevelExit?.Invoke();
             isReturningToMenu = false;
-            levelContext.currentChapter = chapter;
-            levelContext.currentLevel = level;
+            LevelContext.Instance.currentChapter = chapter;
+            LevelContext.Instance.currentLevel = level;
             StopAllCoroutines();
             StartCoroutine(LoadWithTransition(chapter.sceneName));
         }
@@ -143,15 +142,25 @@ namespace GamePlay.Scene
         }
 
         private void TriggerPrepare(Action actionDel)
-        { 
+        {
             if (actionDel == null) return;
             Delegate[] delegates = actionDel.GetInvocationList();
             if(delegates.Length <= 0) return;
             foreach (Delegate del in delegates)
             {
                 Action func = (Action)del;
-                func();
-                pendingReadyCount--;
+                try
+                {
+                    func();
+                }
+                catch (Exception e)
+                {
+                    Debug.LogError($"SceneLoader: subscriber threw in prepare phase: {e}");
+                }
+                finally
+                {
+                    pendingReadyCount--;
+                }
             }
         }
         
