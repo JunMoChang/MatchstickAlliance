@@ -9,21 +9,22 @@ namespace GamePlay.Role
 {
     public class PlayerController : MonoBehaviour
     {
-        public static PlayerController Instance {get; private set;}
-        
         [SerializeField] private PlayerDataManager playerDataManager;
         [SerializeField] private RoleRegistry roleRegistry;
         [SerializeField] private PlayerInputHandler playerInputHandler;
         private readonly List<GameObject> roleInstances = new ();
-        
+
+        private static bool exists;
+
         private void Awake()
         {
-            if (Instance == null)
+            if (exists)
             {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
+                Destroy(gameObject);
+                return;
             }
-            else Destroy(gameObject);
+            exists = true;
+            DontDestroyOnLoad(gameObject);
         }
         
         private void Start()
@@ -69,7 +70,8 @@ namespace GamePlay.Role
 
         private void SceneLoaded()
         {
-            if(SpawnPoint.Instance != null) transform.position = SpawnPoint.Instance.transform.position;
+            SpawnPoint sp = FindAnyObjectByType<SpawnPoint>();
+            if(sp != null) transform.position = sp.transform.position;
         }
 
         public void UnlockRole(RoleSaveData saveData)

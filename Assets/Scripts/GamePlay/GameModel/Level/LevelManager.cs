@@ -1,28 +1,19 @@
 ﻿using System;
 using GamePlay.EnemyConfiguration;
 using GamePlay.Scene;
-using GamePlay.UI;
 using UnityEngine;
 
 namespace GamePlay.GameModel.Level
 {
     public class LevelManager : MonoBehaviour
     {
-        public LevelManager Instance { get; private set; }
-        
-        public static Action<Action> OnLevelEnded;
+        public static event Action<Action> OnLevelEnded;
+        public static event Action OnRewardCompleted;
 
         private bool levelEndInProgress;
 
         void Awake()
         {
-            if(Instance == null)
-            {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
-            else Destroy(gameObject);
-
             SceneLoader.OnLevelLoaded += FindObject;
         }
         private void FindObject()
@@ -36,12 +27,11 @@ namespace GamePlay.GameModel.Level
         {
             if (levelEndInProgress) return;
             levelEndInProgress = true;
-            Debug.Log("LevelEnd");
             OnLevelEnded?.Invoke(OnRewardFinished);
         }
         private void OnRewardFinished()
         {
-            UIManager.ShowLevelEndedPanel();
+            OnRewardCompleted?.Invoke();
         }
         public static class LevelScaler
         {

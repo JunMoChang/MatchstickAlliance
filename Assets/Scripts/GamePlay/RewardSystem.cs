@@ -7,17 +7,14 @@ namespace GamePlay
 {
     public class RewardSystem : MonoBehaviour
     {
-        public static RewardSystem Instance { get; private set; }
         void Awake()
         {
-            if (Instance == null)
-            {
-                Instance = this;
-                DontDestroyOnLoad(gameObject);
-            }
-            else Destroy(gameObject);
-            
             LevelManager.OnLevelEnded += HandleReward;
+        }
+
+        void OnDestroy()
+        {
+            LevelManager.OnLevelEnded -= HandleReward;
         }
 
         private void HandleReward(Action onFinished)

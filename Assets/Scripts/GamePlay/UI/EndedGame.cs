@@ -22,6 +22,7 @@ namespace GamePlay.UI
             exitButton.onClick.AddListener(ExitButtonOnClick);
             againButton.onClick.AddListener(AgainButtonOnClick);
             nextButton.onClick.AddListener(NextButtonOnClick);
+            LevelManager.OnRewardCompleted += Show;
         }
 
         void OnDisable()
@@ -29,6 +30,7 @@ namespace GamePlay.UI
             exitButton.onClick.RemoveListener(ExitButtonOnClick);
             againButton.onClick.RemoveListener(AgainButtonOnClick);
             nextButton.onClick.RemoveListener(NextButtonOnClick);
+            LevelManager.OnRewardCompleted -= Show;
         }
 
         private void ExitButtonOnClick()
