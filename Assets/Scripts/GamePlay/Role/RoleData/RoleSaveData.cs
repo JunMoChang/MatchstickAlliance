@@ -2,9 +2,17 @@
 {
     public class RoleSaveData
     {
+        /// <summary>
+        /// 持久化属性
+        /// </summary>
         public RoleName roleName;
         public int roleLevel;
-        
-        public int[] skillsLevel = new []{1,1,1,1};
+        public float health;
+        public float damage;
+        public float speed;
+        public int[] skillsLevel;
+        public float[] skillsDamages;
+        public float[] skillsCooldowns;
+        public float[] damageIntervals;
     }
 }

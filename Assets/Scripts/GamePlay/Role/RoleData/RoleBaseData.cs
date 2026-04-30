@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using GamePlay.Role.RoleBoxCollider;
+using UnityEngine;
 
 namespace GamePlay.Role.RoleData
 {
@@ -6,26 +8,30 @@ namespace GamePlay.Role.RoleData
     public abstract class RoleBaseData : ScriptableObject
     {
         public RoleName roleName;
-        public Sprite unSelectedIcon;
-        public Sprite selectedIcon;
         public int roleLevel;
         public float defaultHealth = 100f;
         public float defaultSpeed = 3.5f;
         public float defaultDamage = 10f;
         public float healthGrowth;
         public float damageGrowth;
-        
+        public float[] skillDamageGrowth;
         public SkillData[] skills;
+        public Sprite unSelectedIcon;
+        public Sprite selectedIcon;
         /// <summary>
         /// 技能数据
         /// </summary>
-        [System.Serializable]
+        [Serializable]
         public struct SkillData
         {
             /// <summary>
             /// 技能图标
             /// </summary>
             public Sprite icon;
+            /// <summary>
+            /// 技能等级
+            /// </summary>
+            public int level;
             /// <summary>
             /// 基础伤害
             /// </summary>
@@ -34,30 +40,40 @@ namespace GamePlay.Role.RoleData
             /// 基础冷却
             /// </summary>
             public float baseCooldown;
+            /// <summary>
+            /// 伤害间隔（秒）,0 = 仅进入时伤害一次
+            /// </summary>
+            public float damageInterval;
+        }
+        
+        /// <summary>
+        /// 持续攻击碰撞检测数据
+        /// </summary>
+        [Serializable]
+        public struct ContinuousHitBoxData
+        {
+            public BoxColliderManager.BoxColliderName boxColliderName;
+            public Collider2D collider;
+            [Tooltip("技能索引，-1 使用默认伤害")]
+            public int skillIndex;
         }
         
         /// <summary>
         /// 瞬间攻击碰撞检测数据
         /// </summary>
-        [System.Serializable]
-        public struct InstantHitData
+        [Serializable]
+        public struct InstantHitBoxData
         {
-            public RoleBoxCollider.BoxColliderManager.InstantBoxColliderName instantBoxName;
+            public BoxColliderManager.InstantBoxColliderName instantBoxName;
             public Vector2 offset;
             public Vector2 size;
             public float radius;
             public bool useCircle;
-            public InstantHitData(RoleBoxCollider.BoxColliderManager.InstantBoxColliderName _name, Vector2 _offset, Vector2 _size, float _radius, bool _useCircle)
-            {
-                instantBoxName = _name;
-                offset = _offset;
-                size = _size;
-                radius = _radius;
-                useCircle = _useCircle;
-            }
+            [Tooltip("技能索引，普攻或无需技能伤害时设为 -1，将使用默认伤害")]
+            public int skillIndex;
         }
         
-        [System.Serializable]
+        [Serializable]
         public struct MotionCommand
         {
             public MotionName motionName;
@@ -124,5 +140,55 @@ namespace GamePlay.Role.RoleData
                 AddForce,
             }
         }
+
+        public void FirstLoadSaveData(RoleSaveData save)
+        {
+            save.health = defaultHealth;
+            save.damage = defaultDamage;
+            save.speed = defaultSpeed;
+        
+            int length = skills.Length;
+            save.skillsLevel = new int[length];
+            save.skillsDamages = new float[length];
+            save.skillsCooldowns = new float[length];
+            save.damageIntervals = new float[length];
+            for (int i = 0; i < length; i++)
+            {
+                save.skillsDamages[i] = skills[i].baseDamage;
+                save.skillsCooldowns[i] = skills[i].baseCooldown;
+                save.damageIntervals[i] = skills[i].damageInterval;
+            }
+        }
+        /// <summary>
+        /// 更新角色属性
+        /// </summary>
+        /// <param name="save">持久化数据类</param>
+        /// <param name="enhance">等级提升数量</param>
+        public void RefreshSaveData(RoleSaveData save, int enhance)
+        {
+            save.roleLevel += enhance;
+            save.health = defaultHealth * (1 + healthGrowth) * enhance;
+            save.damage = defaultDamage * (1 + damageGrowth) *  enhance;
+            save.speed = defaultSpeed;
+        }
+        /// <summary>
+        /// 更新角色技能属性
+        /// </summary>
+        /// <param name="data">持久化数据类</param>
+        /// <param name="skillIndex">目标技能</param>
+        /// <param name="enhance">等级提升数量</param>
+        public void RefreshSkillsSaveData(RoleSaveData data, int skillIndex, int enhance)
+        {
+            if (data.skillsCooldowns == null || data.skillsCooldowns.Length < skills.Length) data.skillsCooldowns = new float[skills.Length];
+            if (data.skillsDamages == null || data.skillsDamages.Length < skills.Length) data.skillsDamages = new float[skills.Length];
+            if (data.damageIntervals == null || data.damageIntervals.Length < skills.Length) data.damageIntervals = new float[skills.Length];
+
+            data.skillsLevel[skillIndex] += enhance;
+            data.skillsDamages[skillIndex] = skills[skillIndex].baseDamage * (1 + damageGrowth) * (1 + (data.skillsLevel[skillIndex] - 1) * 0.15f);
+            data.skillsCooldowns[skillIndex] = skills[skillIndex].baseCooldown;
+            data.damageIntervals[skillIndex] = skills[skillIndex].damageInterval;
+        }
     }
+
+    
 }

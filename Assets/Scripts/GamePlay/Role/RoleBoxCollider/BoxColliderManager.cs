@@ -36,33 +36,41 @@ namespace GamePlay.Role.RoleBoxCollider
             InstantBox_Normal_5,
         }
         
-        [System.Serializable]
-        public struct HitBoxData
-        {
-            public BoxColliderName boxColliderName;
-            public Collider2D collider;
-        }
         
         private int enemyLayer;
+        private RoleRuntimeData runtimeData;
         private HashSet<Collider2D> targets = new ();
-        [SerializeField] private HitBoxData[] hitBoxes;
-        [SerializeField] private RoleBaseData.InstantHitData[] instantBoxesConfig;
-        private readonly Dictionary<BoxColliderName, HitBoxData> colliderBoxes = new ();
-        private readonly Dictionary<InstantBoxColliderName, RoleBaseData.InstantHitData> instantBoxes = new ();
+        private readonly Dictionary<Collider2D, float> lastDamageTime = new ();
+        
+        [SerializeField] private RoleBaseData.ContinuousHitBoxData[] continuousBoxesConfig;
+        [SerializeField] private RoleBaseData.InstantHitBoxData[] instantBoxesConfig;
+        /// <summary>
+        /// 持续检测的碰撞盒
+        /// </summary>
+        private readonly Dictionary<BoxColliderName, RoleBaseData.ContinuousHitBoxData> continuousBoxes = new ();
+        /// <summary>
+        /// 瞬时检测的碰撞盒
+        /// </summary>
+        private readonly Dictionary<InstantBoxColliderName, RoleBaseData.InstantHitBoxData> instantBoxes = new ();
         
         Collider2D[] enemies = new Collider2D[5];
         ContactFilter2D filter;
+        public void InitRuntime(RoleRuntimeData _runtimeData)
+        {
+            runtimeData = _runtimeData;
+        }
+
         private void Start()
         {
-            foreach (HitBoxData hitBox in hitBoxes)
+            foreach (RoleBaseData.ContinuousHitBoxData hitBox in continuousBoxesConfig)
             {
-                colliderBoxes.Add(hitBox.boxColliderName, hitBox);
+                continuousBoxes.Add(hitBox.boxColliderName, hitBox);
                 
                 BoxColliderReporter reporter = hitBox.collider.gameObject.AddComponent<BoxColliderReporter>();
-                reporter.SetBoxColliderManager(this);
+                reporter.Init(this, hitBox.boxColliderName);
             }
 
-            foreach (RoleBaseData.InstantHitData instantBox in instantBoxesConfig)
+            foreach (RoleBaseData.InstantHitBoxData instantBox in instantBoxesConfig)
             {
                 instantBoxes.Add(instantBox.instantBoxName, instantBox);
             }
@@ -75,6 +83,7 @@ namespace GamePlay.Role.RoleBoxCollider
         public void EnableBox(BoxColliderName boxName)
         {
             targets.Clear();
+            lastDamageTime.Clear();
             Collider2D coll2D = GetCollider(boxName);
             if (coll2D != null) coll2D.enabled = true;
         }
@@ -82,28 +91,30 @@ namespace GamePlay.Role.RoleBoxCollider
         public void DisableBox(BoxColliderName boxName)
         {
             targets.Clear();
+            lastDamageTime.Clear();
             Collider2D coll2D = GetCollider(boxName);
             if (coll2D != null) coll2D.enabled = false;
         }
         
         public void InstantHit(InstantBoxColliderName instantBoxName)
         {
-            RoleBaseData.InstantHitData? instantData = GetInstantBoxCollider(instantBoxName);
+            RoleBaseData.InstantHitBoxData? instantData = GetInstantBoxCollider(instantBoxName);
             if (instantData == null) return;
-            
+
             Vector2 center = (Vector2)transform.position + new Vector2(instantData.Value.offset.x, instantData.Value.offset.y);
             int count = instantData.Value.useCircle
                 ? Physics2D.OverlapCircle(center, instantData.Value.radius, filter, enemies)
                 : Physics2D.OverlapBox(center, instantData.Value.size, 0f, filter, enemies);
 
+            float damage = GetDamage(instantData.Value.skillIndex);
             for (int i = 0; i < count; i++)
             {
                 if (enemies[i].TryGetComponent(out IDamageable target))
                 {
-                    target.TakeDamage(10000);
+                    target.TakeDamage(damage);
                 }
             }
-#if UNITY_EDITOR            
+#if UNITY_EDITOR
             if (count > 0)
             {
                 c = center;
@@ -112,6 +123,7 @@ namespace GamePlay.Role.RoleBoxCollider
             }
 #endif
         }
+        
 #if UNITY_EDITOR
         private Vector2 c;
         private float s;
@@ -124,29 +136,64 @@ namespace GamePlay.Role.RoleBoxCollider
             }
         }
 #endif
-        public void TriggerEnter2D(Collider2D other)
+
+        public void TriggerEnter2D(BoxColliderName boxName, Collider2D other)
         {
-            if (other.CompareTag("Enemy"))
-            {
-                Debug.Log("敌人受到攻击");
-            }
+            if (!targets.Add(other)) return;
+            if (!other.TryGetComponent(out IDamageable target)) return;
+
+            RoleBaseData.ContinuousHitBoxData? data = GetContinuousHitBoxData(boxName);
+            if (data == null) return;
+
+            float damage = GetDamage(data.Value.skillIndex);
+            target.TakeDamage(damage);
+            lastDamageTime[other] = Time.time;
         }
 
-        public void TriggerStay2D(Collider2D other)
+        public void TriggerStay2D(BoxColliderName boxName, Collider2D other)
         {
-            if (other.CompareTag("Enemy"))
+            if (!targets.Contains(other)) return;
+
+            RoleBaseData.ContinuousHitBoxData? data = GetContinuousHitBoxData(boxName);
+            if (data == null) return;
+
+            int skillIndex = data.Value.skillIndex;
+            if (skillIndex < 0 || skillIndex >= runtimeData.skillRuntimeData.Length) return;
+
+            float interval = runtimeData.skillRuntimeData[skillIndex].damageInterval;
+            if (interval <= 0f) return;
+
+            if (!lastDamageTime.TryGetValue(other, out float lastTime)) return;
+            if (Time.time - lastTime < interval) return;
+
+            float damage = GetDamage(skillIndex);
+            if (other.TryGetComponent(out IDamageable target))
             {
-                Debug.Log("敌人受到攻击");
+                target.TakeDamage(damage);
+                lastDamageTime[other] = Time.time;
             }
         }
         
         private Collider2D GetCollider(BoxColliderName boxName)
         {
-            return colliderBoxes.TryGetValue(boxName, out HitBoxData data) ? data.collider : null;
+            return continuousBoxes.TryGetValue(boxName, out RoleBaseData.ContinuousHitBoxData data) ? data.collider : null;
         }
-        private RoleBaseData.InstantHitData? GetInstantBoxCollider(InstantBoxColliderName nm)
+
+        private RoleBaseData.ContinuousHitBoxData? GetContinuousHitBoxData(BoxColliderName boxName)
         {
-            return instantBoxes.TryGetValue(nm, out RoleBaseData.InstantHitData data) ? data : null;
+            return continuousBoxes.TryGetValue(boxName, out RoleBaseData.ContinuousHitBoxData data) ? data : null;
+        }
+        private RoleBaseData.InstantHitBoxData? GetInstantBoxCollider(InstantBoxColliderName nm)
+        {
+            return instantBoxes.TryGetValue(nm, out RoleBaseData.InstantHitBoxData data) ? data : null;
+        }
+
+        private float GetDamage(int skillIndex)
+        {
+            if (runtimeData == null) return 0f;
+            if (skillIndex >= 0 && skillIndex < runtimeData.skillRuntimeData.Length)
+                return runtimeData.skillRuntimeData[skillIndex].damage;
+            return runtimeData.damage;
         }
     }
 }

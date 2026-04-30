@@ -20,7 +20,7 @@ namespace GamePlay.Role.RoleStrategy
         private bool pendingAttack;
         private bool facingRight = true;
         
-        private float[] skillTimers = new float[4];
+        private RoleRuntimeData runtimeData;
         private bool skill2Active;
  
         Dictionary<RoleBaseData.MotionName, RoleBaseData.MotionData[]> motionData = new ();
@@ -28,6 +28,7 @@ namespace GamePlay.Role.RoleStrategy
         {
             roleContext = _context;
             template = (SunWuKongData)roleContext.Template;
+            runtimeData = roleContext.RuntimeData;
             animator = roleContext.animator;
             rb = roleContext.rb;
             boxColliderManager = roleContext.boxColliderManager;
@@ -42,7 +43,10 @@ namespace GamePlay.Role.RoleStrategy
         public void Tick()
         {
             CombosWindows();
-            UpdateCooldowns();
+            foreach (RoleRuntimeData.RuntimeSkillData skillData in runtimeData.skillRuntimeData)
+            {
+                skillData.Tick(Time.deltaTime);
+            }
             UpdateSkill2();
         }
 
@@ -69,7 +73,7 @@ namespace GamePlay.Role.RoleStrategy
         private void ApplyMove()
         {
             if (moveInput.x != 0)
-                rb.MovePosition(new Vector2(rb.position.x + moveInput.x * template.defaultSpeed * Time.fixedDeltaTime, rb.position.y));
+                rb.MovePosition(new Vector2(rb.position.x + moveInput.x * runtimeData.speed * Time.fixedDeltaTime, rb.position.y));
         }
         
         public void Attack(UnityEngine.InputSystem.InputAction.CallbackContext context)
@@ -125,34 +129,24 @@ namespace GamePlay.Role.RoleStrategy
    
         public void UseSkill(int index)
         {
-            if (skillTimers[index] > 0f) return;
-            skillTimers[index] = template.skillCooldowns[index];
+            if (!runtimeData.skillRuntimeData[index].IsReady) return;
+            runtimeData.skillRuntimeData[index].TriggerCooldown();
             switch (index)
             {
-                case 0:
-                    Skill1Logic(index);
-                    break;
-                case 1:
-                    Skill2Logic(index);
-                    break;
-                case 2:
-                    Skill3Logic(index);
-                    break;
-                case 3:
-                    Skill4Logic(index);
-                    break;
+                case 0: Skill1Logic(); break;
+                case 1: Skill2Logic(); break;
+                case 2: Skill3Logic(); break;
+                case 3: Skill4Logic(); break;
             }
         }
         
-        private void Skill1Logic(int index)
+        private void Skill1Logic()
         {
-            skillTimers[index] = template.skillCooldowns[index];
             animator.SetTrigger(AnimationParameters.Skill_1);
         }
-        private void Skill2Logic(int index)
+        private void Skill2Logic()
         {
             skill2Active = true;
-            skillTimers[index] = template.skillCooldowns[index];
             animator.SetTrigger(AnimationParameters.Skill_2);
             rb.linearVelocity = new Vector2(template.skill2JumpForceX, template.skill2JumpForceY);
         }
@@ -173,14 +167,12 @@ namespace GamePlay.Role.RoleStrategy
                 }
             }
         }
-        private void Skill3Logic(int index)
+        private void Skill3Logic()
         {
-            skillTimers[index] = template.skillCooldowns[index];
             animator.SetTrigger(AnimationParameters.Skill_3);
         }
-        private void Skill4Logic(int index)
+        private void Skill4Logic()
         {
-            skillTimers[index] = template.skillCooldowns[index];
             boxColliderManager.EnableBox(RoleBoxCollider.BoxColliderManager.BoxColliderName.HitBox_Skill_4);
             animator.SetTrigger(AnimationParameters.Skill_4);
         }
@@ -213,12 +205,5 @@ namespace GamePlay.Role.RoleStrategy
             }
         }
         
-        private void UpdateCooldowns()
-        {
-            for (int i = 0; i < skillTimers.Length; i++)
-            {
-                if (skillTimers[i] > 0f) skillTimers[i] -= Time.deltaTime;
-            }
-        }
     }
 }

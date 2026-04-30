@@ -1,4 +1,5 @@
-﻿using GamePlay.Role.RoleStrategy;
+﻿using System.Collections.Generic;
+using GamePlay.Role.RoleStrategy;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -8,6 +9,7 @@ namespace GamePlay.Role
     {
         private PlayerInput playerInput;
         private IRoleStrategy[] strategies = new IRoleStrategy[2];
+        private List<GameObject> roleInstances;
         private IRoleStrategy currentStrategy;
         private int currentIndex;
 
@@ -16,18 +18,24 @@ namespace GamePlay.Role
             playerInput = GetComponent<PlayerInput>();
             playerInput.enabled = false; 
         }
-        public void Init(IRoleStrategy[] _strategies)
+        public void Init(IRoleStrategy[] _strategies, List<GameObject> _roleInstances)
         {
             strategies = _strategies;
             currentIndex = 0;
             currentStrategy = strategies[0];
+            roleInstances = _roleInstances;
             enabled = true;
             playerInput.enabled = true;
         }
         
-        private void SwitchStrategy()
+        public void SwitchStrategy()
         {
+            if(roleInstances.Count < 2) return;
+            
+            roleInstances[currentIndex].SetActive(false);
+            
             currentIndex = 1 - currentIndex;
+            roleInstances[currentIndex].SetActive(true);
             currentStrategy = strategies[currentIndex];
         }
         

@@ -9,6 +9,7 @@ namespace GamePlay.Role.RoleData
     {
         public RoleBaseData Template { get; private set; }
         public RoleSaveData SaveData { get; private set; }
+        public RoleRuntimeData RuntimeData { get; private set; }
         [SerializeField] public Animator animator;
         [SerializeField] public Rigidbody2D rb;
         [SerializeField] public BoxColliderManager boxColliderManager;
@@ -23,8 +24,11 @@ namespace GamePlay.Role.RoleData
  
         public void Init(RoleBaseData _template, RoleSaveData _saveData)
         {
-            Template =  _template;
+            Template = _template;
             SaveData = _saveData;
+            RuntimeData = new RoleRuntimeData();
+            RuntimeData.Init(_saveData);
+            boxColliderManager.InitRuntime(RuntimeData);
         }
         public void SetStrategy(IRoleStrategy s)
         {

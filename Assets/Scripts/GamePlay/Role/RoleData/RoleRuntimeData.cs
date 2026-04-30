@@ -1,46 +1,58 @@
-﻿namespace GamePlay.Role.RoleData
+using UnityEngine;
+
+namespace GamePlay.Role.RoleData
 {
     public class RoleRuntimeData
     {
+        public float maxHealth;
+        public float currentHealth;
+        public float damage;
+        public float speed;
+
+        public RuntimeSkillData[] skillRuntimeData;
+
         /// <summary>
-        /// 角色运行时数据
-        /// </summary>
-        public class RoleStatRuntime
-        {
-            public float maxHealth;
-            public float currentHealth;
-            public float damage;
-            public float speed;
-        }
-        /// <summary>
-        /// 技能运行时数据
+        /// 技能运行时状态
         /// </summary>
         public class RuntimeSkillData
         {
-            public float cooldown;
             public float damage;
-            public float currentCooldownTimer;
-    
+            public float cooldown;
+            public float damageInterval;
+            private float currentCooldownTimer;
+            
             public bool IsReady => currentCooldownTimer <= 0f;
-    
+
             public void Tick(float deltaTime)
             {
                 if (currentCooldownTimer > 0f) currentCooldownTimer -= deltaTime;
             }
-    
+
             public void TriggerCooldown()
             {
                 currentCooldownTimer = cooldown;
             }
         }
-        public RoleBaseData template;
-        public RoleSaveData saveData;
 
-        public void Init(RoleBaseData _template, RoleSaveData _saveData)
+        public void Init(RoleSaveData saveData)
         {
-            template = _template;
-            saveData = _saveData;
-            
+            maxHealth = saveData.health;
+            currentHealth = maxHealth;
+            damage = saveData.damage;
+            speed = saveData.speed;
+
+            int count = saveData.skillsCooldowns.Length;
+            skillRuntimeData = new RuntimeSkillData[count];
+            for (int i = 0; i < count; i++)
+            {
+                Debug.Log(i);
+                skillRuntimeData[i] = new RuntimeSkillData
+                {
+                    cooldown = saveData.skillsCooldowns[i],
+                    damage = saveData.skillsDamages[i],
+                    damageInterval = saveData.damageIntervals[i]
+                };
+            }
         }
     }
 }
