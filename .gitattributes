@@ -1,0 +1,24 @@
+* text=auto
+
+# Unity
+*.asset text
+*.unity text
+*.prefab text
+*.meta text
+*.cs text
+
+# Binary
+*.dll binary
+*.png binary
+*.jpg binary
+*.tga binary
+*.psd binary
+*.fbx binary
+*.anim text
+*.controller text
+*.mat text
+*.cubemap binary
+*.shader binary
+*.ttf binary
+*.otf binary
+*.bytes binary
