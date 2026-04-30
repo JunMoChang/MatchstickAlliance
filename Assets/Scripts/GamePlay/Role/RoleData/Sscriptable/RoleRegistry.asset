@@ -22,27 +22,3 @@ MonoBehaviour:
   - roleName: 2
     template: {fileID: 11400000, guid: 08b687963fd77c744bcb51c563e538d8, type: 2}
     prefab: {fileID: 4010939859288580430, guid: 6cc37470e7b065d438c6ab26f9565029, type: 3}
-  - roleName: 2
-    template: {fileID: 11400000, guid: 08b687963fd77c744bcb51c563e538d8, type: 2}
-    prefab: {fileID: 4010939859288580430, guid: 6cc37470e7b065d438c6ab26f9565029, type: 3}
-  - roleName: 2
-    template: {fileID: 11400000, guid: 08b687963fd77c744bcb51c563e538d8, type: 2}
-    prefab: {fileID: 4010939859288580430, guid: 6cc37470e7b065d438c6ab26f9565029, type: 3}
-  - roleName: 1
-    template: {fileID: 11400000, guid: 6919cbe530b9fed47830c2912bde0320, type: 2}
-    prefab: {fileID: 4010939859288580430, guid: b2ba686cc569f6e4198334fac13a49b8, type: 3}
-  - roleName: 0
-    template: {fileID: 11400000, guid: 6919cbe530b9fed47830c2912bde0320, type: 2}
-    prefab: {fileID: 4010939859288580430, guid: b2ba686cc569f6e4198334fac13a49b8, type: 3}
-  - roleName: 0
-    template: {fileID: 11400000, guid: 6919cbe530b9fed47830c2912bde0320, type: 2}
-    prefab: {fileID: 4010939859288580430, guid: b2ba686cc569f6e4198334fac13a49b8, type: 3}
-  - roleName: 0
-    template: {fileID: 11400000, guid: f845ec98e4498f14086e389f2db5458f, type: 2}
-    prefab: {fileID: 4010939859288580430, guid: a55f34be1f63b0c4e91a3af1aea9dd6e, type: 3}
-  - roleName: 0
-    template: {fileID: 11400000, guid: 6919cbe530b9fed47830c2912bde0320, type: 2}
-    prefab: {fileID: 4010939859288580430, guid: b2ba686cc569f6e4198334fac13a49b8, type: 3}
-  - roleName: 0
-    template: {fileID: 11400000, guid: 6919cbe530b9fed47830c2912bde0320, type: 2}
-    prefab: {fileID: 4010939859288580430, guid: b2ba686cc569f6e4198334fac13a49b8, type: 3}

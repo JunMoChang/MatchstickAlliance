@@ -2193,6 +2193,7 @@ GameObject:
   - component: {fileID: 1282902318}
   - component: {fileID: 1282902317}
   - component: {fileID: 1282902319}
+  - component: {fileID: 1282902320}
   m_Layer: 5
   m_Name: SwitchRole
   m_TagString: Untagged
@@ -2301,6 +2302,19 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls: []
+--- !u!114 &1282902320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1282902315}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 995a5d8ba0be4c1bb14cb85144183298, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GamePlay.UI.SwitchRole
+  switchButton: {fileID: 1282902319}
 --- !u!4 &1297095916 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7513774595400382903, guid: a55f34be1f63b0c4e91a3af1aea9dd6e, type: 3}
@@ -5508,8 +5522,8 @@ SceneRoots:
   - {fileID: 1889863685}
   - {fileID: 202569455}
   - {fileID: 845851325}
-  - {fileID: 2129532949}
   - {fileID: 2110791919}
   - {fileID: 744204148}
   - {fileID: 911130262}
   - {fileID: 219985702}
+  - {fileID: 2129532949}

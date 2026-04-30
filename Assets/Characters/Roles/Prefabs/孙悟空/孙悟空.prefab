@@ -406,66 +406,65 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd3b761390cf469b9c2f88eb48b28754, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GamePlay.Role.RoleBoxCollider.BoxColliderManager
-  hitBoxes:
-  - boxColliderName: 5
-    collider: {fileID: 8676597864553405370}
-  - boxColliderName: 6
+  continuousBoxesConfig:
+  - boxColliderName: 1
     collider: {fileID: 7797440312827658987}
+    skillIndex: 1
   - boxColliderName: 7
     collider: {fileID: 4168218438371692575}
+    skillIndex: 2
   - boxColliderName: 8
     collider: {fileID: 750816529770936481}
-  - boxColliderName: 0
-    collider: {fileID: 8545352310164889244}
-  - boxColliderName: 1
-    collider: {fileID: 1195444434714492217}
-  - boxColliderName: 2
-    collider: {fileID: 2229372013189534395}
-  - boxColliderName: 3
-    collider: {fileID: 1089239038856527137}
-  - boxColliderName: 4
-    collider: {fileID: 4021510614470042030}
+    skillIndex: 3
   instantBoxesConfig:
   - instantBoxName: 0
     offset: {x: 1.01, y: 1.75}
     size: {x: 2.4, y: 2.2}
     radius: 0
     useCircle: 0
+    skillIndex: 0
   - instantBoxName: 1
     offset: {x: -0.4, y: 0.9}
     size: {x: 0, y: 0}
     radius: 0.88
     useCircle: 1
+    skillIndex: 1
   - instantBoxName: 2
     offset: {x: -0.35, y: 1.3}
     size: {x: 0.95, y: 1.33}
     radius: 0
     useCircle: 0
+    skillIndex: 2
   - instantBoxName: 3
     offset: {x: -0.13, y: 1.08}
     size: {x: 1.8, y: 0.5}
     radius: 0
     useCircle: 0
+    skillIndex: -1
   - instantBoxName: 4
     offset: {x: -0.19, y: 1.05}
     size: {x: 1.45, y: 1}
     radius: 0
     useCircle: 0
+    skillIndex: -1
   - instantBoxName: 5
     offset: {x: -0.8, y: 1.4}
     size: {x: 0, y: 0}
     radius: 0.72
     useCircle: 1
+    skillIndex: -1
   - instantBoxName: 6
     offset: {x: -0.46, y: 1.39}
     size: {x: 0, y: 0}
     radius: 0.64
     useCircle: 1
+    skillIndex: -1
   - instantBoxName: 7
     offset: {x: 0.09, y: 1}
     size: {x: 0, y: 0}
     radius: 1
     useCircle: 1
+    skillIndex: -1
 --- !u!1 &2991568384591207541
 GameObject:
   m_ObjectHideFlags: 0
