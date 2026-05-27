@@ -33,3 +33,7 @@ Thumbs.db
 /[Aa]ssets/AssetStoreTools/
 /[Aa]ssets/Plugins/Editor/JetBrains*
 /[Aa]ssets/AddressableAssetsData/*/*.bin*
+
+.claude/
+CLAUDE.md
+项目分析报告.md
