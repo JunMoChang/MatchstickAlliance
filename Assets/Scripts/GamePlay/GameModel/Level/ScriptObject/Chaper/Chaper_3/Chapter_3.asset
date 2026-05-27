@@ -13,10 +13,17 @@ MonoBehaviour:
   m_Name: Chapter_3
   m_EditorClassIdentifier: Assembly-CSharp::GamePlay.GameModel.Level.ChapterData
   chapter: 3
-  sceneName: 
+  sceneName: ChapterLevel
   levelData:
   - {fileID: 11400000, guid: 6de37ca18c8ff3a478b6a94ae439744b, type: 2}
   - {fileID: 11400000, guid: 3959167f92cd2a24aa6322b8f9530819, type: 2}
   - {fileID: 11400000, guid: 5c185afafb034574aaf16d24547e1915, type: 2}
   - {fileID: 11400000, guid: 414580fb1d3cb514da094a2e3bebc51b, type: 2}
   - {fileID: 11400000, guid: e0abe0f5a2bd7ea4ea310d84a466a83f, type: 2}
+  dorpConfig: {fileID: 0}
+  baseExperience: 0
+  experienceGrowthToLevel: 0
+  baseGold: 0
+  goldGrowthToLevel: 0
+  diamondPerLevel: 0
+  diamondFirstLevel: 0

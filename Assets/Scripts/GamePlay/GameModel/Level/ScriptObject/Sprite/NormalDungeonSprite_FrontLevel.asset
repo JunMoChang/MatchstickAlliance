@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: NormalDungeonSprite_FrontLevel
   m_EditorClassIdentifier: Assembly-CSharp::GamePlay.GameModel.Level.LevelSprite
   levelSprite: {fileID: 21300000, guid: d7266316513204842ba0701ae3fcfdb5, type: 3}
+  unlockedSprite: {fileID: 21300000, guid: 9fc11d1b8b1dff9479960d5563d8c6af, type: 3}

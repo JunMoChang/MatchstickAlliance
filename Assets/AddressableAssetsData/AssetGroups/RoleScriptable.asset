@@ -14,7 +14,28 @@ MonoBehaviour:
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
   m_GroupName: RoleScriptable
   m_GUID: 63f06087a5c6299458406994747f7291
-  m_SerializeEntries: []
+  m_SerializeEntries:
+  - m_GUID: 08b687963fd77c744bcb51c563e538d8
+    m_Address: "Assets/Scripts/GamePlay/Role/RoleData/\u52AB.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 3f8ee2ab47faa1444bafdbea0f9a9123
+    m_Address: Assets/Scripts/GamePlay/Role/RoleData/RoleRegistry.asset
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: 6919cbe530b9fed47830c2912bde0320
+    m_Address: "Assets/Scripts/GamePlay/Role/RoleData/\u4E9A\u7D22.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: f845ec98e4498f14086e389f2db5458f
+    m_Address: "Assets/Scripts/GamePlay/Role/RoleData/\u5B59\u609F\u7A7A.asset"
+    m_ReadOnly: 0
+    m_SerializedLabels:
+    - RoleScriptable
+    FlaggedDuringContentUpdateRestriction: 0
   m_ReadOnly: 0
   m_Settings: {fileID: 11400000, guid: a51ced51aba0d9f46824787ae4fb8678, type: 2}
   m_SchemaSet:

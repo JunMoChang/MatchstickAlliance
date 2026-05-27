@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using GamePlay.GameModel.Level;
+using GamePlay.PlayerDataHandle;
 using GamePlay.Role.RoleData;
 using GamePlay.Role.RoleStrategy;
 using GamePlay.Scene;
@@ -37,7 +38,7 @@ namespace GamePlay.Role
         
         private void InitSelectedRoles()
         {
-            List<RoleRegistry.RoleEntry> selectedRole = LevelContext.Instance.selectedHeroes;
+            List<RoleRegistry.RoleEntry> selectedRole = LevelContext.SelectedHeroes;
 
             IRoleStrategy[] strategies = new IRoleStrategy[selectedRole.Count];
             for (int i = 0; i < selectedRole.Count; i++)
@@ -53,9 +54,7 @@ namespace GamePlay.Role
                     entry.template.FirstLoadSaveData(saveData);
                 }
                 context.Init(entry.template, saveData);
-                Debug.Log(saveData.roleName);
                 strategies[i] = RoleFactory.CreateRoleStrategy(entry.roleName, context);
-                Debug.Log(saveData.roleName);
             }
             
             playerInputHandler.Init(strategies, roleInstances);

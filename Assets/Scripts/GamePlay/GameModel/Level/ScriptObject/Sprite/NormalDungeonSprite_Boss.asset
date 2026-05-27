@@ -13,3 +13,4 @@ MonoBehaviour:
   m_Name: NormalDungeonSprite_Boss
   m_EditorClassIdentifier: Assembly-CSharp::GamePlay.GameModel.Level.LevelSprite
   levelSprite: {fileID: 21300000, guid: 6dde77b47bcb2cb48bf63ce11980b57e, type: 3}
+  unlockedSprite: {fileID: 21300000, guid: 9fc11d1b8b1dff9479960d5563d8c6af, type: 3}

@@ -4,11 +4,12 @@ using UnityEngine;
 
 namespace GamePlay.Role.RoleData
 {
-    [System.Serializable]
+    [Serializable]
     public abstract class RoleBaseData : ScriptableObject
     {
         public RoleName roleName;
         public int roleLevel;
+        public int defaultStar = 1;
         public float defaultHealth = 100f;
         public float defaultSpeed = 3.5f;
         public float defaultDamage = 10f;
@@ -77,7 +78,7 @@ namespace GamePlay.Role.RoleData
         public struct MotionCommand
         {
             public MotionName motionName;
-            public MotionData[] motionData;
+            public MotionKeyframe[] keyframes;
         }
         
          /// <summary>
@@ -94,8 +95,24 @@ namespace GamePlay.Role.RoleData
             Normal_3,
             Normal_4,
             Normal_5,
-            Parabolic
-            
+            SkillEnd
+        }
+         
+        /// <summary>
+        /// 运动的触发时机
+        /// </summary>
+        [Serializable]
+        public struct MotionKeyframe
+        {
+            /// <summary>
+            /// 动画进度
+            /// </summary>
+            [Range(0f, 1f)]
+            public float normalizedTime;
+            /// <summary>
+            /// 运动数据
+            /// </summary>
+            public MotionData motionData;
         }
         
         /// <summary>
@@ -120,6 +137,11 @@ namespace GamePlay.Role.RoleData
             /// 设置冲力
             /// </summary>
             public Vector2 force;
+            /// <summary>
+            /// 设置重力
+            /// </summary>
+            public float gravityScale;
+            public bool playerControlledDirection;
             
             /// <summary>
             /// 运动控制类型
@@ -138,12 +160,20 @@ namespace GamePlay.Role.RoleData
                 /// 冲力控制
                 /// </summary>
                 AddForce,
+                /// <summary>
+                /// 重力控制
+                /// </summary>
+                GravityScale,
+                /// <summary>
+                /// 清除控制
+                /// </summary>
+                ClearVelocity
             }
         }
 
         public void FirstLoadSaveData(RoleSaveData save)
         {
-            save.health = defaultHealth;
+            save.maxHealth = defaultHealth;
             save.damage = defaultDamage;
             save.speed = defaultSpeed;
         
@@ -167,7 +197,7 @@ namespace GamePlay.Role.RoleData
         public void RefreshSaveData(RoleSaveData save, int enhance)
         {
             save.roleLevel += enhance;
-            save.health = defaultHealth * (1 + healthGrowth) * enhance;
+            save.maxHealth = defaultHealth * (1 + healthGrowth) * enhance;
             save.damage = defaultDamage * (1 + damageGrowth) *  enhance;
             save.speed = defaultSpeed;
         }

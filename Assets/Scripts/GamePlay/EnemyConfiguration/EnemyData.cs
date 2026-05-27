@@ -11,7 +11,10 @@ namespace GamePlay.EnemyConfiguration
         public float baseDamage;
         public float hpGrowthRate;
         public float damageGrowthRate;
-        
+        public float attackRange = 2f;
+        public float attackCooldown = 1.5f;
+        public float moveSpeed = 2f;
+
     }
 }
  

@@ -13,62 +13,48 @@ MonoBehaviour:
   m_Name: "\u52AB"
   m_EditorClassIdentifier: Assembly-CSharp::GamePlay.Role.RoleData.SunWuKongData
   roleName: 2
-  unSelectedIcon: {fileID: 21300000, guid: f3901fd24f30a8249a22568460557b69, type: 3}
-  selectedIcon: {fileID: 21300000, guid: 219de40b35b2dbe449cdf39a923b3762, type: 3}
   roleLevel: 1
+  defaultStar: 1
   defaultHealth: 200
   defaultSpeed: 3.5
   defaultDamage: 20
   healthGrowth: 0
   damageGrowth: 0
+  skillDamageGrowth: []
   skills:
   - icon: {fileID: 21300000, guid: 4ea86551c7c85be49a881adefd0c3b2e, type: 3}
+    level: 0
     baseDamage: 15
     baseCooldown: 3
+    damageInterval: 0
   - icon: {fileID: 21300000, guid: 0262a8b2e08647641ae3e1e17e1e0da2, type: 3}
+    level: 0
     baseDamage: 20
     baseCooldown: 5
+    damageInterval: 0
   - icon: {fileID: 21300000, guid: 885ccba29c78c634fba001c0e0625704, type: 3}
+    level: 0
     baseDamage: 12
     baseCooldown: 8
+    damageInterval: 0
   - icon: {fileID: 21300000, guid: ba01c4f78398c4f478815528892cf675, type: 3}
+    level: 0
     baseDamage: 10
     baseCooldown: 14
+    damageInterval: 0
+  unSelectedIcon: {fileID: 21300000, guid: ea74156f716bc4946b388f2f8b19a113, type: 3}
+  selectedIcon: {fileID: 21300000, guid: b68d36afdfe1f004289aed2d9436d7fc, type: 3}
   maxCombos: 5
   skill2JumpForceX: 0.6
   skill2JumpForceY: 4.6
   motionCommands:
   - motionName: 0
-    motionData:
-    - motionType: 1
-      velocity: {x: 0, y: 0}
-      offset: {x: 0.25, y: 0.1}
-      force: {x: 0, y: 0}
+    keyframes: []
   - motionName: 1
-    motionData:
-    - motionType: 0
-      velocity: {x: 0, y: -4.6}
-      offset: {x: 0, y: 0}
-      force: {x: 0, y: 0}
+    keyframes: []
   - motionName: 2
-    motionData:
-    - motionType: 1
-      velocity: {x: 0, y: 0}
-      offset: {x: 2.2, y: 0}
-      force: {x: 0, y: 0}
-    - motionType: 0
-      velocity: {x: 1.5, y: 2.6}
-      offset: {x: 0, y: 0}
-      force: {x: 0, y: 0}
+    keyframes: []
   - motionName: 8
-    motionData:
-    - motionType: 2
-      velocity: {x: 0, y: 0}
-      offset: {x: 0, y: 0}
-      force: {x: 2.1, y: 3.6}
+    keyframes: []
   - motionName: 9
-    motionData:
-    - motionType: 0
-      velocity: {x: 2.3, y: -2}
-      offset: {x: 0, y: 0}
-      force: {x: 0, y: 0}
+    keyframes: []

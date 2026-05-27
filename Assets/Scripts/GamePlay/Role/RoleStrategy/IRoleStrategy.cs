@@ -8,7 +8,7 @@ namespace GamePlay.Role.RoleStrategy
         void Initialize(RoleContext context);
         void Tick();
         void FixedTick();
-        void OnMotionEvent(RoleData.RoleBaseData.MotionName eventName);
+        void OnMotionEvent(RoleBaseData.MotionName eventName);
         void Move(Vector2 direction);
         void Attack(UnityEngine.InputSystem.InputAction.CallbackContext context);
         void UseSkill(int index);

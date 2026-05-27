@@ -36,7 +36,7 @@ namespace GamePlay.Role.RoleData
 
         public void Init(RoleSaveData saveData)
         {
-            maxHealth = saveData.health;
+            maxHealth = saveData.maxHealth;
             currentHealth = maxHealth;
             damage = saveData.damage;
             speed = saveData.speed;
@@ -45,7 +45,6 @@ namespace GamePlay.Role.RoleData
             skillRuntimeData = new RuntimeSkillData[count];
             for (int i = 0; i < count; i++)
             {
-                Debug.Log(i);
                 skillRuntimeData[i] = new RuntimeSkillData
                 {
                     cooldown = saveData.skillsCooldowns[i],

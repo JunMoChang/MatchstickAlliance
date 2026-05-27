@@ -12,15 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fbf1ce682c43c14c986d519dd818a6c, type: 3}
   m_Name: level_4
   m_EditorClassIdentifier: Assembly-CSharp::GamePlay.GameModel.Level.LevelData
-  levelIndex: 0
+  levelIndex: 3
   sprite: {fileID: 11400000, guid: f7bc75efa63832d41868fe251e3a0c87, type: 2}
-  enemy:
-  - enemyData: {fileID: 0}
-    chapterOverride: 0
-    spawnCount: 0
-  - enemyData: {fileID: 0}
-    chapterOverride: 0
-    spawnCount: 0
-  - enemyData: {fileID: 0}
-    chapterOverride: 0
-    spawnCount: 0
+  waves: []

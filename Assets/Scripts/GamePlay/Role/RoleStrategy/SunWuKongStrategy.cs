@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
+using GamePlay.GameModel;
 using UnityEngine;
-using GamePlay.CharacterControllers;
 using GamePlay.Role.RoleData;
 
 namespace GamePlay.Role.RoleStrategy
@@ -21,9 +21,16 @@ namespace GamePlay.Role.RoleStrategy
         private bool facingRight = true;
         
         private RoleRuntimeData runtimeData;
-        private bool skill2Active;
- 
-        Dictionary<RoleBaseData.MotionName, RoleBaseData.MotionData[]> motionData = new ();
+        
+        private Dictionary<RoleBaseData.MotionName, RoleBaseData.MotionKeyframe[]> motionKeyframes = new();
+        private RoleBaseData.MotionName activeMotionName;
+        private bool motionSequenceActive;
+        private bool isActionActive; 
+        private int motionKeyframeIndex;
+        private bool hasPersistentVelocity;
+        private float persistentVelocityX;
+        private float persistentVelocityY;
+
         public void Initialize(RoleContext _context)
         {
             roleContext = _context;
@@ -35,30 +42,31 @@ namespace GamePlay.Role.RoleStrategy
 
             foreach (RoleBaseData.MotionCommand command in template.motionCommands)
             {
-                motionData.Add(command.motionName, command.motionData);
+                motionKeyframes.Add(command.motionName, command.keyframes);
             }
+            
             roleContext.SetStrategy(this);
         }
 
         public void Tick()
         {
             CombosWindows();
+            TickMotionSequence();
             foreach (RoleRuntimeData.RuntimeSkillData skillData in runtimeData.skillRuntimeData)
             {
                 skillData.Tick(Time.deltaTime);
             }
-            UpdateSkill2();
         }
 
         public void FixedTick()
         {
             ApplyMove();
+            ApplyPersistentVelocity();
         }
         
         public void Move(Vector2 direction)
         {
             moveInput = direction;
-            animator.SetFloat(AnimationParameters.Speed, Mathf.Abs(direction.x));
             if (direction.x > 0 && !facingRight)
             {
                 facingRight = true;
@@ -69,13 +77,22 @@ namespace GamePlay.Role.RoleStrategy
                 facingRight = false;
                 roleContext.Flip(facingRight);
             }
+            if (!isActionActive) animator.SetFloat(AnimationParameters.Speed, Mathf.Abs(direction.x));
         }
         private void ApplyMove()
         {
-            if (moveInput.x != 0)
-                rb.MovePosition(new Vector2(rb.position.x + moveInput.x * runtimeData.speed * Time.fixedDeltaTime, rb.position.y));
+            if (moveInput.x == 0 || isActionActive) return;
+            rb.MovePosition(new Vector2(rb.position.x + moveInput.x * runtimeData.speed * Time.fixedDeltaTime, rb.position.y));
         }
         
+        private void ApplyPersistentVelocity()
+        {
+            if (!hasPersistentVelocity) return;
+            
+            float dir = moveInput.x != 0 ? Mathf.Sign(moveInput.x) : facingRight ? 1f : -1f;
+            rb.linearVelocity = new Vector2(dir * persistentVelocityX, persistentVelocityY);
+        }
+
         public void Attack(UnityEngine.InputSystem.InputAction.CallbackContext context)
         {
             if (context.started)
@@ -92,6 +109,7 @@ namespace GamePlay.Role.RoleStrategy
         }
         private void StartCombo()
         {
+            isActionActive = true;
             isAttacking = true;
             combosStep = 0;
             animator.SetInteger(AnimationParameters.NormalCombos, combosStep);
@@ -99,6 +117,7 @@ namespace GamePlay.Role.RoleStrategy
         }
         private void CombosWindows()
         {
+            if(!isAttacking) return;
             AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
             if (!isAttacking || !stateInfo.IsTag("NormalAttack") || animator.IsInTransition(0)) return;
                 
@@ -110,6 +129,7 @@ namespace GamePlay.Role.RoleStrategy
                     pendingAttack = false;
                     if (combosStep < template.maxCombos - 1)
                     {
+                        isActionActive = true;
                         boxColliderManager.DisableBox((RoleBoxCollider.BoxColliderManager.BoxColliderName)combosStep);
                         combosStep++;
                         animator.SetInteger(AnimationParameters.NormalCombos, combosStep);
@@ -122,6 +142,9 @@ namespace GamePlay.Role.RoleStrategy
                     isAttacking = false;
                     pendingAttack = false;
                     combosStep = 0;
+                    isActionActive = false;
+                    motionSequenceActive = false;
+                    hasPersistentVelocity = false;
                     break;
                 }
             }
@@ -146,26 +169,8 @@ namespace GamePlay.Role.RoleStrategy
         }
         private void Skill2Logic()
         {
-            skill2Active = true;
             animator.SetTrigger(AnimationParameters.Skill_2);
-            rb.linearVelocity = new Vector2(template.skill2JumpForceX, template.skill2JumpForceY);
-        }
-        private void UpdateSkill2()
-        {
-            if (!skill2Active) return;
-    
-            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
-            
-            if (rb.linearVelocityY <= 0)
-            {
-                rb.gravityScale = 0.15f;
-                if (stateInfo.normalizedTime >= 0.6f)
-                {
-                    rb.gravityScale = 1;
-                    rb.linearVelocity = new Vector2(0, -template.skill2JumpForceY);
-                    skill2Active = false;
-                }
-            }
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, motionKeyframes[RoleBaseData.MotionName.Skill_2][0].motionData.velocity.y);
         }
         private void Skill3Logic()
         {
@@ -179,13 +184,43 @@ namespace GamePlay.Role.RoleStrategy
         
         public void OnMotionEvent(RoleBaseData.MotionName eventName)
         {
-            if(!motionData.TryGetValue(eventName, out RoleBaseData.MotionData[] motions)) return;
-
-            foreach (RoleBaseData.MotionData motion in motions)
+            if (eventName == RoleBaseData.MotionName.SkillEnd)
             {
-                ApplyMotion(motion);
+                motionSequenceActive = false;
+                hasPersistentVelocity = false;
+                isActionActive = false; 
+                return;
             }
             
+            isActionActive = true;
+            
+            if (!motionKeyframes.ContainsKey(eventName))
+            {
+                motionSequenceActive = false;
+                hasPersistentVelocity = false;
+                return;
+            }
+            
+            activeMotionName = eventName;
+            motionKeyframeIndex = 0;
+            motionSequenceActive = true;
+            hasPersistentVelocity = false;
+        }
+
+        private void TickMotionSequence()
+        {
+            if(!motionSequenceActive) return;
+            if (animator.IsInTransition(0)) return;
+            
+            RoleBaseData.MotionKeyframe[] frames = motionKeyframes[activeMotionName];
+            AnimatorStateInfo stateInfo = animator.GetCurrentAnimatorStateInfo(0);
+            float progress = stateInfo.normalizedTime;
+            
+            while (motionKeyframeIndex < frames.Length && progress >= frames[motionKeyframeIndex].normalizedTime)
+            {
+                ApplyMotion(frames[motionKeyframeIndex].motionData);
+                motionKeyframeIndex++;
+            }
         }
         private void ApplyMotion(RoleBaseData.MotionData motion)
         {
@@ -194,13 +229,29 @@ namespace GamePlay.Role.RoleStrategy
             switch (motion.motionType)
             {
                 case RoleBaseData.MotionData.MotionType.LinearVelocity:
-                    rb.linearVelocity = new Vector2(motion.velocity.x * dir, motion.velocity.y);
+                    if (motion.playerControlledDirection)
+                    {
+                        hasPersistentVelocity = true;
+                    }
+                    else
+                    {
+                        hasPersistentVelocity = false;
+                        rb.linearVelocity = new Vector2(motion.velocity.x * dir, motion.velocity.y);
+                    }
+                    persistentVelocityX = motion.velocity.x;
+                    persistentVelocityY = motion.velocity.y;
                     break;
                 case RoleBaseData.MotionData.MotionType.MovePosition:
                     rb.MovePosition(rb.position + new Vector2(dir * motion.offset.x, motion.offset.y));
                     break;
                 case RoleBaseData.MotionData.MotionType.AddForce:
                     rb.AddForce(new Vector2(dir * motion.force.x, motion.force.y), ForceMode2D.Impulse);
+                    break;
+                case RoleBaseData.MotionData.MotionType.GravityScale:
+                    rb.gravityScale = motion.gravityScale;
+                    break;
+                case RoleBaseData.MotionData.MotionType.ClearVelocity:
+                    hasPersistentVelocity = false;
                     break;
             }
         }

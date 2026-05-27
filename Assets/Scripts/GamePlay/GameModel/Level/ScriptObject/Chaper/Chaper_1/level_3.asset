@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4fbf1ce682c43c14c986d519dd818a6c, type: 3}
   m_Name: level_3
   m_EditorClassIdentifier: Assembly-CSharp::GamePlay.GameModel.Level.LevelData
-  levelIndex: 0
+  levelIndex: 2
   sprite: {fileID: 11400000, guid: 0c272c14aa23d5848bc701417991dd4c, type: 2}
   waves:
   - {fileID: 0}

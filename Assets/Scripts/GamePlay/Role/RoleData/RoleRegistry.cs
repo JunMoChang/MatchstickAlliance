@@ -1,8 +1,7 @@
 ﻿using System;
-using GamePlay.Role.RoleData;
 using UnityEngine;
 
-namespace GamePlay.Role
+namespace GamePlay.Role.RoleData
 {
     [CreateAssetMenu(fileName = "RoleRegistry", menuName = "RoleData/RoleRegistry")]
     public class RoleRegistry : ScriptableObject
@@ -32,7 +31,7 @@ namespace GamePlay.Role
     
         public RoleEntry[] entries;
     
-        public RoleEntry? GetEntry(RoleName roleName)
+        public RoleEntry? GetRoleEntry(RoleName roleName)
         {
             foreach (RoleEntry e in entries)
                 if (e.roleName == roleName) return e;

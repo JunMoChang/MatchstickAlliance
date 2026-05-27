@@ -22,3 +22,6 @@ MonoBehaviour:
   - roleName: 2
     template: {fileID: 11400000, guid: 08b687963fd77c744bcb51c563e538d8, type: 2}
     prefab: {fileID: 4010939859288580430, guid: 6cc37470e7b065d438c6ab26f9565029, type: 3}
+  - roleName: 2
+    template: {fileID: 11400000, guid: 08b687963fd77c744bcb51c563e538d8, type: 2}
+    prefab: {fileID: 4010939859288580430, guid: 6cc37470e7b065d438c6ab26f9565029, type: 3}

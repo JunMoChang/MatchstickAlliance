@@ -14,9 +14,9 @@ namespace GamePlay.EnemyConfiguration
         private Transform player;
         
         private Transform[] createPosition;
-        private List<GameObject> activeEnemies  = new (10);
         private int currentWaveIndex;
         private bool waveInProgress;
+        private int remainingEnemies;
         
         public event Action OnAllWavesCleared;
         void Awake()
@@ -35,7 +35,7 @@ namespace GamePlay.EnemyConfiguration
         
         private IEnumerator WaveSequenceLoop()
         {
-            WaveData[] waves = LevelContext.Instance.currentLevel.waves;
+            WaveData[] waves = LevelContext.CurrentLevel.waves;
 
             while (currentWaveIndex < waves.Length)
             {
@@ -62,51 +62,45 @@ namespace GamePlay.EnemyConfiguration
 
         private IEnumerator WaitForWaveClear()
         {
-            while (true)
-            {
-                bool allDead = true;
-                foreach (GameObject enemy in activeEnemies)
-                {
-                    if (enemy != null) { allDead = false; break; }
-                }
-                if (allDead) break;
-                yield return null;
-            }
-            activeEnemies.Clear();
+            while (remainingEnemies > 0) yield return null;
         }
         
         private void SpawnWave(WaveData wave)
         {
-            int chapter = LevelContext.Instance.currentChapter.chapter;
-
+            int chapter = LevelContext.CurrentChapter.chapter;
+            
             foreach (LevelEnemyConfiguration cfg in wave.enemies)
             {
+                remainingEnemies += cfg.spawnCount;
+                
                 float factor = cfg.GetGrowthFactor(chapter);
                 float hp = LevelManager.LevelScaler.GetHp(cfg.enemyData, factor);
-                float damage = LevelManager.LevelScaler.GetDamage(cfg.enemyData, factor);
+                float damage = LevelManager.LevelScaler.GetDamage(cfg.enemyData, factor); 
 
                 for (int i = 0; i < cfg.spawnCount; i++)
                 {
                     Vector2 pos = new(player.position.x + Random.Range(-maxOffset, maxOffset), player.position.y);
                     GameObject enemy = Instantiate(cfg.enemyData.enemyPrefab, pos, Quaternion.identity);
-                    enemy.GetComponentInChildren<EnemyContext>().Init(hp, damage);
-                    activeEnemies.Add(enemy);
+                    EnemyContext context = enemy.GetComponent<EnemyContext>();
+                    context.Init(hp, damage, player, cfg.enemyData);
+                    context.OnEnemyDied += OnEnemyDied;
                 }
             }
+        }
+        
+        private void OnEnemyDied(Vector2 pos)
+        {
+            remainingEnemies--;
+            DropManager.Instance.TryDrop(pos);
         }
         
         private void ClearUp()
         {
             StopAllCoroutines();
-            foreach (GameObject enemy in activeEnemies)
-            {
-                if (enemy != null) Destroy(enemy);
-            }
-            activeEnemies.Clear();
             waveInProgress = false;
             currentWaveIndex = 0;
         }
-
+        
         void OnDisable()
         {
             SceneLoader.OnLevelExit -= ClearUp;

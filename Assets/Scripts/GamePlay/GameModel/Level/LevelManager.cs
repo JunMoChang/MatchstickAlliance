@@ -11,7 +11,8 @@ namespace GamePlay.GameModel.Level
         public static event Action OnRewardCompleted;
 
         private bool levelEndInProgress;
-
+        private ChapterData currentChapter;
+        private LevelData currentLevel;
         void Awake()
         {
             SceneLoader.OnLevelLoaded += FindObject;

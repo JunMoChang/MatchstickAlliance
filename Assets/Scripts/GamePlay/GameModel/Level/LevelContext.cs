@@ -1,24 +1,12 @@
 using System.Collections.Generic;
-using GamePlay.Role;
-using UnityEngine;
+using GamePlay.Role.RoleData;
 
 namespace GamePlay.GameModel.Level
 {
-    public class LevelContext : ScriptableObject
+    public static class LevelContext
     {
-        private static LevelContext instance;
-        public static LevelContext Instance
-        {
-            get
-            {
-                if (instance == null)
-                    instance = CreateInstance<LevelContext>();
-                return instance;
-            }
-        }
-
-        public ChapterData currentChapter;
-        public LevelData currentLevel;
-        public List<RoleRegistry.RoleEntry> selectedHeroes;
+        public static ChapterData CurrentChapter;
+        public static LevelData CurrentLevel;
+        public static List<RoleRegistry.RoleEntry> SelectedHeroes;
     }
 }

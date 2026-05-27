@@ -93,8 +93,8 @@ namespace GamePlay.Scene
         {
             OnLevelExit?.Invoke();
             isReturningToMenu = false;
-            LevelContext.Instance.currentChapter = chapter;
-            LevelContext.Instance.currentLevel = level;
+            LevelContext.CurrentChapter = chapter;
+            LevelContext.CurrentLevel = level;
             StopAllCoroutines();
             StartCoroutine(LoadWithTransition(chapter.sceneName));
         }
@@ -103,7 +103,7 @@ namespace GamePlay.Scene
             isReturningToMenu = true;
             OnLevelExit?.Invoke();
             StopAllCoroutines();
-            StartCoroutine(LoadWithTransition("MainMenu"));
+            StartCoroutine(LoadWithTransition("Main"));
         }
         
         private IEnumerator LoadWithTransition(string sceneName)
