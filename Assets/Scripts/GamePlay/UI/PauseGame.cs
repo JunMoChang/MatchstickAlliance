@@ -41,7 +41,7 @@ namespace GamePlay.UI
         private void ResetButtonOnClick()
         {
             Time.timeScale = 1f;
-            SceneLoader.Instance.LoadLevel(LevelContext.Instance.currentChapter, LevelContext.Instance.currentLevel);
+            SceneLoader.Instance.LoadLevel(LevelContext.CurrentChapter, LevelContext.CurrentLevel);
         }
     }
 }

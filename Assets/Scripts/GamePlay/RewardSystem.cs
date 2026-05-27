@@ -1,8 +1,8 @@
-﻿using System;
+using System;
 using System.Collections;
 using GamePlay.GameModel.Level;
+using GamePlay.PlayerDataHandle;
 using UnityEngine;
-
 namespace GamePlay
 {
     public class RewardSystem : MonoBehaviour
@@ -24,8 +24,24 @@ namespace GamePlay
 
         private IEnumerator DropRewardThenCallback(Action onFinished)
         {
-            yield return new WaitForSeconds(1);
+            PlayerDataManager pdm = PlayerDataManager.Instance;
+           
+            ChapterData chapter = LevelContext.CurrentChapter;
+            LevelData level = LevelContext.CurrentLevel;
+            
+            pdm.AddGold(chapter.GetGold(level.levelIndex));
+            pdm.AddDiamond(chapter.DiamondsPerLevel);
+            
+            if (pdm.IsFirstClear(chapter.chapter, level.levelIndex))
+            {
+                pdm.AddDiamond(chapter.DiamondsFirstLevel);
+            }
+
+            DropManager.Instance.CommitEquipmentsToInventory();
+            yield return new WaitForSeconds(0.5f);
             onFinished?.Invoke();
         }
+        
+        
     }
 }

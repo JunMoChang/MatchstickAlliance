@@ -1,5 +1,6 @@
 ﻿using GamePlay.GameModel.Level;
 using GamePlay.Scene;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,9 +12,23 @@ namespace GamePlay.UI
         [SerializeField] private Button exitButton;
         [SerializeField] private Button againButton;
         [SerializeField] private Button nextButton;
-
-        public void Show()
+        
+        [SerializeField] private TextMeshProUGUI expText;
+        [SerializeField] private TextMeshProUGUI goldText;
+        [SerializeField] private TextMeshProUGUI diamondPerText;
+        [SerializeField] private TextMeshProUGUI diamondFirstText;
+        [SerializeField] private GameObject lootContent;
+        
+        private void Show()
         {
+            ChapterData chapterData = LevelContext.CurrentChapter;
+            LevelData levelData = LevelContext.CurrentLevel;
+            
+            expText.text = chapterData.GetExp(levelData.levelIndex).ToString();
+            goldText.text = chapterData.GetGold(levelData.levelIndex).ToString();
+            diamondPerText.text = chapterData.DiamondsPerLevel.ToString();
+            diamondFirstText.text = chapterData.DiamondsFirstLevel.ToString();
+            
             endedPanel.SetActive(true);
         }
 
@@ -40,15 +55,15 @@ namespace GamePlay.UI
 
         private void AgainButtonOnClick()
         {
-            SceneLoader.Instance.LoadLevel(LevelContext.Instance.currentChapter, LevelContext.Instance.currentLevel);
+            SceneLoader.Instance.LoadLevel(LevelContext.CurrentChapter, LevelContext.CurrentLevel);
         }
 
         private void NextButtonOnClick()
         {
-            LevelData nextLevel = GetNextLevel(LevelContext.Instance.currentChapter, LevelContext.Instance.currentLevel);
+            LevelData nextLevel = GetNextLevel(LevelContext.CurrentChapter, LevelContext.CurrentLevel);
 
             if (nextLevel != null)
-                SceneLoader.Instance.LoadLevel(LevelContext.Instance.currentChapter, nextLevel);
+                SceneLoader.Instance.LoadLevel(LevelContext.CurrentChapter, nextLevel);
             else
                 SceneLoader.Instance.LoadMainMenu();
         }

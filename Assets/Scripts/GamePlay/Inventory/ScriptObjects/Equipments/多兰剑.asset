@@ -1,0 +1,33 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e480bc1d9c924fdba98ae6ccf9f4932f, type: 3}
+  m_Name: "\u591A\u5170\u5251"
+  m_EditorClassIdentifier: Assembly-CSharp::GamePlay.Inventory.ScriptObjects.ItemScriptableObject
+  itemName: 0
+  itemType: 1
+  itemStar: 1
+  itemRarity: 0
+  itemProperties:
+  - itemPropertyType: 2
+    baseValue: 117
+  - itemPropertyType: 0
+    baseValue: 540
+  itemSprites:
+  - rarity: 0
+    sprite: {fileID: 2634581254100188468, guid: a85969a453fa52d4da98d8a506a7c7b9, type: 3}
+  - rarity: 1
+    sprite: {fileID: 6068373614614089934, guid: a85969a453fa52d4da98d8a506a7c7b9, type: 3}
+  - rarity: 2
+    sprite: {fileID: 8344717679193547042, guid: a85969a453fa52d4da98d8a506a7c7b9, type: 3}
+  - rarity: 3
+    sprite: {fileID: 3158488010477605343, guid: a85969a453fa52d4da98d8a506a7c7b9, type: 3}
+  itemMaxSuperposition: 100

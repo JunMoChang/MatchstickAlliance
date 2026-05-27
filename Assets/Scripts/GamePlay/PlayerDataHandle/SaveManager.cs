@@ -1,6 +1,5 @@
 ﻿using System.IO;
 using System.Reflection;
-using GamePlay.Role;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using UnityEngine;
@@ -27,7 +26,8 @@ namespace GamePlay.PlayerDataHandle
         private readonly JsonSerializerSettings setting = new ()
         {
             ContractResolver = new IgnoreVector2NormalizedResolver(),
-            TypeNameHandling = TypeNameHandling.Auto
+            TypeNameHandling = TypeNameHandling.Auto,
+            Converters = {new Newtonsoft.Json.Converters.StringEnumConverter()}
         };
         
         public void Save(PlayerData data) 

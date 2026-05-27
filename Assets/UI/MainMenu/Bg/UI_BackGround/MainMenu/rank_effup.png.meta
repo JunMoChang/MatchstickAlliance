@@ -1,0 +1,533 @@
+fileFormatVersion: 2
+guid: 5883255d64c584d499fbefd34bfec2e4
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: 1046872753964902829
+    second: rank_effup_0
+  - first:
+      213: -1876249816434882664
+    second: rank_effup_1
+  - first:
+      213: 6049281756692010202
+    second: rank_effup_2
+  - first:
+      213: 1339784154096698647
+    second: rank_effup_3
+  - first:
+      213: -909388337371270961
+    second: rank_effup_4
+  - first:
+      213: 1603629399712716691
+    second: rank_effup_5
+  - first:
+      213: -4531640551637071125
+    second: rank_effup_6
+  - first:
+      213: 2755883486460483903
+    second: rank_effup_7
+  - first:
+      213: -3447335392750721119
+    second: rank_effup_8
+  - first:
+      213: -4671136818493466673
+    second: rank_effup_9
+  - first:
+      213: -7790153878455618265
+    second: rank_effup_10
+  - first:
+      213: 1084283199608868523
+    second: rank_effup_11
+  - first:
+      213: -8049127965744543674
+    second: rank_effup_12
+  - first:
+      213: -9021675871885200026
+    second: rank_effup_13
+  - first:
+      213: 4113160427199028102
+    second: rank_effup_14
+  - first:
+      213: 7053206094308726484
+    second: rank_effup_15
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: rank_effup_0
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 727
+        width: 146
+        height: 293
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: da9ec11293d378e00800000000000000
+      internalID: 1046872753964902829
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rank_effup_1
+      rect:
+        serializedVersion: 2
+        x: 154
+        y: 873
+        width: 146
+        height: 147
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 897c1859bb836f5e0800000000000000
+      internalID: -1876249816434882664
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rank_effup_2
+      rect:
+        serializedVersion: 2
+        x: 301
+        y: 876
+        width: 147
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ad4d0ed05bd53f350800000000000000
+      internalID: 6049281756692010202
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rank_effup_3
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 766
+        width: 66
+        height: 68
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 71581a4f69ed79210800000000000000
+      internalID: 1339784154096698647
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rank_effup_4
+      rect:
+        serializedVersion: 2
+        x: 147
+        y: 730
+        width: 144
+        height: 141
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc03a1410243163f0800000000000000
+      internalID: -909388337371270961
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rank_effup_5
+      rect:
+        serializedVersion: 2
+        x: 301
+        y: 730
+        width: 146
+        height: 143
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 397df31517c314610800000000000000
+      internalID: 1603629399712716691
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rank_effup_6
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 590
+        width: 137
+        height: 136
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: beacaed8de06c11c0800000000000000
+      internalID: -4531640551637071125
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rank_effup_7
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 587
+        width: 138
+        height: 140
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f3997dcfd6dde3620800000000000000
+      internalID: 2755883486460483903
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rank_effup_8
+      rect:
+        serializedVersion: 2
+        x: 291
+        y: 600
+        width: 127
+        height: 127
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a7267d99ba9820d0800000000000000
+      internalID: -3447335392750721119
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rank_effup_9
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 644
+        width: 85
+        height: 84
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fc7d274ffc9cc2fb0800000000000000
+      internalID: -4671136818493466673
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rank_effup_10
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 454
+        width: 133
+        height: 133
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 72575015250d3e390800000000000000
+      internalID: -7790153878455618265
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rank_effup_11
+      rect:
+        serializedVersion: 2
+        x: 139
+        y: 476
+        width: 109
+        height: 110
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: bae4c9443d52c0f00800000000000000
+      internalID: 1084283199608868523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rank_effup_12
+      rect:
+        serializedVersion: 2
+        x: 291
+        y: 478
+        width: 119
+        height: 120
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6484222e2c0cb4090800000000000000
+      internalID: -8049127965744543674
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rank_effup_13
+      rect:
+        serializedVersion: 2
+        x: 419
+        y: 562
+        width: 82
+        height: 80
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 665f199e7919cc280800000000000000
+      internalID: -9021675871885200026
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rank_effup_14
+      rect:
+        serializedVersion: 2
+        x: 249
+        y: 410
+        width: 68
+        height: 66
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 68b5467bd91e41930800000000000000
+      internalID: 4113160427199028102
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: rank_effup_15
+      rect:
+        serializedVersion: 2
+        x: 412
+        y: 459
+        width: 98
+        height: 101
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4d654e2c29502e160800000000000000
+      internalID: 7053206094308726484
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      rank_effup_0: 1046872753964902829
+      rank_effup_1: -1876249816434882664
+      rank_effup_10: -7790153878455618265
+      rank_effup_11: 1084283199608868523
+      rank_effup_12: -8049127965744543674
+      rank_effup_13: -9021675871885200026
+      rank_effup_14: 4113160427199028102
+      rank_effup_15: 7053206094308726484
+      rank_effup_2: 6049281756692010202
+      rank_effup_3: 1339784154096698647
+      rank_effup_4: -909388337371270961
+      rank_effup_5: 1603629399712716691
+      rank_effup_6: -4531640551637071125
+      rank_effup_7: 2755883486460483903
+      rank_effup_8: -3447335392750721119
+      rank_effup_9: -4671136818493466673
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -1,0 +1,533 @@
+fileFormatVersion: 2
+guid: eadffa872f770d34fbd2642d0429d073
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -8858442507859420859
+    second: startbattle_effup_0
+  - first:
+      213: 2131142775470440281
+    second: startbattle_effup_1
+  - first:
+      213: 5761613698598931283
+    second: startbattle_effup_2
+  - first:
+      213: -1920423070434132859
+    second: startbattle_effup_3
+  - first:
+      213: -2372944157928696486
+    second: startbattle_effup_4
+  - first:
+      213: 510975104836200804
+    second: startbattle_effup_5
+  - first:
+      213: -6280145166788025191
+    second: startbattle_effup_6
+  - first:
+      213: 1189063195880125825
+    second: startbattle_effup_7
+  - first:
+      213: 3704599721606952507
+    second: startbattle_effup_8
+  - first:
+      213: -3168943197375818799
+    second: startbattle_effup_9
+  - first:
+      213: -3680779709651853587
+    second: startbattle_effup_10
+  - first:
+      213: -2222612805447714280
+    second: startbattle_effup_11
+  - first:
+      213: 4695792390099078876
+    second: startbattle_effup_12
+  - first:
+      213: 304772728865354264
+    second: startbattle_effup_13
+  - first:
+      213: 7374382491226104325
+    second: startbattle_effup_14
+  - first:
+      213: -8544175254668971727
+    second: startbattle_effup_15
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 1
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: startbattle_effup_0
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 728
+        width: 147
+        height: 292
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54991df197d701580800000000000000
+      internalID: -8858442507859420859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: startbattle_effup_1
+      rect:
+        serializedVersion: 2
+        x: 154
+        y: 875
+        width: 146
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 95f3e812017539d10800000000000000
+      internalID: 2131142775470440281
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: startbattle_effup_2
+      rect:
+        serializedVersion: 2
+        x: 302
+        y: 876
+        width: 146
+        height: 145
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 35b830ee12d55ff40800000000000000
+      internalID: 5761613698598931283
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: startbattle_effup_3
+      rect:
+        serializedVersion: 2
+        x: 41
+        y: 765
+        width: 66
+        height: 69
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 58cfe4c64694955e0800000000000000
+      internalID: -1920423070434132859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: startbattle_effup_4
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 730
+        width: 142
+        height: 141
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a5552da5cdb911fd0800000000000000
+      internalID: -2372944157928696486
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: startbattle_effup_5
+      rect:
+        serializedVersion: 2
+        x: 301
+        y: 730
+        width: 146
+        height: 143
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 46964dc8629571700800000000000000
+      internalID: 510975104836200804
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: startbattle_effup_6
+      rect:
+        serializedVersion: 2
+        x: 2
+        y: 590
+        width: 137
+        height: 136
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 994a6b39e3178d8a0800000000000000
+      internalID: -6280145166788025191
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: startbattle_effup_7
+      rect:
+        serializedVersion: 2
+        x: 149
+        y: 587
+        width: 138
+        height: 140
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 185fced3da6608010800000000000000
+      internalID: 1189063195880125825
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: startbattle_effup_8
+      rect:
+        serializedVersion: 2
+        x: 291
+        y: 600
+        width: 127
+        height: 127
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b36b469a1d1696330800000000000000
+      internalID: 3704599721606952507
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: startbattle_effup_9
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 644
+        width: 85
+        height: 84
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1d31607a3f6a504d0800000000000000
+      internalID: -3168943197375818799
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: startbattle_effup_10
+      rect:
+        serializedVersion: 2
+        x: 3
+        y: 454
+        width: 133
+        height: 133
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: dee5cbd0b5e3becc0800000000000000
+      internalID: -3680779709651853587
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: startbattle_effup_11
+      rect:
+        serializedVersion: 2
+        x: 139
+        y: 475
+        width: 109
+        height: 111
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 81afd0aed61b721e0800000000000000
+      internalID: -2222612805447714280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: startbattle_effup_12
+      rect:
+        serializedVersion: 2
+        x: 291
+        y: 478
+        width: 119
+        height: 120
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: cde86d6ac4eca2140800000000000000
+      internalID: 4695792390099078876
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: startbattle_effup_13
+      rect:
+        serializedVersion: 2
+        x: 420
+        y: 562
+        width: 81
+        height: 80
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 812fe31ae25ca3400800000000000000
+      internalID: 304772728865354264
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: startbattle_effup_14
+      rect:
+        serializedVersion: 2
+        x: 249
+        y: 406
+        width: 73
+        height: 70
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 502646bfdc1175660800000000000000
+      internalID: 7374382491226104325
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: startbattle_effup_15
+      rect:
+        serializedVersion: 2
+        x: 412
+        y: 459
+        width: 98
+        height: 101
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 131f5c6ffddfc6980800000000000000
+      internalID: -8544175254668971727
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      startbattle_effup_0: -8858442507859420859
+      startbattle_effup_1: 2131142775470440281
+      startbattle_effup_10: -3680779709651853587
+      startbattle_effup_11: -2222612805447714280
+      startbattle_effup_12: 4695792390099078876
+      startbattle_effup_13: 304772728865354264
+      startbattle_effup_14: 7374382491226104325
+      startbattle_effup_15: -8544175254668971727
+      startbattle_effup_2: 5761613698598931283
+      startbattle_effup_3: -1920423070434132859
+      startbattle_effup_4: -2372944157928696486
+      startbattle_effup_5: 510975104836200804
+      startbattle_effup_6: -6280145166788025191
+      startbattle_effup_7: 1189063195880125825
+      startbattle_effup_8: 3704599721606952507
+      startbattle_effup_9: -3168943197375818799
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

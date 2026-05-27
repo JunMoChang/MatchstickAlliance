@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using GamePlay.GameModel.Level;
 using GamePlay.Role;
+using GamePlay.Role.RoleData;
 using GamePlay.Scene;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -22,7 +23,7 @@ namespace GamePlay.UI
         [SerializeField] private List<ChapterData> levelChapters;
         
         [Header("导航按钮")]
-        [SerializeField] List<NavButtonData> navButtons = new();
+        [SerializeField] List<FunctionButtonData> navButtons = new();
 
         [SerializeField] RoleRegistry roleRegistry;
         
@@ -180,7 +181,7 @@ namespace GamePlay.UI
 
             navBar.Clear();
 
-            foreach (NavButtonData buttonData in navButtons)
+            foreach (FunctionButtonData buttonData in navButtons)
             {
                 VisualElement btn = new ();
                 btn.AddToClassList("nav-btn");
@@ -197,7 +198,7 @@ namespace GamePlay.UI
                     btn.Add(badge);
                 }
             
-                Label label = new Label(buttonData.label);
+                Label label = new Label(/*buttonData.nameLabel*/);
                 label.AddToClassList("nav-label");
 
                 btn.Add(label);
@@ -395,7 +396,7 @@ namespace GamePlay.UI
         {
             if (selectedHeroes.Count > 0)
             {
-                LevelContext.Instance.selectedHeroes = selectedHeroes;
+                LevelContext.SelectedHeroes = selectedHeroes;
                 SceneLoader.Instance.LoadLevel(chapter, level);
             }
             else

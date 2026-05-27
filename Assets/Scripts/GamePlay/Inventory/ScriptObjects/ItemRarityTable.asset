@@ -1,0 +1,55 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dddb718efe7249c4a80af53d4c6b5637, type: 3}
+  m_Name: ItemRarityTable
+  m_EditorClassIdentifier: Assembly-CSharp::GamePlay.Inventory.ScriptObjects.ItemRarityScriptObject
+  itemRarityTable:
+  - itemRarity: 0
+    properties:
+    - itemPropertyType: 0
+      rarityMult: 1
+      levelMaxMult: 1.5
+    - itemPropertyType: 2
+      rarityMult: 1
+      levelMaxMult: 1.6
+  - itemRarity: 1
+    properties:
+    - itemPropertyType: 0
+      rarityMult: 1.12
+      levelMaxMult: 1.6
+    - itemPropertyType: 2
+      rarityMult: 1.15
+      levelMaxMult: 1.7
+  - itemRarity: 2
+    properties:
+    - itemPropertyType: 0
+      rarityMult: 1.25
+      levelMaxMult: 1.7
+    - itemPropertyType: 2
+      rarityMult: 1.32
+      levelMaxMult: 1.8
+  - itemRarity: 3
+    properties:
+    - itemPropertyType: 0
+      rarityMult: 1.4
+      levelMaxMult: 1.8
+    - itemPropertyType: 0
+      rarityMult: 1.52
+      levelMaxMult: 2
+  - itemRarity: 4
+    properties:
+    - itemPropertyType: 0
+      rarityMult: 1.56
+      levelMaxMult: 2
+    - itemPropertyType: 2
+      rarityMult: 1.75
+      levelMaxMult: 2.3
