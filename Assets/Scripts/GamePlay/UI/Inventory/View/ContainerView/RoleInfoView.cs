@@ -1,10 +1,11 @@
 using System;
 using System.Collections.Generic;
 using GamePlay.Inventory.Model;
-using GamePlay.Inventory.View;
 using GamePlay.PlayerDataHandle;
 using GamePlay.Role;
 using GamePlay.Role.RoleData;
+using GamePlay.UI.Inventory.View;
+using GamePlay.UI.Inventory.View.SingleView;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;

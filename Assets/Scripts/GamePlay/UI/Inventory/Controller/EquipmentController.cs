@@ -19,7 +19,7 @@ namespace GamePlay.Inventory.Controller
             inventoryModel = _inventoryModel;
             inventoryModel.OnInventoryChanged += OnModelChanged;
 
-            equipmentPopupView.OnFunctionButtonNameChanged += OnFunctionButtonNameChanged;
+            equipmentPopupView.Initialize();
             equipmentPopupView.OnSlotFunctionButtonClicked += OnSlotFunctionButtonClicked;
             equipmentPopupView.OnClosed += OnEquipmentPopupClosed;
 
@@ -33,6 +33,7 @@ namespace GamePlay.Inventory.Controller
         {
             roleInfoView.Show();
             equipmentPopupView.Show();
+            RefreshView();
         }
 
         private void OnEquipmentPopupClosed()
@@ -45,8 +46,10 @@ namespace GamePlay.Inventory.Controller
             inventoryModel.UnequipItem(itemData);
         }
         
-        private void OnFunctionButtonNameChanged(FunctionButtonName funBtnNm)
+        public void OnFunctionButtonNameChanged(FunctionButtonName funBtnNm)
         {
+            if (curFunBtnNm == funBtnNm) return;
+            
             curFunBtnNm = funBtnNm;
             RefreshView();
         }

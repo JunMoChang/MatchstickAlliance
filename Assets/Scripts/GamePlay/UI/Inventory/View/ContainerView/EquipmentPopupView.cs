@@ -1,7 +1,8 @@
 using System;
 using System.Collections.Generic;
 using GamePlay.Inventory.Model;
-using GamePlay.Inventory.View;
+using GamePlay.UI.Inventory.View.ScrollView;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -9,43 +10,34 @@ namespace GamePlay.UI
 {
     public class EquipmentPopupView : MonoBehaviour
     {
-        [SerializeField] private GameObject rootPanel;
         [SerializeField] private Button closeButton;
-
-        [Header("标签页")]
-        [SerializeField] private Button[] tabButtons;
-        [SerializeField] private GameObject[] tabPanels;
         
         [Header("装备面板")]
-        [SerializeField] private EquipmentInfoSlotsScrollView equipmentInfoInfoScrollView;
+        [SerializeField] private EquipmentInfoSlotScrollView equipmentInfoInfoScrollView;
+        [SerializeField] private TMP_Text panelText;
         
         public event Action OnClosed;
-        public event Action<FunctionButtonName> OnFunctionButtonNameChanged;
         public event Action<ItemDataModel> OnSlotFunctionButtonClicked;
+
+        public void Initialize()
+        {
+            equipmentInfoInfoScrollView.Initialize();
+        }
         
         public void Show()
         {
-            rootPanel.SetActive(true);
+            transform.gameObject.SetActive(true);
         }
 
-        public void Hide()
+        private void Hide()
         {
-            rootPanel.SetActive(false);
+            transform.gameObject.SetActive(false);
             OnClosed?.Invoke();
         }
         
         void OnEnable()
         {
             if (closeButton) closeButton.onClick.AddListener(Hide);
-            
-            for (int i = 0; i < tabButtons.Length; i++)
-            {
-                int index = i;
-                tabButtons[i]?.onClick.AddListener(() =>
-                {
-                    OnFunctionButtonNameChanged?.Invoke((FunctionButtonName)index);
-                });
-            }
             
             equipmentInfoInfoScrollView.OnSlotFunctionButtonClicked += OnSlotFunctionButtonClick;
         }
@@ -54,18 +46,16 @@ namespace GamePlay.UI
         {
             if (closeButton) closeButton.onClick.RemoveListener(Hide);
             equipmentInfoInfoScrollView.OnSlotFunctionButtonClicked -= OnSlotFunctionButtonClick;
-            foreach (Button btn in tabButtons)
-            {
-                if (btn) btn.onClick.RemoveAllListeners();
-            }
         }
-
+        
         private void OnSlotFunctionButtonClick(ItemDataModel dataModel)
         {
             OnSlotFunctionButtonClicked?.Invoke(dataModel);
         }
+        
         public void RefreshEquipmentView(FunctionButtonName funBtnNm, IReadOnlyList<ItemDataModel> items)
         {
+            panelText.text = funBtnNm.ToString();
             equipmentInfoInfoScrollView.SetFunctionButtonName(funBtnNm);
             equipmentInfoInfoScrollView.SetData(items, items.Count);
         }

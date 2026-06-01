@@ -16,7 +16,7 @@ namespace GamePlay.Role.RoleData
         public float healthGrowth;
         public float damageGrowth;
         public float[] skillDamageGrowth;
-        public SkillData[] skills;
+        public SkillData[] skillsBaseData;
         public Sprite unSelectedIcon;
         public Sprite selectedIcon;
         /// <summary>
@@ -34,9 +34,13 @@ namespace GamePlay.Role.RoleData
             /// </summary>
             public int level;
             /// <summary>
-            /// 基础伤害
+            /// 基础攻击
             /// </summary>
             public float baseDamage;
+            /// <summary>
+            /// 伤害
+            /// </summary>
+            public int damage;
             /// <summary>
             /// 基础冷却
             /// </summary>
@@ -176,49 +180,47 @@ namespace GamePlay.Role.RoleData
             save.maxHealth = defaultHealth;
             save.damage = defaultDamage;
             save.speed = defaultSpeed;
-        
-            int length = skills.Length;
-            save.skillsLevel = new int[length];
-            save.skillsDamages = new float[length];
-            save.skillsCooldowns = new float[length];
-            save.damageIntervals = new float[length];
+
+            int length = skillsBaseData.Length;
+            save.skillsData = new SkillSaveData[length];
             for (int i = 0; i < length; i++)
             {
-                save.skillsDamages[i] = skills[i].baseDamage;
-                save.skillsCooldowns[i] = skills[i].baseCooldown;
-                save.damageIntervals[i] = skills[i].damageInterval;
+                save.skillsData[i] = new SkillSaveData
+                {
+                    level = skillsBaseData[i].level,
+                    damage = skillsBaseData[i].damage
+                };
             }
         }
         /// <summary>
         /// 更新角色属性
         /// </summary>
-        /// <param name="save">持久化数据类</param>
+        /// <param name="saveData">持久化数据类</param>
         /// <param name="enhance">等级提升数量</param>
-        public void RefreshSaveData(RoleSaveData save, int enhance)
+        public void RefreshSaveData(RoleSaveData saveData, int enhance)
         {
-            save.roleLevel += enhance;
-            save.maxHealth = defaultHealth * (1 + healthGrowth) * enhance;
-            save.damage = defaultDamage * (1 + damageGrowth) *  enhance;
-            save.speed = defaultSpeed;
+            saveData.roleLevel += enhance;
+            saveData.maxHealth = defaultHealth * (1 + healthGrowth) * enhance;
+            saveData.damage = defaultDamage * (1 + damageGrowth) *  enhance;
+            saveData.speed = defaultSpeed;
         }
         /// <summary>
         /// 更新角色技能属性
         /// </summary>
-        /// <param name="data">持久化数据类</param>
+        /// <param name="saveData">持久化数据类</param>
         /// <param name="skillIndex">目标技能</param>
         /// <param name="enhance">等级提升数量</param>
-        public void RefreshSkillsSaveData(RoleSaveData data, int skillIndex, int enhance)
+        public void UpdateSkillData(RoleSaveData saveData, int skillIndex, int enhance)
         {
-            if (data.skillsCooldowns == null || data.skillsCooldowns.Length < skills.Length) data.skillsCooldowns = new float[skills.Length];
-            if (data.skillsDamages == null || data.skillsDamages.Length < skills.Length) data.skillsDamages = new float[skills.Length];
-            if (data.damageIntervals == null || data.damageIntervals.Length < skills.Length) data.damageIntervals = new float[skills.Length];
+            if (saveData.skillsData == null) saveData.skillsData = new SkillSaveData[skillsBaseData.Length];
 
-            data.skillsLevel[skillIndex] += enhance;
-            data.skillsDamages[skillIndex] = skills[skillIndex].baseDamage * (1 + damageGrowth) * (1 + (data.skillsLevel[skillIndex] - 1) * 0.15f);
-            data.skillsCooldowns[skillIndex] = skills[skillIndex].baseCooldown;
-            data.damageIntervals[skillIndex] = skills[skillIndex].damageInterval;
+            saveData.skillsData[skillIndex].level += enhance;
+            saveData.skillsData[skillIndex].damage += Mathf.CeilToInt(skillsBaseData[skillIndex].baseDamage *
+                                                                  (1 + damageGrowth)
+                                                                  * (1 + (saveData.skillsData[skillIndex].level - 1) *
+                                                                      0.15f));
         }
-    }
+    } 
 
     
 }

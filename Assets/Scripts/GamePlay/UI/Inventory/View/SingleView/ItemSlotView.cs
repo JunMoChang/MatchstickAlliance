@@ -2,7 +2,7 @@
 using GamePlay.Inventory.Model;
 using UnityEngine;
 
-namespace GamePlay.Inventory.View
+namespace GamePlay.UI.Inventory.View
 {
     public class ItemSlotView : MonoBehaviour, ISlotView
     {
@@ -12,7 +12,6 @@ namespace GamePlay.Inventory.View
         [SerializeField] private TMPro.TMP_Text itemQuantityText;
         
         public RectTransform RectTransform { get; private set; }
-        public GameObject GameObject { get; private set; }
         
         [NonSerialized] public ItemDataModel currentDataModel;
         

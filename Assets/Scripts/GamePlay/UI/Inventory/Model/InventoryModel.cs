@@ -223,7 +223,7 @@ namespace GamePlay.Inventory.Model
         
         public int GetItemCapacity(ItemScriptableObject.ItemType categoryType)
         {
-            if(categoryType == ItemScriptableObject.ItemType.All) return 0;
+            if(categoryType == ItemScriptableObject.ItemType.All) return DefaultCapacity;
             
             return itemsDataMaxCapacityDic.GetValueOrDefault(categoryType, DefaultCapacity);
         }

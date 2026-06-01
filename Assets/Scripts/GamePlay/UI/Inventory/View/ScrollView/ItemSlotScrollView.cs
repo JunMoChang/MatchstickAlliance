@@ -1,9 +1,9 @@
 ﻿using System;
 using GamePlay.Inventory.Model;
 
-namespace GamePlay.Inventory.View
+namespace GamePlay.UI.Inventory.View
 {
-    public class ItemSlotsScrollView : SlotsScrollView<ItemSlotView, ItemDataModel>
+    public class ItemSlotScrollView : SlotScrollView<ItemSlotView, ItemDataModel>
     {
         public event Action<ItemSlotView> OnSlotClicked;
         

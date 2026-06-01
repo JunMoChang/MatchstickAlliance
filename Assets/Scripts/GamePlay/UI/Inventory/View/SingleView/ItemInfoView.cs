@@ -5,7 +5,7 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace GamePlay.Inventory.View
+namespace GamePlay.UI.Inventory.View
 {
     public class ItemInfoView : MonoBehaviour
     {

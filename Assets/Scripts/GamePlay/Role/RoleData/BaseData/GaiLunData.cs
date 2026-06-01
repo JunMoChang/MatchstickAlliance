@@ -3,7 +3,7 @@
 namespace GamePlay.Role.RoleData
 {
     [CreateAssetMenu(fileName = "SunWuKongData", menuName = "RoleData/孙悟空")]
-    public class SunWuKongData : RoleBaseData
+    public class GaiLunData : RoleBaseData
     {
         public int maxCombos = 5;
 

@@ -1,10 +1,9 @@
 ﻿using System;
 using GamePlay.Inventory.Model;
-using GamePlay.UI;
 
-namespace GamePlay.Inventory.View
+namespace GamePlay.UI.Inventory.View
 {
-    public class EquipmentInfoSlotsScrollView : SlotsScrollView<EquipmentInfoSlotView, ItemDataModel>
+    public class EquipmentInfoSlotScrollView : SlotScrollView<EquipmentInfoSlotView, ItemDataModel>
     {
         public event Action<ItemDataModel> OnSlotFunctionButtonClicked;
         private FunctionButtonName curFunBtnNm;

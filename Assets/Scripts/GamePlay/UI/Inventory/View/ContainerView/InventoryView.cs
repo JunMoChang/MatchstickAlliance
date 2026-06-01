@@ -1,16 +1,16 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using GamePlay.Inventory.Model;
 using GamePlay.Inventory.ScriptObjects;
+using GamePlay.UI.Inventory.View.ScrollView;
 using UnityEngine;
 
-namespace GamePlay.Inventory.View
+namespace GamePlay.UI.Inventory.View
 {
     public class InventoryView : MonoBehaviour
     {
         [SerializeField] private GameObject inventoryMenu;
-        [SerializeField] private ItemSlotsScrollView scrollView;
+        [SerializeField] private ItemSlotScrollView scrollView;
 
         private InventoryModel inventoryModel;
 
@@ -57,6 +57,7 @@ namespace GamePlay.Inventory.View
 
             CurrentCategoryType = ItemScriptableObject.ItemType.All;
             
+            scrollView.Initialize();
             RefreshDisplay();
         }
 

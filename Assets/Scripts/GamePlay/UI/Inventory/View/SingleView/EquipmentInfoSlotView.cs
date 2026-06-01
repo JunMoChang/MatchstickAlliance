@@ -2,11 +2,9 @@
 using System.Text;
 using GamePlay.Inventory.Model;
 using GamePlay.Inventory.ScriptObjects;
-using GamePlay.UI;
 using UnityEngine;
 
-
-namespace GamePlay.Inventory.View
+namespace GamePlay.UI.Inventory.View
 {
     public class EquipmentInfoSlotView : MonoBehaviour, ISlotView
     {
@@ -19,7 +17,6 @@ namespace GamePlay.Inventory.View
         
         private TMPro.TMP_Text functionNameText;
         public RectTransform RectTransform { get; private set; }
-        public GameObject GameObject { get; private set; }
         
         public event Action<ItemDataModel> OnFunctionButtonClicked;
         public void Init()
