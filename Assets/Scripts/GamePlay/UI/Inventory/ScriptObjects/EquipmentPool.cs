@@ -1,16 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using GamePlay.Inventory.ScriptObjects;
 using UnityEngine;
 
-namespace GamePlay.Inventory.ScriptObjects
+namespace GamePlay.UI.Inventory.ScriptObjects
 {
     [CreateAssetMenu(fileName = "EquipmentPool", menuName = "Inventory/EquipmentPool", order = 0)]
     public class EquipmentPool : ScriptableObject
     {
-        public static EquipmentPool Instance { get; private set; }
-        
         public EquipmentData[] equipmentsData;
         private Dictionary<ItemScriptableObject.ItemName, ItemScriptableObject> equipmentsDictionary;
+        private bool _initialized;
         
         [Serializable]
         public struct EquipmentData
@@ -26,20 +26,11 @@ namespace GamePlay.Inventory.ScriptObjects
             public float weight;
         }
 
-        void OnEnable()
+        public void Initialize()
         {
-            if (Instance != null && Instance != this)
-            {
-                Debug.LogError("EquipmentPool 存在多个实例，请检查资产配置");
-                return;
-            }
-            
-            Instance = this;
-            Initialize();
-        }
-        
-        private void Initialize()
-        {
+            if (_initialized) return;
+            _initialized = true;
+
             equipmentsDictionary = new (equipmentsData.Length);
             foreach (EquipmentData itemData in equipmentsData)
             {

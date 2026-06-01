@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using AssetLoad;
 using GamePlay.GameModel.Level;
 using GamePlay.Role.RoleData;
 using GamePlay.Scene;
@@ -18,7 +19,6 @@ namespace GamePlay.UI
         [SerializeField] private GameObject heroCardPrefab;
         [SerializeField] private GameObject starPrefab;
         [SerializeField] private Transform heroCardContainer;
-        [SerializeField] private RoleRegistry roleRegistry;
 
         private const int MaxSelectCount = 2;
         private readonly List<RoleRegistry.RoleEntry> selectedHeroes = new(MaxSelectCount);
@@ -42,11 +42,17 @@ namespace GamePlay.UI
 
         public void Show()
         {
+            if (GameDataManager.RoleRegistry == null)
+            {
+                Debug.LogError("RoleRegistry 尚未加载");
+                return;
+            }
+
             if (!cardsGenerated) GenerateCards();
 
             selectedHeroes.Clear();
 
-            RoleRegistry.RoleEntry[] entries = roleRegistry.entries;
+            RoleRegistry.RoleEntry[] entries = GameDataManager.RoleRegistry.entries;
             for (int i = 0; i < cardImages.Length && i < entries.Length; i++)
             { 
                 cardImages[i].sprite = entries[i].template.unSelectedIcon;
@@ -63,7 +69,9 @@ namespace GamePlay.UI
 
         private void GenerateCards()
         {
-            RoleRegistry.RoleEntry[] entries = roleRegistry.entries;
+            if (GameDataManager.RoleRegistry == null) return;
+
+            RoleRegistry.RoleEntry[] entries = GameDataManager.RoleRegistry.entries;
             cardImages = new Image[entries.Length];
 
             for (int i = 0; i < entries.Length; i++)
@@ -98,7 +106,9 @@ namespace GamePlay.UI
 
         private void OnHeroCardClicked(int index)
         {
-            RoleRegistry.RoleEntry[] entries = roleRegistry.entries;
+            if (GameDataManager.RoleRegistry == null) return;
+
+            RoleRegistry.RoleEntry[] entries = GameDataManager.RoleRegistry.entries;
             
             bool isUnSelected = entries[index].template.selectedIcon != cardImages[index].sprite;
             if (isUnSelected)

@@ -1,4 +1,5 @@
 ﻿using System;
+using GamePlay.Role.RoleData.BaseData;
 using UnityEngine;
 
 namespace GamePlay.Role.RoleData
@@ -30,11 +31,13 @@ namespace GamePlay.Role.RoleData
         }
     
         public RoleEntry[] entries;
-    
+
         public RoleEntry? GetRoleEntry(RoleName roleName)
         {
             foreach (RoleEntry e in entries)
+            {
                 if (e.roleName == roleName) return e;
+            }
             return null;
         }
     }

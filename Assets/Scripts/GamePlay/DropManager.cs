@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
+using AssetLoad;
 using GamePlay.GameModel.Level;
 using GamePlay.Inventory.ScriptObjects;
 using GamePlay.PlayerDataHandle;
 using GamePlay.Scene;
+using GamePlay.UI.Inventory.ScriptObjects;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -11,7 +13,6 @@ namespace GamePlay
     public class DropManager : MonoBehaviour
     {
         public static DropManager Instance { get; private set; }
-        [SerializeField] private EquipmentPool equipmentPool;
         [SerializeField] private GameObject equipPickupPrefab;
         
         [System.Serializable]
@@ -99,10 +100,16 @@ namespace GamePlay
         
         private void SpawnEquipment(Vector2 position)
         {
+            if (GameDataManager.EquipmentPool == null)
+            {
+                Debug.LogError("EquipmentPool 尚未加载");
+                return;
+            }
+
             int star = GetStar();
             ItemRarityScriptObject.ItemRarity rarity = GetItemRarity();
-            
-            ItemScriptableObject equipment = equipmentPool.RollEquipment(star);
+
+            ItemScriptableObject equipment = GameDataManager.EquipmentPool.RollEquipment(star);
             if(!equipment) return;
             
             DroppedEquipments ??= new List<(ItemScriptableObject, ItemRarityScriptObject.ItemRarity)>(3);
