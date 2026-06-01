@@ -2,7 +2,7 @@
 using GamePlay.Role.RoleBoxCollider;
 using UnityEngine;
 
-namespace GamePlay.Role.RoleData
+namespace GamePlay.Role.RoleData.BaseData
 {
     [Serializable]
     public abstract class RoleBaseData : ScriptableObject
@@ -17,6 +17,7 @@ namespace GamePlay.Role.RoleData
         public float damageGrowth;
         public float[] skillDamageGrowth;
         public SkillData[] skillsBaseData;
+        public Sprite exhibitionIcon;
         public Sprite unSelectedIcon;
         public Sprite selectedIcon;
         /// <summary>

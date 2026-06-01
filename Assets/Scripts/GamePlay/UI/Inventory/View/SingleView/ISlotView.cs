@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace GamePlay.UI.Inventory.View
+namespace GamePlay.UI.Inventory.View.SingleView
 {
     public interface ISlotView
     {

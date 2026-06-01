@@ -1,7 +1,8 @@
 using System;
 using GamePlay.Inventory.ScriptObjects;
+using GamePlay.Role.RoleData;
 
-namespace GamePlay.Inventory.Model
+namespace GamePlay.UI.Inventory.Model
 {
     public class ItemDataModel
     {
@@ -11,6 +12,14 @@ namespace GamePlay.Inventory.Model
         public bool IsFull { get; private set; }
         public bool IsEquipped { get; set; }
         public int EnhancementLevel { get; set; }
+        /// <summary>
+        /// 该物品被哪个角色装备（未装备时为 null）
+        /// </summary>
+        public RoleName? EquippedByRole { get; set; }
+        /// <summary>
+        /// 物品唯一标识，与存档 ItemInstance.instanceId 对应（加载时可覆盖）
+        /// </summary>
+        public string InstanceId { get; set; }
 
         private int itemMaxSuperposition;
 
@@ -23,6 +32,8 @@ namespace GamePlay.Inventory.Model
             itemMaxSuperposition = targetItemSo.itemMaxSuperposition;
             IsEquipped = false;
             EnhancementLevel = 0;
+            EquippedByRole = null;
+            InstanceId = Guid.NewGuid().ToString("N");
 
             int extraItems = AddQuantity(quantity);
             return extraItems;
@@ -61,6 +72,8 @@ namespace GamePlay.Inventory.Model
             IsFull = false;
             IsEquipped = false;
             EnhancementLevel = 0;
+            EquippedByRole = null;
+            InstanceId = null;
             itemMaxSuperposition = 0;
             StorageItemQuantity = 0;
             ItemSo = null;

@@ -15,7 +15,7 @@ namespace GamePlay.PlayerDataHandle
         [JsonProperty(ObjectCreationHandling = ObjectCreationHandling.Replace)]
         public readonly Dictionary<RoleName, RoleSaveData> ownedRoles = new()
         {
-            { RoleName.孙悟空, new RoleSaveData { roleName = RoleName.孙悟空, roleLevel = 1 } }
+            { RoleName.猴子, new RoleSaveData { roleName = RoleName.猴子, roleLevel = 1 } }
         };
         
         /// <summary>
@@ -26,10 +26,30 @@ namespace GamePlay.PlayerDataHandle
 
         public readonly List<ItemInstance> inventoryItems = new();
         /// <summary>
-        /// 已装备的物品名称列表
+        /// 各角色已装备的物品（角色名 → 装备列表）
         /// </summary>
         [JsonProperty(ObjectCreationHandling = ObjectCreationHandling.Replace)]
-        public List<ItemInstance> equippedItems = new();
+        public Dictionary<RoleName, List<ItemInstance>> roleEquippedItems = new();
+
+        /// <summary>
+        /// 获取指定角色的已装备物品列表
+        /// </summary>
+        public List<ItemInstance> GetEquippedItemsForRole(RoleName role)
+        {
+            roleEquippedItems.TryGetValue(role, out List<ItemInstance> items);
+            return items ?? new List<ItemInstance>();
+        }
+
+        /// <summary>
+        /// 设置指定角色的已装备物品
+        /// </summary>
+        public void SetEquippedItemsForRole(RoleName role, List<ItemInstance> items)
+        {
+            if (items == null || items.Count == 0)
+                roleEquippedItems.Remove(role);
+            else
+                roleEquippedItems[role] = items;
+        }
 
         /// <summary>
         /// 已首次通关的关卡ID（chapter * 1000 + levelIndex）
@@ -56,6 +76,11 @@ namespace GamePlay.PlayerDataHandle
 
         public class ItemInstance
         {
+            /// <summary>
+            /// 物品唯一标识，用于存档加载时精确匹配装备归属
+            /// </summary>
+            [JsonProperty]
+            public string instanceId = Guid.NewGuid().ToString("N");
             public ItemScriptableObject.ItemName itemName;
             public ItemRarityScriptObject.ItemRarity itemRarity;
             public int owenQuantities;

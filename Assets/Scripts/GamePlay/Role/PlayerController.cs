@@ -11,7 +11,6 @@ namespace GamePlay.Role
     public class PlayerController : MonoBehaviour
     {
         [SerializeField] private PlayerDataManager playerDataManager;
-        [SerializeField] private RoleRegistry roleRegistry;
         [SerializeField] private PlayerInputHandler playerInputHandler;
         private readonly List<GameObject> roleInstances = new ();
 

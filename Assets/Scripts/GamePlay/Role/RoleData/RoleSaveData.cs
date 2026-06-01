@@ -1,10 +1,9 @@
-﻿namespace GamePlay.Role.RoleData
+﻿using System;
+
+namespace GamePlay.Role.RoleData
 {
     public class RoleSaveData
     {
-        /// <summary>
-        /// 持久化属性
-        /// </summary>
         public RoleName roleName;
         public int roleLevel;
         public float maxHealth;
@@ -15,12 +14,9 @@
         public int maxExperience;
         public int currentExperience;
         public float speed;
-        
-        public int[] skillsLevel;
-        public float[] skillsDamages;
-        public float[] skillsCooldowns;
-        public float[] damageIntervals;
-        
+
+        public SkillSaveData[] skillsData;
+
         public float GetProperty(RoleProperty property)
         {
             return property switch
@@ -34,5 +30,12 @@
                 _ => 0f
             };
         }
+    }
+
+    [Serializable]
+    public class SkillSaveData
+    {
+        public int level;
+        public int damage;
     }
 }

@@ -1,7 +1,8 @@
 ﻿using System;
-using GamePlay.Inventory.Model;
+using GamePlay.UI.Inventory.Model;
+using GamePlay.UI.Inventory.View.SingleView;
 
-namespace GamePlay.UI.Inventory.View
+namespace GamePlay.UI.Inventory.View.ScrollView
 {
     public class ItemSlotScrollView : SlotScrollView<ItemSlotView, ItemDataModel>
     {

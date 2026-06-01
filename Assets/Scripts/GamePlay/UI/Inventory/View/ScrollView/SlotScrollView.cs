@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
-using GamePlay.Inventory.Model;
+using GamePlay.UI.Inventory.Model;
+using GamePlay.UI.Inventory.View.SingleView;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace GamePlay.UI.Inventory.View
+namespace GamePlay.UI.Inventory.View.ScrollView
 {
     [RequireComponent(typeof(ScrollRect))]
     public abstract class SlotScrollView<TView, TData> : MonoBehaviour where TView : MonoBehaviour, ISlotView where TData : ItemDataModel

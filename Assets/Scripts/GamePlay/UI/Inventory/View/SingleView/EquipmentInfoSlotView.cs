@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Text;
-using GamePlay.Inventory.Model;
 using GamePlay.Inventory.ScriptObjects;
+using GamePlay.UI.Inventory.Model;
 using UnityEngine;
 
-namespace GamePlay.UI.Inventory.View
+namespace GamePlay.UI.Inventory.View.SingleView
 {
     public class EquipmentInfoSlotView : MonoBehaviour, ISlotView
     {

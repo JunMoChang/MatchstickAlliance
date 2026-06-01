@@ -1,4 +1,4 @@
-using UnityEngine;
+using GamePlay.Role.RoleData.BaseData;
 
 namespace GamePlay.Role.RoleData
 {
@@ -34,22 +34,23 @@ namespace GamePlay.Role.RoleData
             }
         }
 
-        public void Init(RoleSaveData saveData)
+        public void Init(RoleSaveData saveData, RoleBaseData template)
         {
             maxHealth = saveData.maxHealth;
             currentHealth = maxHealth;
             damage = saveData.damage;
             speed = saveData.speed;
 
-            int count = saveData.skillsCooldowns.Length;
-            skillRuntimeData = new RuntimeSkillData[count];
-            for (int i = 0; i < count; i++)
+            SkillSaveData[] skillsData = saveData.skillsData;
+            RoleBaseData.SkillData[] skillConfigs = template.skillsBaseData;
+            skillRuntimeData = new RuntimeSkillData[skillsData.Length];
+            for (int i = 0; i < skillsData.Length; i++)
             {
                 skillRuntimeData[i] = new RuntimeSkillData
                 {
-                    cooldown = saveData.skillsCooldowns[i],
-                    damage = saveData.skillsDamages[i],
-                    damageInterval = saveData.damageIntervals[i]
+                    cooldown = skillConfigs[i].baseCooldown,
+                    damage = skillsData[i].damage,
+                    damageInterval = skillConfigs[i].damageInterval
                 };
             }
         }

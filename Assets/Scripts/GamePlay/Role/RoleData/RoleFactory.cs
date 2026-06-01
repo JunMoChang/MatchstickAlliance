@@ -8,9 +8,9 @@ namespace GamePlay.Role.RoleData
         {
             IRoleStrategy strategy = roleName switch
             {
-                RoleName.孙悟空 => new SunWuKongStrategy(),
-                RoleName.亚索   => new YasuoStrategy(),
-                _               => throw new System.Exception($"未注册的角色: {roleName}")
+                RoleName.猴子 => new SunWuKongStrategy(),
+                RoleName.武士 => new YasuoStrategy(),
+                _ => throw new System.Exception($"未注册的角色: {roleName}")
             };
             
             strategy.Initialize(context);

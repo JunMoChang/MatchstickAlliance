@@ -1,16 +1,16 @@
-﻿using System.Collections.Generic;
-using GamePlay.Inventory.Model;
+using System.Collections.Generic;
 using GamePlay.Inventory.ScriptObjects;
-using GamePlay.UI;
+using GamePlay.UI.Inventory.Model;
+using GamePlay.UI.Inventory.View.ContainerView;
 using UnityEngine;
 
-namespace GamePlay.Inventory.Controller
+namespace GamePlay.UI.Inventory.Controller
 {
     public class EquipmentController : MonoBehaviour
     {
-        [SerializeField] private RoleInfoView roleInfoView;
+        [SerializeField] private RoleInfoController roleInfoController;
         [SerializeField] private EquipmentPopupView equipmentPopupView;
-        
+
         private InventoryModel inventoryModel;
         private FunctionButtonName curFunBtnNm;
 
@@ -23,37 +23,29 @@ namespace GamePlay.Inventory.Controller
             equipmentPopupView.OnSlotFunctionButtonClicked += OnSlotFunctionButtonClicked;
             equipmentPopupView.OnClosed += OnEquipmentPopupClosed;
 
-            roleInfoView.Init();
-            roleInfoView.OnUnequipClicked += OnRoleInfoUnequipClicked;
-
             RefreshView();
         }
 
         public void ShowEquipmentPopup()
         {
-            roleInfoView.Show();
+            roleInfoController.Show();
             equipmentPopupView.Show();
             RefreshView();
         }
 
         private void OnEquipmentPopupClosed()
         {
-            roleInfoView.Hide();
+            roleInfoController.Hide();
         }
 
-        private void OnRoleInfoUnequipClicked(ItemDataModel itemData)
-        {
-            inventoryModel.UnequipItem(itemData);
-        }
-        
         public void OnFunctionButtonNameChanged(FunctionButtonName funBtnNm)
         {
             if (curFunBtnNm == funBtnNm) return;
-            
+
             curFunBtnNm = funBtnNm;
             RefreshView();
         }
-        
+
         private void OnSlotFunctionButtonClicked(ItemDataModel itemData)
         {
             switch (curFunBtnNm)
@@ -63,22 +55,21 @@ namespace GamePlay.Inventory.Controller
 
                     if (itemData.StorageItemQuantity > 1)
                     {
-                        if (!roleInfoView.HasEmptyEquipmentSlot()) break;
+                        if (!roleInfoController.HasEmptyEquipmentSlot()) break;
 
-                        ItemDataModel equippedItem = inventoryModel.SplitEquipItem(itemData);
-                        roleInfoView.SetEquipmentInfo(equippedItem);
+                        ItemDataModel equippedItem = inventoryModel.SplitEquipItem(itemData, roleInfoController.CurrentRoleName);
                     }
                     else
                     {
-                        if (!roleInfoView.SetEquipmentInfo(itemData)) break;
-                        inventoryModel.EquipItem(itemData);
+                        if (!roleInfoController.HasEmptyEquipmentSlot()) break;
+                        inventoryModel.EquipItem(itemData, roleInfoController.CurrentRoleName);
                     }
                     break;
                 case FunctionButtonName.强化:
                     break;
             }
         }
-        
+
         private void OnModelChanged(InventoryModel _, ItemScriptableObject.ItemType __)
         {
             RefreshView();
@@ -88,8 +79,8 @@ namespace GamePlay.Inventory.Controller
         {
             IReadOnlyList<ItemDataModel> items = curFunBtnNm == FunctionButtonName.装备
                 ? (IReadOnlyList<ItemDataModel>)inventoryModel.GetUnequippedEquipment()
-                : inventoryModel.GetEquippedItems();
-            
+                : inventoryModel.GetEquippedItemsForRole(roleInfoController.CurrentRoleName);
+
             equipmentPopupView.RefreshEquipmentView(curFunBtnNm, items);
         }
     }

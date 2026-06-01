@@ -1,8 +1,8 @@
 ﻿using UnityEngine;
 
-namespace GamePlay.Role.RoleData
+namespace GamePlay.Role.RoleData.BaseData
 {
-    [CreateAssetMenu(fileName = "SunWuKongData", menuName = "RoleData/孙悟空")]
+    [CreateAssetMenu(fileName = "盖伦", menuName = "RoleData/盖伦")]
     public class GaiLunData : RoleBaseData
     {
         public int maxCombos = 5;

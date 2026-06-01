@@ -1,11 +1,11 @@
 using System;
-using GamePlay.Inventory.Model;
 using GamePlay.Inventory.ScriptObjects;
+using GamePlay.UI.Inventory.Model;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace GamePlay.UI.Inventory.View
+namespace GamePlay.UI.Inventory.View.SingleView
 {
     public class ItemInfoView : MonoBehaviour
     {

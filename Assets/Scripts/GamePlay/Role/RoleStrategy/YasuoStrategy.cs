@@ -1,5 +1,6 @@
 ﻿using GamePlay.Role.RoleBoxCollider;
 using GamePlay.Role.RoleData;
+using GamePlay.Role.RoleData.BaseData;
 using UnityEngine;
 using UnityEngine.InputSystem;
 

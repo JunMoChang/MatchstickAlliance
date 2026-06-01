@@ -1,4 +1,5 @@
 ﻿using GamePlay.Role.RoleData;
+using GamePlay.Role.RoleData.BaseData;
 using UnityEngine;
 
 namespace GamePlay.Role.RoleStrategy

@@ -1,15 +1,17 @@
-﻿using UnityEngine;
+﻿using GamePlay.UI.Inventory.View;
+using GamePlay.UI.Inventory.View.SingleView;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace GamePlay.Inventory.Controller
 {
     public class ItemInteractionController : MonoBehaviour, IPointerClickHandler
     {
-        private View.ItemSlotView slotView;
+        private ItemSlotView slotView;
         
         void Start()
         {
-            slotView = GetComponent<View.ItemSlotView>();
+            slotView = GetComponent<ItemSlotView>();
         }
         
         public void OnPointerClick(PointerEventData eventData)

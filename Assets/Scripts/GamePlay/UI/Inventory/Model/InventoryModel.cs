@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
 using GamePlay.Inventory.ScriptObjects;
+using GamePlay.Role.RoleData;
 
-namespace GamePlay.Inventory.Model
+namespace GamePlay.UI.Inventory.Model
 {
     public class InventoryModel
     {
@@ -85,11 +86,12 @@ namespace GamePlay.Inventory.Model
             return false;
         }
 
-        public void EquipItem(ItemDataModel item)
+        public void EquipItem(ItemDataModel item, RoleName role)
         {
             if (item == null || item.IsEmpty() || item.IsEquipped) return;
 
             item.IsEquipped = true;
+            item.EquippedByRole = role;
             OnItemEquipped?.Invoke(item);
             NotifyInventoryChanged(item.ItemSo.itemType);
         }
@@ -99,6 +101,7 @@ namespace GamePlay.Inventory.Model
             if (item == null || !item.IsEquipped) return;
 
             item.IsEquipped = false;
+            item.EquippedByRole = null;
 
             List<ItemDataModel> dataList = itemsDataDic[item.ItemSo.itemType];
             foreach (ItemDataModel data in dataList)
@@ -121,7 +124,7 @@ namespace GamePlay.Inventory.Model
         /// <summary>
         /// 从堆叠物品中拆分 1 个并标记为已装备，返回新创建的装备中物品
         /// </summary>
-        public ItemDataModel SplitEquipItem(ItemDataModel stackItem)
+        public ItemDataModel SplitEquipItem(ItemDataModel stackItem, RoleName role)
         {
             if (stackItem == null || stackItem.StorageItemQuantity <= 1) return null;
 
@@ -130,6 +133,7 @@ namespace GamePlay.Inventory.Model
             ItemDataModel newItem = new ItemDataModel();
             newItem.AddNewData(stackItem.ItemSo, stackItem.ItemRarity, 1);
             newItem.IsEquipped = true;
+            newItem.EquippedByRole = role;
 
             itemsDataDic[stackItem.ItemSo.itemType].Add(newItem);
             isAllItemsCacheChange = true;
@@ -169,6 +173,26 @@ namespace GamePlay.Inventory.Model
                 foreach (ItemDataModel item in itemsDataDic[type])
                 {
                     if (item.IsEquipped) result.Add(item);
+                }
+            }
+            SortByRarityDesc(result);
+            return result;
+        }
+
+        /// <summary>
+        /// 获取指定角色的已装备物品
+        /// </summary>
+        public List<ItemDataModel> GetEquippedItemsForRole(RoleName role)
+        {
+            List<ItemDataModel> result = new List<ItemDataModel>();
+            foreach (ItemScriptableObject.ItemType type in ItemScriptableObject.StorableItemType)
+            {
+                if (type == ItemScriptableObject.ItemType.Material || type == ItemScriptableObject.ItemType.Rune) continue;
+
+                foreach (ItemDataModel item in itemsDataDic[type])
+                {
+                    if (item.IsEquipped && item.EquippedByRole == role)
+                        result.Add(item);
                 }
             }
             SortByRarityDesc(result);

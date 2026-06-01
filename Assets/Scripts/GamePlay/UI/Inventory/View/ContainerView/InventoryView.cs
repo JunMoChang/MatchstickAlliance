@@ -1,11 +1,12 @@
 using System.Collections;
 using System.Collections.Generic;
-using GamePlay.Inventory.Model;
 using GamePlay.Inventory.ScriptObjects;
+using GamePlay.UI.Inventory.Model;
 using GamePlay.UI.Inventory.View.ScrollView;
+using GamePlay.UI.Inventory.View.SingleView;
 using UnityEngine;
 
-namespace GamePlay.UI.Inventory.View
+namespace GamePlay.UI.Inventory.View.ContainerView
 {
     public class InventoryView : MonoBehaviour
     {
@@ -22,7 +23,6 @@ namespace GamePlay.UI.Inventory.View
         
         [SerializeField] private UnityEngine.UI.Button closeBtn;
         [SerializeField] private UnityEngine.UI.Button itemInfoViewCloseBtn;
-        
         
         private RectTransform itemInfoPanel;
         private Vector2 backpackOriginalPos;

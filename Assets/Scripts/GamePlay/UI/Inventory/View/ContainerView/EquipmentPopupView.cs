@@ -1,12 +1,12 @@
 using System;
 using System.Collections.Generic;
-using GamePlay.Inventory.Model;
+using GamePlay.UI.Inventory.Model;
 using GamePlay.UI.Inventory.View.ScrollView;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace GamePlay.UI
+namespace GamePlay.UI.Inventory.View.ContainerView
 {
     public class EquipmentPopupView : MonoBehaviour
     {

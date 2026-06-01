@@ -1,6 +1,9 @@
-﻿namespace GamePlay.Role.RoleData.BaseData
+﻿using UnityEngine;
+
+namespace GamePlay.Role.RoleData.BaseData
 {
-    public class JieData
+    [CreateAssetMenu(fileName = "劫", menuName = "RoleData / 劫")]
+    public class JieData : RoleBaseData
     {
         
     }

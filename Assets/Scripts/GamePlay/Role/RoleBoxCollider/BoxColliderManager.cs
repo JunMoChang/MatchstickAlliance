@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using GamePlay.GameModel;
 using GamePlay.Role.RoleData;
+using GamePlay.Role.RoleData.BaseData;
 #if UNITY_EDITOR
 using UnityEditor;
 #endif

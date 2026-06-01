@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using GamePlay.Inventory.ScriptObjects;
+using GamePlay.Role.RoleData;
 using UnityEngine;
 
 namespace GamePlay.PlayerDataHandle
@@ -20,6 +21,7 @@ namespace GamePlay.PlayerDataHandle
             else Destroy(gameObject);
 
             PlayerData = saveManager.LoadData();
+            //PlayerData.ownedRoles.Add(RoleName.亚索, new RoleSaveData { roleName = RoleName.亚索, roleLevel = 1 });
         }
 
         void OnApplicationQuit()
@@ -86,9 +88,29 @@ namespace GamePlay.PlayerDataHandle
             saveManager.Save(PlayerData);
         }
         
-        public void SetEquippedItems(List<PlayerData.ItemInstance> items)
+        /// <summary>
+        /// 设置指定角色的已装备物品
+        /// </summary>
+        public void SetEquippedItemsForRole(RoleName role, List<PlayerData.ItemInstance> items)
         {
-            PlayerData.equippedItems = items;
+            PlayerData.SetEquippedItemsForRole(role, items);
+            saveManager.Save(PlayerData);
+        }
+
+        /// <summary>
+        /// 获取指定角色的已装备物品
+        /// </summary>
+        public List<PlayerData.ItemInstance> GetEquippedItemsForRole(RoleName role)
+        {
+            return PlayerData.GetEquippedItemsForRole(role);
+        }
+
+        /// <summary>
+        /// 清除指定角色的所有已装备物品
+        /// </summary>
+        public void ClearEquippedItemsForRole(RoleName role)
+        {
+            PlayerData.roleEquippedItems.Remove(role);
             saveManager.Save(PlayerData);
         }
         

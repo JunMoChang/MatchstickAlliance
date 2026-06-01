@@ -1,16 +1,14 @@
 using System;
 using System.Collections.Generic;
-using GamePlay.Inventory.Model;
-using GamePlay.PlayerDataHandle;
-using GamePlay.Role;
 using GamePlay.Role.RoleData;
-using GamePlay.UI.Inventory.View;
+using GamePlay.Role.RoleData.BaseData;
+using GamePlay.UI.Inventory.Model;
 using GamePlay.UI.Inventory.View.SingleView;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
-namespace GamePlay.UI
+namespace GamePlay.UI.Inventory.View.ContainerView
 {
     public class RoleInfoView : MonoBehaviour
     {
@@ -20,7 +18,8 @@ namespace GamePlay.UI
             public RoleProperty property;
             public TMP_Text text;
         }
-
+    
+        [SerializeField] private Image roleImage;
         [SerializeField] private TMP_Text roleNameText;
         [SerializeField] private ItemSlotView[] equipmentSlots;
         [SerializeField] private RolePropertyText[] rolePropertyTexts;
@@ -28,13 +27,12 @@ namespace GamePlay.UI
 
         [SerializeField] private GameObject roleContext;
         [SerializeField] private GameObject roleLabelPrefab;
-        [SerializeField] private RoleRegistry roleRegistry;
 
         private Dictionary<RoleProperty, TMP_Text> rolePropertyDic;
-        private RoleSaveData currentSaveData;
-        private readonly List<GameObject> roleLabelInstances = new ();
+        private readonly List<GameObject> roleLabelInstances = new();
 
         public event Action<ItemDataModel> OnUnequipClicked;
+        public event Action<RoleName, RoleSaveData> OnRoleLabelClicked;
 
         public void Init()
         {
@@ -51,8 +49,6 @@ namespace GamePlay.UI
             {
                 rolePropertyDic.Add(property.property, property.text);
             }
-
-            BuildRoleLabels();
         }
 
         void OnDestroy()
@@ -67,15 +63,8 @@ namespace GamePlay.UI
             ClearRoleLabels();
         }
 
-        public void Show()
+        public void ShowPanel()
         {
-            Dictionary<RoleName, RoleSaveData> ownedRoles = PlayerDataManager.Instance.PlayerData.ownedRoles;
-            foreach (KeyValuePair<RoleName, RoleSaveData> kvp in ownedRoles)
-            {
-                SwitchRole(kvp.Key, kvp.Value);
-                break;
-            }
-
             gameObject.SetActive(true);
         }
 
@@ -83,84 +72,49 @@ namespace GamePlay.UI
         {
             gameObject.SetActive(false);
         }
-
-        public void RefreshRoleLabels()
-        {
-            BuildRoleLabels();
-        }
-
-        private void BuildRoleLabels()
+        
+        public void SetRoleLabels(IReadOnlyList<(RoleName name, RoleSaveData saveData)> roles)
         {
             ClearRoleLabels();
-            Dictionary<RoleName, RoleSaveData> ownedRoles = PlayerDataManager.Instance.PlayerData.ownedRoles;
-            foreach (KeyValuePair<RoleName, RoleSaveData> kvp in ownedRoles)
+            foreach ((RoleName name, RoleSaveData saveData) in roles)
             {
                 GameObject label = Instantiate(roleLabelPrefab, roleContext.transform);
 
                 TMP_Text nameText = label.GetComponentInChildren<TMP_Text>();
-                if (nameText != null) nameText.text = $"{kvp.Key} \n {kvp.Value.roleLevel}";
+                if (nameText != null) nameText.text = $"{name} \n Lv:{saveData.roleLevel}";
 
                 Button btn = label.GetComponent<Button>();
-                if (btn)
-                {
-                    RoleName rn = kvp.Key;
-                    RoleSaveData sd = kvp.Value;
-                    btn.onClick.AddListener(() => SwitchRole(rn, sd));
-                }
+                if (btn != null) btn.onClick.AddListener(() => OnRoleLabelClicked?.Invoke(name, saveData));
+                
 
                 roleLabelInstances.Add(label);
             }
         }
-
-        private void SwitchRole(RoleName roleName, RoleSaveData saveData)
+        
+        public void SetRoleBaseInfo(RoleBaseData roleData)
         {
-            currentSaveData = saveData;
-            roleNameText.text = roleName.ToString();
-            RefreshAllProperties();
+            if (roleData == null) return;
+            
+            roleNameText.text = roleData.roleName.ToString();
+            roleImage.sprite = roleData.exhibitionIcon;
         }
 
-        private void ClearRoleLabels()
-        {
-            foreach (GameObject label in roleLabelInstances)
-            {
-                if (label == null) continue;
-                Button btn = label.GetComponent<Button>();
-                if (btn) btn.onClick.RemoveAllListeners();
-                Destroy(label);
-            }
-            roleLabelInstances.Clear();
-        }
-
-        private void OnEquipmentInfoUnequipClicked(ItemDataModel dataModel)
-        {
-            ClearEquipmentSlotInfo(dataModel);
-            OnUnequipClicked?.Invoke(dataModel);
-        }
-
-        private void OnSlotClicked(ItemSlotView slot)
-        {
-            UpdateItemDescriptionInfo(slot.currentDataModel);
-        }
-
-        private void UpdateItemDescriptionInfo(ItemDataModel currentDataModel)
-        {
-            equipmentInfoView.Show(currentDataModel);
-        }
-
-        private void RefreshAllProperties()
-        {
-            foreach (var kvp in rolePropertyDic)
-            {
-                UpdateRolePropertyDisplay(kvp.Key);
-            }
-        }
-
-        private void UpdateRolePropertyDisplay(RoleProperty property)
+        /// <summary>
+        /// 设置角色单个属性显示
+        /// </summary>
+        public void SetRoleProperty(RoleProperty property, float value)
         {
             if (rolePropertyDic.TryGetValue(property, out TMP_Text text))
             {
-                float value = currentSaveData.GetProperty(property);
                 text.text = $"{property}: {value}";
+            }
+        }
+        
+        public void ClearAllEquipmentSlots()
+        {
+            foreach (ItemSlotView slotView in equipmentSlots)
+            {
+                slotView.SetData(null);
             }
         }
 
@@ -185,7 +139,35 @@ namespace GamePlay.UI
             return false;
         }
 
-        private void ClearEquipmentSlotInfo(ItemDataModel dataModel)
+        private void ClearRoleLabels()
+        {
+            foreach (GameObject label in roleLabelInstances)
+            {
+                if (label == null) continue;
+                Button btn = label.GetComponent<Button>();
+                if (btn != null) btn.onClick.RemoveAllListeners();
+                Destroy(label);
+            }
+            roleLabelInstances.Clear();
+        }
+
+        private void OnEquipmentInfoUnequipClicked(ItemDataModel dataModel)
+        {
+            ClearClickedEquipmentSlotInfo(dataModel);
+            OnUnequipClicked?.Invoke(dataModel);
+        }
+
+        private void OnSlotClicked(ItemSlotView slot)
+        {
+            UpdateEquipmentInfo(slot.currentDataModel);
+        }
+
+        private void UpdateEquipmentInfo(ItemDataModel currentDataModel)
+        {
+            equipmentInfoView.Show(currentDataModel);
+        }
+
+        private void ClearClickedEquipmentSlotInfo(ItemDataModel dataModel)
         {
             foreach (ItemSlotView slotView in equipmentSlots)
             {

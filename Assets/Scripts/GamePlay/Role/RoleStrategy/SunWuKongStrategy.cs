@@ -2,6 +2,7 @@
 using GamePlay.GameModel;
 using UnityEngine;
 using GamePlay.Role.RoleData;
+using GamePlay.Role.RoleData.BaseData;
 
 namespace GamePlay.Role.RoleStrategy
 {
@@ -9,7 +10,7 @@ namespace GamePlay.Role.RoleStrategy
     public class SunWuKongStrategy : IRoleStrategy
     {
         private RoleContext roleContext;
-        private SunWuKongData template;
+        private MonkeyData template;
         private RoleBoxCollider.BoxColliderManager boxColliderManager;
         private Animator animator;
         private Rigidbody2D rb;
@@ -34,7 +35,7 @@ namespace GamePlay.Role.RoleStrategy
         public void Initialize(RoleContext _context)
         {
             roleContext = _context;
-            template = (SunWuKongData)roleContext.Template;
+            template = (MonkeyData)roleContext.Template;
             runtimeData = roleContext.RuntimeData;
             animator = roleContext.animator;
             rb = roleContext.rb;

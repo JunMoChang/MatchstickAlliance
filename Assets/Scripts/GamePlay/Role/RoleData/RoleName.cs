@@ -2,8 +2,8 @@
 {
     public enum RoleName
     {
-        孙悟空,
-        亚索,
+        猴子,
+        武士,
         劫,
         盖伦
     }

@@ -2,8 +2,8 @@
 
 namespace GamePlay.Role.RoleData.BaseData
 {
-    [CreateAssetMenu(fileName = "MonkeyData", menuName = "RoleData/猴子")]
-    public class SunWuKongData : RoleBaseData
+    [CreateAssetMenu(fileName = "猴子", menuName = "RoleData/猴子")]
+    public class MonkeyData : RoleBaseData
     {
         public int maxCombos = 5;
 

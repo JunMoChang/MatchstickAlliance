@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace GamePlay.Inventory
+namespace GamePlay.UI.Inventory
 {
     public class ItemPickUp : MonoBehaviour
     {

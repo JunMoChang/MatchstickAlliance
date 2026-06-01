@@ -1,5 +1,6 @@
 ﻿using GamePlay.GameModel;
 using GamePlay.Role.RoleBoxCollider;
+using GamePlay.Role.RoleData.BaseData;
 using GamePlay.Role.RoleStrategy;
 using UnityEngine;
 
@@ -31,7 +32,7 @@ namespace GamePlay.Role.RoleData
             Template = _template;
             SaveData = _saveData;
             RuntimeData = new RoleRuntimeData();
-            RuntimeData.Init(_saveData);
+            RuntimeData.Init(_saveData, _template);
             boxColliderManager.InitRuntime(RuntimeData);
         }
         public void SetStrategy(IRoleStrategy s)
