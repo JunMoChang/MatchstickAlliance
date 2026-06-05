@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 9facf02c60be4ef4aa9d17669842714f
+guid: ddd9c0862b5033b4b882235d61ea663f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -5885712381811052457
-    second: menu_rune_0
+      213: 5846684960805701898
+    second: skill_2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,7 +46,7 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 1
+  spriteMode: 2
   spriteExtrude: 1
   spriteMeshType: 1
   alignment: 0
@@ -100,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: menu_rune_0
+      name: skill_2_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 60
-        height: 60
+        width: 80
+        height: 80
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -115,8 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 750b808c5cfb15ea0800000000000000
-      internalID: -5885712381811052457
+      spriteID: a09417aaef8932150800000000000000
+      internalID: 5846684960805701898
       vertices: []
       indices: 
       edges: []
@@ -125,7 +125,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 5e97eb03825dee720800000000000000
+    spriteID: 
     internalID: 0
     vertices: []
     indices: 
@@ -135,7 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      menu_rune_0: -5885712381811052457
+      skill_2_0: 5846684960805701898
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
