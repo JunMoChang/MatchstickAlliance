@@ -1,7 +1,10 @@
 using System;
 using System.Collections.Generic;
+using AssetLoad;
 using GamePlay.Inventory.ScriptObjects;
 using GamePlay.Role.RoleData;
+using GamePlay.Role.RoleData.BaseData;
+using GamePlay.UI.Inventory.Model;
 using UnityEngine;
 
 namespace GamePlay.PlayerDataHandle
@@ -15,21 +18,42 @@ namespace GamePlay.PlayerDataHandle
 
         public event Action OnCurrencyChanged;
 
+        private InventoryModel inventoryModel;
+        private bool isInventoryInitializing;
+        
         void Awake()
         {
             if (Instance == null) Instance = this;
             else Destroy(gameObject);
 
             PlayerData = saveManager.LoadData();
-            //PlayerData.ownedRoles.Add(RoleName.亚索, new RoleSaveData { roleName = RoleName.亚索, roleLevel = 1 });
+            //GameDataManager.OnReady += Test;
         }
 
+        void Test()
+        {
+            UnLockNewRole(RoleName.武士);
+        }
         void OnApplicationQuit()
         {
             saveManager.Save(PlayerData);
             Debug.Log("退出保存完成");
         }
 
+        public void UnLockNewRole(RoleName roleName)
+        {
+            RoleRegistry.RoleEntry? roleEntry = GameDataManager.RoleRegistry.GetRoleEntry(roleName);
+            if (roleEntry != null)
+            {
+                RoleBaseData newRole = roleEntry.Value.template;
+                RoleSaveData newSaveData = new RoleSaveData { roleName = roleName, roleLevel = newRole.roleLevel };
+                
+                newRole.FirstLoadSaveData(newSaveData);   
+                bool success = PlayerData.ownedRoles.TryAdd(roleName, newSaveData);
+                
+                if (!success) Debug.LogError($"添加角色:{roleName}失败");
+            }
+        }
   
         public void AddGold(int amount)
         {
@@ -68,7 +92,7 @@ namespace GamePlay.PlayerDataHandle
         {
             if (itemSo.itemMaxSuperposition > 1)
             {
-                foreach (PlayerData.ItemInstance instance in PlayerData.inventoryItems)
+                foreach (PlayerData.ItemInstance instance in PlayerData.unequippedItems)
                 {
                     if (instance.itemName == itemSo.itemName && instance.itemRarity == rarity)
                     {
@@ -79,7 +103,7 @@ namespace GamePlay.PlayerDataHandle
                 }
             }
             
-            PlayerData.inventoryItems.Add(new PlayerData.ItemInstance
+            PlayerData.unequippedItems.Add(new PlayerData.ItemInstance
             {
                 itemName = itemSo.itemName,
                 itemRarity = rarity,
@@ -125,6 +149,126 @@ namespace GamePlay.PlayerDataHandle
         public void Save()
         {
             saveManager.Save(PlayerData);
+        }
+        
+        /// <summary>
+        /// 从 PlayerData 填充 InventoryModel
+        /// </summary>
+        public void PopulateInventoryModel(InventoryModel model)
+        {
+            isInventoryInitializing = true;
+
+            foreach (PlayerData.ItemInstance itemInstance in PlayerData.unequippedItems)
+            {
+                ItemScriptableObject so = GameDataManager.EquipmentPool?.FindItemScriptableObject(itemInstance.itemName);
+                ItemDataModel modelItem = model.AddItem(so, itemInstance.itemRarity, itemInstance.owenQuantities);
+                if (modelItem != null && !string.IsNullOrEmpty(itemInstance.instanceId))
+                    modelItem.InstanceId = itemInstance.instanceId;
+            }
+
+            foreach (KeyValuePair<RoleName, List<PlayerData.ItemInstance>> kvp in PlayerData.roleEquippedItems)
+            {
+                foreach (PlayerData.ItemInstance equippedInstance in kvp.Value)
+                {
+                    ItemScriptableObject so = GameDataManager.EquipmentPool?.FindItemScriptableObject(equippedInstance.itemName);
+                    if (so == null) continue;
+
+                    ItemDataModel newItem = model.AddItem(so, equippedInstance.itemRarity, equippedInstance.owenQuantities);
+                    if (newItem != null)
+                    {
+                        newItem.InstanceId = equippedInstance.instanceId;
+                        model.EquipItem(newItem, kvp.Key);
+                    }
+                }
+            }
+
+            isInventoryInitializing = false;
+        }
+
+        /// <summary>
+        /// 订阅 InventoryModel 事件，运行时修改同步到 PlayerData
+        /// </summary>
+        public void BindToModel(InventoryModel model)
+        {
+            inventoryModel = model;
+            model.OnItemEquipped += OnItemEquipped;
+            model.OnItemUnequipped += OnItemUnequipped;
+        }
+
+        public void UnbindFromModel(InventoryModel model)
+        {
+            model.OnItemEquipped -= OnItemEquipped;
+            model.OnItemUnequipped -= OnItemUnequipped;
+            inventoryModel = null;
+        }
+
+        /// <summary>
+        /// 背包物品增加（掉落/奖励），同时更新 Model 和 PlayerData
+        /// </summary>
+        public ItemDataModel AddItemToModel(ItemScriptableObject itemSo, ItemRarityScriptObject.ItemRarity rarity, int quantity)
+        {
+            if (inventoryModel == null) return null;
+
+            ItemDataModel result = inventoryModel.AddItem(itemSo, rarity, quantity);
+            if (result != null)
+            {
+                SyncUnequippedItemsByType(itemSo.itemType);
+                Save();
+            }
+            return result;
+        }
+
+        private void OnItemEquipped(ItemDataModel item)
+        {
+            if (isInventoryInitializing) return;
+
+            RoleName role = item.EquippedByRole.Value;
+
+            PlayerData.unequippedItems.RemoveAll(i => i.instanceId == item.InstanceId);
+
+            if (!PlayerData.roleEquippedItems.ContainsKey(role))
+                PlayerData.roleEquippedItems[role] = new List<PlayerData.ItemInstance>();
+            PlayerData.roleEquippedItems[role].Add(CreateItemInstance(item));
+
+            Save();
+        }
+
+        private void OnItemUnequipped(ItemDataModel item, RoleName previousRole)
+        {
+            if (isInventoryInitializing) return;
+
+            if (PlayerData.roleEquippedItems.TryGetValue(previousRole, out List<PlayerData.ItemInstance> list))
+            {
+                list.RemoveAll(i => i.instanceId == item.InstanceId);
+                if (list.Count == 0) PlayerData.roleEquippedItems.Remove(previousRole);
+            }
+
+            SyncUnequippedItemsByType(item.ItemSo.itemType);
+            Save();
+        }
+
+        private void SyncUnequippedItemsByType(ItemScriptableObject.ItemType type)
+        {
+            PlayerData.unequippedItems.RemoveAll(i =>
+            {
+                ItemScriptableObject so = GameDataManager.EquipmentPool?.FindItemScriptableObject(i.itemName);
+                return so != null && so.itemType == type;
+            });
+
+            foreach (ItemDataModel item in inventoryModel.GetUnequippedItemsByType(type))
+                PlayerData.unequippedItems.Add(CreateItemInstance(item));
+        }
+
+        private static PlayerData.ItemInstance CreateItemInstance(ItemDataModel item)
+        {
+            return new PlayerData.ItemInstance
+            {
+                instanceId = item.InstanceId,
+                itemName = item.ItemSo.itemName,
+                itemRarity = item.ItemRarity,
+                owenQuantities = item.StorageItemQuantity,
+                level = item.EnhancementLevel
+            };
         }
     }
 }

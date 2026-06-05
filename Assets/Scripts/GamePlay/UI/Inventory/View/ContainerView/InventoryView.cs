@@ -44,37 +44,21 @@ namespace GamePlay.UI.Inventory.View.ContainerView
 
         public void BindInventoryModel(InventoryModel model)
         {
-            if (inventoryModel != null)
-            {
-                inventoryModel.OnInventoryChanged -= OnInventoryChanged;
-            }
-
             inventoryModel = model;
-            if (inventoryModel != null)
-            {
-                inventoryModel.OnInventoryChanged += OnInventoryChanged;
-            }
 
             CurrentCategoryType = ItemScriptableObject.ItemType.All;
-            
+
             scrollView.Initialize();
-            RefreshDisplay();
-        }
-
-        private void OnInventoryChanged(InventoryModel model, ItemScriptableObject.ItemType categoryType)
-        {
-            if (categoryType != CurrentCategoryType) return;
-
             RefreshDisplay();
         }
 
         private void RefreshDisplay()
         {
-            IReadOnlyList<ItemDataModel> allItems = inventoryModel.GetItemsByType(CurrentCategoryType);
+            IReadOnlyList<ItemDataModel> allItems = inventoryModel.GetUnequippedItemsByType(CurrentCategoryType);
             List<ItemDataModel> items = new List<ItemDataModel>(allItems.Count);
             foreach (ItemDataModel item in allItems)
             {
-                if (!item.IsEquipped) items.Add(item);
+                items.Add(item);
             }
             scrollView.SetData(items, inventoryModel.GetItemCapacity(CurrentCategoryType));
         }
@@ -165,8 +149,6 @@ namespace GamePlay.UI.Inventory.View.ContainerView
         
         private void OnDestroy()
         {
-            if (inventoryModel != null) inventoryModel.OnInventoryChanged -= OnInventoryChanged;
-            
             closeBtn.onClick.RemoveListener(Hide);
         }
     }

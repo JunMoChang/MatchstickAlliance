@@ -10,15 +10,14 @@ namespace GamePlay.UI.Inventory.ScriptObjects
     {
         public EquipmentData[] equipmentsData;
         private Dictionary<ItemScriptableObject.ItemName, ItemScriptableObject> equipmentsDictionary;
-        private bool _initialized;
-        
+
         [Serializable]
         public struct EquipmentData
         {
             public int star;
             public EquipmentEntry[] equipments;
         }
-        
+
         [Serializable]
         public struct EquipmentEntry
         {
@@ -28,18 +27,18 @@ namespace GamePlay.UI.Inventory.ScriptObjects
 
         public void Initialize()
         {
-            if (_initialized) return;
-            _initialized = true;
+            if (equipmentsDictionary != null) return;
 
             equipmentsDictionary = new (equipmentsData.Length);
+
             foreach (EquipmentData itemData in equipmentsData)
             {
                 foreach (EquipmentEntry equipment in itemData.equipments)
                 {
                     equipmentsDictionary.TryAdd(equipment.item.itemName, equipment.item);
                 }
-                
             }
+            Debug.Log($"EquipmentPool initialized: {equipmentsDictionary.Count} items");
         }
         public ItemScriptableObject RollEquipment(int star)
         {

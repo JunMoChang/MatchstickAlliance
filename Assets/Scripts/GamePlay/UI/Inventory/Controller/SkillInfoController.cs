@@ -11,8 +11,6 @@ namespace GamePlay.UI.Inventory.Controller
 {
     public class SkillInfoController : MonoBehaviour
     {
-
-
         [SerializeField] private SkillInfoView[] skillViews;
 
         [SerializeField] private GameObject skillInfoPanel;
@@ -24,6 +22,7 @@ namespace GamePlay.UI.Inventory.Controller
 
         public void Initialize(RoleInfoController roleInfoCtrl)
         {
+            Debug.Log("SkillInfoController::Initialize");
             roleInfoController = roleInfoCtrl;
             roleInfoController.OnRoleChanged += OnExternalRoleChanged;
 
@@ -33,7 +32,7 @@ namespace GamePlay.UI.Inventory.Controller
                 view.OnEnhanceClicked += OnEnhanceSkill;
             }
 
-            closeButton.onClick.AddListener(Hide);
+            closeButton.onClick.AddListener(HidePopup);
         }
 
         void OnDestroy()
@@ -46,7 +45,7 @@ namespace GamePlay.UI.Inventory.Controller
                 if (view != null) view.OnEnhanceClicked -= OnEnhanceSkill;
             }
 
-            closeButton.onClick.RemoveListener(Hide);
+            closeButton.onClick.RemoveListener(HidePopup);
         }
         
         /// <summary>
@@ -67,9 +66,10 @@ namespace GamePlay.UI.Inventory.Controller
             skillInfoPanel.SetActive(true);
         }
 
-        private void Hide()
+        public void HidePopup()
         {
             skillInfoPanel.SetActive(false);
+            roleInfoController.HidePopup();
         }
 
         private void SwitchRoleSkill(RoleSaveData saveData)

@@ -9,7 +9,6 @@ namespace GamePlay.Inventory.ScriptObjects
         public ItemName itemName;
         public ItemType itemType;
         public int itemStar = 1;
-        public ItemRarityScriptObject.ItemRarity itemRarity;
         public ItemProperty[] itemProperties;
         public RaritySprite[] itemSprites;
 
@@ -70,14 +69,6 @@ namespace GamePlay.Inventory.ScriptObjects
         public Sprite GetItemSprite(ItemRarityScriptObject.ItemRarity rarity)
         {
             return itemSprites[(int)rarity].sprite;
-        }
-        
-        public enum Buff
-        {
-            None,
-            MaxHealth,
-            Speed,
-            Damage,
         }
     }
 }

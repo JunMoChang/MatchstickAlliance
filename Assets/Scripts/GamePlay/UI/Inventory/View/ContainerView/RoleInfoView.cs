@@ -118,16 +118,16 @@ namespace GamePlay.UI.Inventory.View.ContainerView
             }
         }
 
-        public bool SetEquipmentInfo(ItemDataModel currentDataModel)
+        public void SetEquipmentInfo(ItemDataModel currentDataModel)
         {
             foreach (ItemSlotView slotView in equipmentSlots)
             {
                 if (slotView.currentDataModel != null) continue;
 
                 slotView.SetData(currentDataModel);
-                return true;
+                Debug.Log("RoleInfoView::SetEquipmentInfo");
+                return;
             }
-            return false;
         }
 
         public bool HasEmptyEquipmentSlot()

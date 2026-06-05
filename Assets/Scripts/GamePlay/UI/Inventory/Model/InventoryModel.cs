@@ -7,40 +7,40 @@ namespace GamePlay.UI.Inventory.Model
 {
     public class InventoryModel
     {
-        private readonly Dictionary<ItemScriptableObject.ItemType, List<ItemDataModel>> itemsDataDic;
+        private readonly Dictionary<ItemScriptableObject.ItemType, List<ItemDataModel>> unequippedItemsDataDic;
+        private readonly Dictionary<RoleName, List<ItemDataModel>> equippedItems;
         private readonly Dictionary<ItemScriptableObject.ItemType, int> itemsDataMaxCapacityDic;
         private readonly List<ItemDataModel> allItemsCache;
-
+        
         public int DefaultCapacity { get; private set; } = 30;
         private bool isAllItemsCacheChange;
-
-        public event Action<InventoryModel, ItemScriptableObject.ItemType> OnInventoryChanged;
-        public event Action<ItemDataModel> OnItemEquipped;
-        public event Action<ItemDataModel> OnItemUnequipped;
         
-
+        public event Action<ItemDataModel> OnItemEquipped;
+        public event Action<ItemDataModel, RoleName> OnItemUnequipped;
+  
         public InventoryModel()
         {
             int typeCount = ItemScriptableObject.StorableItemType.Length;
 
-            itemsDataDic = new Dictionary<ItemScriptableObject.ItemType, List<ItemDataModel>>(typeCount);
+            unequippedItemsDataDic = new Dictionary<ItemScriptableObject.ItemType, List<ItemDataModel>>(typeCount);
             itemsDataMaxCapacityDic = new Dictionary<ItemScriptableObject.ItemType, int>(typeCount);
             foreach (ItemScriptableObject.ItemType type in ItemScriptableObject.StorableItemType)
             {
                 itemsDataMaxCapacityDic.Add(type, DefaultCapacity);
-                itemsDataDic.Add(type, new List<ItemDataModel>(DefaultCapacity));
+                unequippedItemsDataDic.Add(type, new List<ItemDataModel>(DefaultCapacity));
             }
 
             allItemsCache = new List<ItemDataModel>(DefaultCapacity);
+            equippedItems = new Dictionary<RoleName, List<ItemDataModel>>();
         }
-
+        
         public ItemDataModel AddItem(ItemScriptableObject itemSo, ItemRarityScriptObject.ItemRarity rarity, int quantity)
         {
             if (itemSo == null || quantity <= 0) return null;
 
             if (itemSo.itemType == ItemScriptableObject.ItemType.Gold || itemSo.itemType == ItemScriptableObject.ItemType.Diamond) return null;
 
-            List<ItemDataModel> dataList = itemsDataDic[itemSo.itemType];
+            List<ItemDataModel> dataList = unequippedItemsDataDic[itemSo.itemType];
             ItemDataModel currentItemDataModel = null;
             
             if (itemSo.itemMaxSuperposition > 1)
@@ -63,7 +63,6 @@ namespace GamePlay.UI.Inventory.Model
 
                 dataList.Add(newItem);
                 isAllItemsCacheChange = true;
-                NotifyInventoryChanged(itemSo.itemType);
             }
             
             return currentItemDataModel;
@@ -92,33 +91,57 @@ namespace GamePlay.UI.Inventory.Model
 
             item.IsEquipped = true;
             item.EquippedByRole = role;
+
+            unequippedItemsDataDic[item.ItemSo.itemType].Remove(item);
+            isAllItemsCacheChange = true;
+
+            if (!equippedItems.TryGetValue(role, out List<ItemDataModel> list))
+            {
+                list = new List<ItemDataModel>();
+                equippedItems[role] = list;
+            }
+            list.Add(item);
+
             OnItemEquipped?.Invoke(item);
-            NotifyInventoryChanged(item.ItemSo.itemType);
         }
 
         public void UnequipItem(ItemDataModel item)
         {
-            if (item == null || !item.IsEquipped) return;
+            if (item == null || !item.IsEquipped || item.EquippedByRole == null) return;
 
-            item.IsEquipped = false;
-            item.EquippedByRole = null;
-
-            List<ItemDataModel> dataList = itemsDataDic[item.ItemSo.itemType];
-            foreach (ItemDataModel data in dataList)
+            RoleName previousRole = item.EquippedByRole.Value;
+            
+            if (equippedItems.TryGetValue(previousRole, out List<ItemDataModel> list))
             {
-                if (data == item || data.IsEquipped) continue;
-                if (!data.IsFull && data.ItemSo == item.ItemSo && data.ItemRarity == item.ItemRarity)
+                list.Remove(item);
+                if (list.Count == 0) equippedItems.Remove(previousRole);
+            }
+
+            // 尝试合并回背包中已有的同物品堆叠
+            List<ItemDataModel> dataList = unequippedItemsDataDic[item.ItemSo.itemType];
+            foreach (ItemDataModel itemData in dataList)
+            {
+                if (itemData == item || itemData.IsEquipped) continue;
+                if (!itemData.IsFull && itemData.ItemSo == item.ItemSo && itemData.ItemRarity == item.ItemRarity)
                 {
-                    data.AddQuantity(item.StorageItemQuantity);
-                    RemoveItem(item);
+                    itemData.AddQuantity(item.StorageItemQuantity);
+                    
+                    item.IsEquipped = false;
+                    item.EquippedByRole = null;
+                    OnItemUnequipped?.Invoke(item, previousRole);
+
                     item.ClearData();
-                    OnItemUnequipped?.Invoke(data);
                     return;
                 }
             }
 
-            OnItemUnequipped?.Invoke(item);
-            NotifyInventoryChanged(item.ItemSo.itemType);
+            // 未能合并，放回背包
+            item.IsEquipped = false;
+            item.EquippedByRole = null;
+
+            dataList.Add(item);
+            isAllItemsCacheChange = true;
+            OnItemUnequipped?.Invoke(item, previousRole);
         }
 
         /// <summary>
@@ -135,30 +158,30 @@ namespace GamePlay.UI.Inventory.Model
             newItem.IsEquipped = true;
             newItem.EquippedByRole = role;
 
-            itemsDataDic[stackItem.ItemSo.itemType].Add(newItem);
-            isAllItemsCacheChange = true;
+            if (!equippedItems.TryGetValue(role, out List<ItemDataModel> eqList))
+            {
+                eqList = new List<ItemDataModel>();
+                equippedItems[role] = eqList;
+            }
+            eqList.Add(newItem);
 
             OnItemEquipped?.Invoke(newItem);
-            NotifyInventoryChanged(stackItem.ItemSo.itemType);
 
             return newItem;
         }
-
-        /// <summary>
-        /// 获取指定类型的物品
-        /// </summary>
-        public IReadOnlyList<ItemDataModel> GetItemsByType(ItemScriptableObject.ItemType categoryType)
+        
+        public IReadOnlyList<ItemDataModel> GetUnequippedItemsByType(ItemScriptableObject.ItemType categoryType)
         {
-            if (categoryType == ItemScriptableObject.ItemType.All) return GetAllItems();
+            if (categoryType == ItemScriptableObject.ItemType.All) return GetUnequippedItems();
 
-            List<ItemDataModel> sorted = new List<ItemDataModel>(itemsDataDic[categoryType]);
+            List<ItemDataModel> sorted = new List<ItemDataModel>(unequippedItemsDataDic[categoryType]);
             SortByRarityDesc(sorted);
             return sorted;
         }
 
-        public IReadOnlyList<ItemDataModel> GetAllItems()
+        public IReadOnlyList<ItemDataModel> GetUnequippedItems()
         {
-            UpdateAllItems();
+            UpdateUnequippedItemsCache();
             
             return allItemsCache.AsReadOnly();
         }
@@ -166,15 +189,9 @@ namespace GamePlay.UI.Inventory.Model
         public List<ItemDataModel> GetEquippedItems()
         {
             List<ItemDataModel> result = new List<ItemDataModel>();
-            foreach (ItemScriptableObject.ItemType type in ItemScriptableObject.StorableItemType)
-            {
-                if (type == ItemScriptableObject.ItemType.Material || type == ItemScriptableObject.ItemType.Rune) continue;
+            foreach (List<ItemDataModel> list in equippedItems.Values)
+                result.AddRange(list);
 
-                foreach (ItemDataModel item in itemsDataDic[type])
-                {
-                    if (item.IsEquipped) result.Add(item);
-                }
-            }
             SortByRarityDesc(result);
             return result;
         }
@@ -184,17 +201,10 @@ namespace GamePlay.UI.Inventory.Model
         /// </summary>
         public List<ItemDataModel> GetEquippedItemsForRole(RoleName role)
         {
-            List<ItemDataModel> result = new List<ItemDataModel>();
-            foreach (ItemScriptableObject.ItemType type in ItemScriptableObject.StorableItemType)
-            {
-                if (type == ItemScriptableObject.ItemType.Material || type == ItemScriptableObject.ItemType.Rune) continue;
+            if (!equippedItems.TryGetValue(role, out List<ItemDataModel> list))
+                return new List<ItemDataModel>();
 
-                foreach (ItemDataModel item in itemsDataDic[type])
-                {
-                    if (item.IsEquipped && item.EquippedByRole == role)
-                        result.Add(item);
-                }
-            }
+            List<ItemDataModel> result = new List<ItemDataModel>(list);
             SortByRarityDesc(result);
             return result;
         }
@@ -208,23 +218,19 @@ namespace GamePlay.UI.Inventory.Model
                     type == ItemScriptableObject.ItemType.Rune)
                     continue;
 
-                foreach (ItemDataModel item in itemsDataDic[type])
-                {
-                    if (!item.IsEquipped)
-                        result.Add(item);
-                }
+                result.AddRange(unequippedItemsDataDic[type]);
             }
             SortByRarityDesc(result);
             return result;
         }
 
-        private void UpdateAllItems()
+        private void UpdateUnequippedItemsCache()
         {
             if (isAllItemsCacheChange)
             {
                 isAllItemsCacheChange = false;
                 allItemsCache.Clear();
-                foreach (List<ItemDataModel> typeList in itemsDataDic.Values)
+                foreach (List<ItemDataModel> typeList in unequippedItemsDataDic.Values)
                 {
                     allItemsCache.AddRange(typeList);
                 }
@@ -238,11 +244,8 @@ namespace GamePlay.UI.Inventory.Model
 
         private void RemoveItem(ItemDataModel item)
         {
-            if (itemsDataDic[item.ItemSo.itemType].Remove(item))
-            {
+            if (unequippedItemsDataDic[item.ItemSo.itemType].Remove(item))
                 isAllItemsCacheChange = true;
-                NotifyInventoryChanged(item.ItemSo.itemType);
-            }
         }
         
         public int GetItemCapacity(ItemScriptableObject.ItemType categoryType)
@@ -257,9 +260,5 @@ namespace GamePlay.UI.Inventory.Model
             list.Sort((a, b) => b.ItemRarity.CompareTo(a.ItemRarity));
         }
 
-        private void NotifyInventoryChanged(ItemScriptableObject.ItemType categoryType)
-        {
-            OnInventoryChanged?.Invoke(this, categoryType);
-        }
     }
 }

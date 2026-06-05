@@ -16,8 +16,8 @@ namespace GamePlay.UI.Inventory.Controller
 
         public void Initialize(InventoryModel _inventoryModel)
         {
+            Debug.Log("EquipmentController::Initialize");
             inventoryModel = _inventoryModel;
-            inventoryModel.OnInventoryChanged += OnModelChanged;
 
             equipmentPopupView.Initialize();
             equipmentPopupView.OnSlotFunctionButtonClicked += OnSlotFunctionButtonClicked;
@@ -35,7 +35,7 @@ namespace GamePlay.UI.Inventory.Controller
 
         private void OnEquipmentPopupClosed()
         {
-            roleInfoController.Hide();
+            roleInfoController.HidePopup();
         }
 
         public void OnFunctionButtonNameChanged(FunctionButtonName funBtnNm)
@@ -57,22 +57,24 @@ namespace GamePlay.UI.Inventory.Controller
                     {
                         if (!roleInfoController.HasEmptyEquipmentSlot()) break;
 
-                        ItemDataModel equippedItem = inventoryModel.SplitEquipItem(itemData, roleInfoController.CurrentRoleName);
+                        inventoryModel.SplitEquipItem(itemData, roleInfoController.CurrentRoleName);
                     }
                     else
                     {
                         if (!roleInfoController.HasEmptyEquipmentSlot()) break;
                         inventoryModel.EquipItem(itemData, roleInfoController.CurrentRoleName);
                     }
+                    RefreshView();
                     break;
                 case FunctionButtonName.强化:
                     break;
             }
         }
 
-        private void OnModelChanged(InventoryModel _, ItemScriptableObject.ItemType __)
+        public void HidePopup()
         {
-            RefreshView();
+            equipmentPopupView.gameObject.SetActive(false);
+            roleInfoController.HidePopup();
         }
 
         private void RefreshView()

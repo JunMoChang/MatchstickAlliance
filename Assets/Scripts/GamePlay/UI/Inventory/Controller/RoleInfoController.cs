@@ -25,9 +25,10 @@ namespace GamePlay.UI.Inventory.Controller
 
         public void Initialize(InventoryModel model)
         {
+            Debug.Log("RoleInfoController::Initialize");
             inventoryModel = model;
-            inventoryModel.OnItemEquipped += OnItemEquippedOrUnequipped;
-            inventoryModel.OnItemUnequipped += OnItemEquippedOrUnequipped;
+            inventoryModel.OnItemEquipped += OnItemEquippedRefresh;
+            inventoryModel.OnItemUnequipped += OnItemUnequippedRefresh;
 
             roleInfoView.Init();
             roleInfoView.OnUnequipClicked += OnUnequipItem;
@@ -40,8 +41,8 @@ namespace GamePlay.UI.Inventory.Controller
         {
             if (inventoryModel != null)
             {
-                inventoryModel.OnItemEquipped -= OnItemEquippedOrUnequipped;
-                inventoryModel.OnItemUnequipped -= OnItemEquippedOrUnequipped;
+                inventoryModel.OnItemEquipped -= OnItemEquippedRefresh;
+                inventoryModel.OnItemUnequipped -= OnItemUnequippedRefresh;
             }
 
             if (roleInfoView != null)
@@ -62,7 +63,6 @@ namespace GamePlay.UI.Inventory.Controller
                 foreach (KeyValuePair<RoleName, RoleSaveData> pair in ownedRoles)
                 {
                     SwitchRole(pair.Key, pair.Value);
-                    Debug.Log(pair.Value.roleName);
                     break;
                 }
             }
@@ -70,7 +70,7 @@ namespace GamePlay.UI.Inventory.Controller
             roleInfoView.ShowPanel();
         }
 
-        public void Hide()
+        public void HidePopup()
         {
             roleInfoView.Hide();
         }
@@ -104,25 +104,28 @@ namespace GamePlay.UI.Inventory.Controller
             OnRoleChanged?.Invoke(roleName, saveData);
         }
         
+        private void OnItemEquippedRefresh(ItemDataModel item)
+        {
+            if (item.EquippedByRole == curRoleName) RefreshEquipmentSlots();
+        }
+
+        private void OnItemUnequippedRefresh(ItemDataModel item, RoleName previousRole)
+        {
+            if (previousRole == curRoleName) RefreshEquipmentSlots();
+        }
+        
         private void RefreshEquipmentSlots()
         {
             roleInfoView.ClearAllEquipmentSlots();
             if (inventoryModel == null) return;
 
             List<ItemDataModel> equippedItems = inventoryModel.GetEquippedItemsForRole(curRoleName);
+            Debug.Log(equippedItems.Count);
             foreach (ItemDataModel item in equippedItems)
             {
                 roleInfoView.SetEquipmentInfo(item);
             }
-        }
-        
-        /// <summary>
-        /// 仅当变更关联到当前角色或取消装备时刷新
-        /// </summary>
-        /// <param name="item"></param>
-        private void OnItemEquippedOrUnequipped(ItemDataModel item)
-        {
-            if (item.EquippedByRole == curRoleName || item.EquippedByRole == null) RefreshEquipmentSlots();
+            Debug.Log("RoleInfoController::RefreshEquipmentSlots");
         }
         
         private void OnUnequipItem(ItemDataModel item)
