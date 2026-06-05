@@ -42,6 +42,19 @@ namespace GamePlay.UI.Inventory.View.ContainerView
         {
             gameObject.SetActive(false);
         }
+        
+        public void SetRoleUnlocked(RoleName roleName)
+        {
+            foreach (Transform child in roleContent.transform)
+            {
+                RoleExhibitionView view = child.GetComponent<RoleExhibitionView>();
+                if (view != null && view.RoleName == roleName)
+                {
+                    view.SetUnlocked();
+                    return;
+                }
+            }
+        }
 
         void UnlockRole(RoleName roleName)
         {

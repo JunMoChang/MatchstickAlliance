@@ -26,7 +26,10 @@ namespace GamePlay.UI.Inventory.Controller
         }
         private void PurchaseRole(RoleName roleName)
         {
-            PlayerDataManager.Instance.UnLockNewRole(roleName);
+            if (PlayerDataManager.Instance.UnLockNewRole(roleName))
+            {
+                roleExhibitionView.SetRoleUnlocked(roleName);
+            }
         }
         
         

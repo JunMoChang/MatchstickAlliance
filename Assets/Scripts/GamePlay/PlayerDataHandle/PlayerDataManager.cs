@@ -40,19 +40,25 @@ namespace GamePlay.PlayerDataHandle
             Debug.Log("退出保存完成");
         }
 
-        public void UnLockNewRole(RoleName roleName)
+        public bool UnLockNewRole(RoleName roleName)
         {
             RoleRegistry.RoleEntry? roleEntry = GameDataManager.RoleRegistry.GetRoleEntry(roleName);
-            if (roleEntry != null)
+            if (roleEntry == null) return false;
+
+            if (!SpendDiamond(roleEntry.Value.template.price))
             {
-                RoleBaseData newRole = roleEntry.Value.template;
-                RoleSaveData newSaveData = new RoleSaveData { roleName = roleName, roleLevel = newRole.roleLevel };
-                
-                newRole.FirstLoadSaveData(newSaveData);   
-                bool success = PlayerData.ownedRoles.TryAdd(roleName, newSaveData);
-                
-                if (!success) Debug.LogError($"添加角色:{roleName}失败");
+                Debug.Log("钻石不足");
+                return false;
             }
+
+            RoleBaseData newRole = roleEntry.Value.template;
+            RoleSaveData newSaveData = new RoleSaveData { roleName = roleName, roleLevel = newRole.roleLevel };
+
+            newRole.FirstLoadSaveData(newSaveData);
+            bool success = PlayerData.ownedRoles.TryAdd(roleName, newSaveData);
+
+            if (!success) Debug.LogError($"添加角色:{roleName}失败");
+            return success;
         }
   
         public void AddGold(int amount)
@@ -73,7 +79,7 @@ namespace GamePlay.PlayerDataHandle
 
         public bool SpendGold(int amount)
         {
-            if (amount <= 0 || PlayerData.gameProps.gold < amount) return false;
+            if (amount < 0 || PlayerData.gameProps.gold < amount) return false;
             PlayerData.gameProps.gold -= amount;
             OnCurrencyChanged?.Invoke();
             saveManager.Save(PlayerData);
@@ -82,7 +88,7 @@ namespace GamePlay.PlayerDataHandle
 
         public bool SpendDiamond(int amount)
         {
-            if (amount <= 0 || PlayerData.gameProps.diamonds < amount) return false;
+            if (amount < 0 || PlayerData.gameProps.diamonds < amount) return false;
             PlayerData.gameProps.diamonds -= amount;
             OnCurrencyChanged?.Invoke();
             saveManager.Save(PlayerData);
