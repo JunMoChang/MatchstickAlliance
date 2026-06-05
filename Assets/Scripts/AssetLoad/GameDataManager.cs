@@ -18,19 +18,13 @@ namespace AssetLoad
         public static event Action OnReady;
 
         private static bool _isLoading;
-
-        /// <summary>
-        /// 自动在场景加载前启动异步加载
-        /// </summary>
+        
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
         private static void AutoInit()
         {
             if (!IsReady && !_isLoading) InitAsync();
         }
-
-        /// <summary>
-        /// 异步加载数据
-        /// </summary>
+        
         public static async void InitAsync()
         {
             if (IsReady || _isLoading) return;
@@ -40,13 +34,17 @@ namespace AssetLoad
             EquipmentPool = await LoadAsync<EquipmentPool>(nameof(EquipmentPool));
 
             if (EquipmentPool != null)
+            {
+                Debug.Log(EquipmentPool);
                 EquipmentPool.Initialize();
+            }
 
-            IsFailed = (RoleRegistry == null || EquipmentPool == null);
+            IsFailed = RoleRegistry == null || EquipmentPool == null;
             IsReady = true;
             _isLoading = false;
 
             OnReady?.Invoke();
+            
         }
 
         private static async Task<T> LoadAsync<T>(string address) where T : UnityEngine.Object

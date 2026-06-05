@@ -10,13 +10,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
-  m_Name: RoleRegistry
+  m_Name: Config
   m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
-  m_GroupName: RoleRegistry
-  m_GUID: b1886f28d7af99141bc015cdb81f0fdc
+  m_GroupName: Config
+  m_GUID: 4200c1a971dc7814f90d71a98c5fea24
   m_SerializeEntries:
+  - m_GUID: 385f646f15f81fe4597e90cb81a0b027
+    m_Address: EquipmentPool
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
   - m_GUID: 3f8ee2ab47faa1444bafdbea0f9a9123
-    m_Address: Assets/Scripts/GamePlay/Role/RoleData/RoleRegistry.asset
+    m_Address: RoleRegistry
     m_ReadOnly: 0
     m_SerializedLabels: []
     FlaggedDuringContentUpdateRestriction: 0
@@ -24,5 +29,5 @@ MonoBehaviour:
   m_Settings: {fileID: 11400000, guid: a51ced51aba0d9f46824787ae4fb8678, type: 2}
   m_SchemaSet:
     m_Schemas:
-    - {fileID: 11400000, guid: 9157e484fbc830c4ea3e0818b83e2f35, type: 2}
-    - {fileID: 11400000, guid: 68c16c432eb46e44fb9b8bd43a1ae90d, type: 2}
+    - {fileID: 11400000, guid: 903720f8868e1624ca8a8d5528a03f2c, type: 2}
+    - {fileID: 11400000, guid: 040db30f1a88e834689f993b4546ee2c, type: 2}
