@@ -1,4 +1,5 @@
-﻿using UnityEngine.Serialization;
+﻿using TMPro;
+using UnityEngine.Serialization;
 
 namespace GamePlay.UI
 {
@@ -7,8 +8,6 @@ namespace GamePlay.UI
     {
         public FunctionButtonName nameLabel;
         public UnityEngine.Sprite icon;
-        public int badge;
-        public bool badgeExclamation;
     }
 
     public enum FunctionButtonName

@@ -49,6 +49,7 @@ MonoBehaviour:
   exhibitionIcon: {fileID: 21300000, guid: e3e85dd653fd49a468b1a9fa734c1508, type: 3}
   unSelectedIcon: {fileID: 21300000, guid: 9e917782210c1364c9af3f6569d60354, type: 3}
   selectedIcon: {fileID: 21300000, guid: 4e73d610257f9ae40ae7b16d9fa7b8d4, type: 3}
+  price: 1000
   maxCombos: 5
   skill2JumpForceX: 0.6
   skill2JumpForceY: 4.6

@@ -189,12 +189,13 @@ namespace GamePlay.UI.UIToolkit
                 if (buttonData.icon != null) icon.style.backgroundImage = new StyleBackground(buttonData.icon);
                 btn.Add(icon);
             
-                if (buttonData.badge != 0)
+                /*if (buttonData.badge != 0)
                 {
                     Label badge = new Label(buttonData.badge == -1 ? "!" : buttonData.badge.ToString());
                     badge.AddToClassList("nav-badge");
                     btn.Add(badge);
                 }
+                */
             
                 Label label = new Label(/*buttonData.nameLabel*/);
                 label.AddToClassList("nav-label");

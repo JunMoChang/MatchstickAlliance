@@ -20,6 +20,7 @@ namespace GamePlay.Role.RoleData.BaseData
         public Sprite exhibitionIcon;
         public Sprite unSelectedIcon;
         public Sprite selectedIcon;
+        public int price;
         /// <summary>
         /// 技能数据
         /// </summary>

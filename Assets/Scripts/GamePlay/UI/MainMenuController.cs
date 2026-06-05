@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using AssetLoad;
 using GamePlay.GameModel.Level;
-using GamePlay.Role.RoleData;
 using GamePlay.UI.Inventory.Controller;
 using GamePlay.UI.Inventory.Model;
 using UnityEngine;
@@ -33,6 +32,7 @@ namespace GamePlay.UI
         [SerializeField] RoleInfoController roleInfoController;
         [SerializeField] EquipmentController equipmentController;
         [SerializeField] SkillInfoController skillInfoController;
+        [SerializeField] RoleExhibitionController roleExhibitionController;
 
         void Awake()
         {
@@ -49,8 +49,7 @@ namespace GamePlay.UI
         private void OnDataReady()
         {
             GameDataManager.OnReady -= OnDataReady;
-            if (!GameDataManager.IsFailed)
-                InitializeAll();
+            if (!GameDataManager.IsFailed) InitializeAll();
         }
 
         private void InitializeAll()
@@ -109,19 +108,25 @@ namespace GamePlay.UI
         {
             InventoryModel model = new InventoryModel();
             inventoryController.Initialize(model);
-
-            // RoleInfoController 必须在 EquipmentController 之前初始化
+            
             roleInfoController.Initialize(model);
 
             equipmentController.Initialize(model);
 
             skillInfoController.Initialize(roleInfoController);
+
+            roleExhibitionController.Initialize();
         }
 
         private void OnNavClicked(int index)
         {
             if (index >= navButtons.Length) return;
-
+            
+            inventoryController?.HideBackpack();
+            equipmentController?.HidePopup();
+            skillInfoController?.HidePopup();
+            roleInfoController?.HidePopup();
+            roleExhibitionController.HidePopup();
             FunctionButtonName nameLabel = navButtons[index].nameLabel;
 
             switch (nameLabel)
@@ -142,7 +147,7 @@ namespace GamePlay.UI
                     skillInfoController?.Show();
                     break;
                 case FunctionButtonName.角色:
-                    roleInfoController?.Show();
+                    roleExhibitionController?.Show();
                     break;
             }
         }

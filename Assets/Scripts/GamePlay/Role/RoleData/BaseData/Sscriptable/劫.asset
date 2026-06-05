@@ -49,3 +49,4 @@ MonoBehaviour:
   exhibitionIcon: {fileID: 21300000, guid: 91b2caab08142f44fa72caf0e00c3732, type: 3}
   unSelectedIcon: {fileID: 21300000, guid: ea74156f716bc4946b388f2f8b19a113, type: 3}
   selectedIcon: {fileID: 21300000, guid: b68d36afdfe1f004289aed2d9436d7fc, type: 3}
+  price: 500

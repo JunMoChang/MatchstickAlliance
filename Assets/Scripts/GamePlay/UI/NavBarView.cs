@@ -23,24 +23,10 @@ namespace GamePlay.UI
                 btn.onClick.AddListener(() => OnClicked?.Invoke(index));
 
                 Image icon = btn.GetComponent<Image>();
-                if (icon && btnData.icon) icon.sprite = btnData.icon;
+                if (icon != null&& btnData.icon != null) icon.sprite = btnData.icon;
 
-                TextMeshProUGUI label = btn.GetComponent<TextMeshProUGUI>();
-                if (label) label.text = btnData.nameLabel.ToString();
-
-                TextMeshProUGUI badge = btn.transform.Find("Badge")?.GetComponent<TextMeshProUGUI>();
-                if (badge)
-                {
-                    if (btnData.badge != 0)
-                    {
-                        badge.text = btnData.badge == -1 ? "!" : btnData.badge.ToString();
-                        badge.gameObject.SetActive(true);
-                    }
-                    else
-                    {
-                        badge.gameObject.SetActive(false);
-                    }
-                }
+                TextMeshProUGUI label = btn.GetComponentInChildren<TextMeshProUGUI>();
+                if (label != null) label.text = btnData.nameLabel.ToString();
             }
             
             for (int i = count; i < functionButtons.Length; i++)
