@@ -88,7 +88,22 @@ namespace GamePlay.UI
 
             levelPopupView.OnLevelClicked += OnLevelClicked;
         }
+        
+        private void InitializeInventory()
+        {
+            InventoryModel model = new InventoryModel();
+            
+            inventoryController.Initialize(model);
+            
+            roleInfoController.Initialize(model);
 
+            equipmentController.Initialize(model);
+
+            skillInfoController.Initialize(roleInfoController);
+
+            roleExhibitionController.Initialize();
+        }
+        
         private void OnModeClicked(int index)
         {
             Debug.Log("mode selected");
@@ -103,21 +118,7 @@ namespace GamePlay.UI
 
             roleSelectPopupView?.Show();
         }
-
-        private void InitializeInventory()
-        {
-            InventoryModel model = new InventoryModel();
-            inventoryController.Initialize(model);
-            
-            roleInfoController.Initialize(model);
-
-            equipmentController.Initialize(model);
-
-            skillInfoController.Initialize(roleInfoController);
-
-            roleExhibitionController.Initialize();
-        }
-
+        
         private void OnNavClicked(int index)
         {
             if (index >= navButtons.Length) return;

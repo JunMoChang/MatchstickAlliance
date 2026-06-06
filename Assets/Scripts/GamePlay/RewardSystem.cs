@@ -32,7 +32,7 @@ namespace GamePlay
             pdm.AddGold(chapter.GetGold(level.levelIndex));
             pdm.AddDiamond(chapter.DiamondsPerLevel);
             
-            if (pdm.IsFirstClear(chapter.chapter, level.levelIndex))
+            if (pdm.IsLeveFirstPass(chapter.chapter, level.levelIndex + 1))
             {
                 pdm.AddDiamond(chapter.DiamondsFirstLevel);
             }

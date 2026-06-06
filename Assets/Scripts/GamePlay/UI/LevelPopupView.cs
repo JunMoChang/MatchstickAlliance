@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using GamePlay.GameModel.Level;
+using GamePlay.PlayerDataHandle;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -11,8 +12,6 @@ namespace GamePlay.UI
     {
         public event Action<ChapterData, LevelData> OnLevelClicked;
 
-        [SerializeField] GameObject rootPanel;
-        [SerializeField] Button backgroundDismiss;
         [SerializeField] GameObject contentPanel;
 
         [SerializeField] TextMeshProUGUI chapterLabel;
@@ -24,27 +23,27 @@ namespace GamePlay.UI
         [SerializeField] private Sprite datIconSelected;
         [SerializeField] private Sprite datIconUnselected;
         [SerializeField] GameObject dotPrefab;
-
+        [SerializeField] private GameObject inhibitPrefab;
         private List<ChapterData> chaptersData;
         private int currentChapter;
         private readonly List<GameObject> dots = new();
+        private List<GameObject> inhibitObjects;
 
         public void Show(List<ChapterData> chapterDataList, int startChapter = 1)
         {
             chaptersData = chapterDataList;
-            rootPanel.SetActive(true);
+            gameObject.SetActive(true);
 
             SwitchChapter(startChapter);
         }
 
         private void Hide()
         {
-            rootPanel.SetActive(false);
+            gameObject.SetActive(false);
         }
 
         void OnEnable()
         {
-            if (backgroundDismiss) backgroundDismiss.onClick.AddListener(Hide);
             if (closeButton) closeButton.onClick.AddListener(Hide);
             if (prevButton) prevButton.onClick.AddListener(OnPrevChapter);
             if (nextButton) nextButton.onClick.AddListener(OnNextChapter);
@@ -58,7 +57,6 @@ namespace GamePlay.UI
 
         void OnDisable()
         {
-            if (backgroundDismiss) backgroundDismiss.onClick.RemoveListener(Hide);
             if (closeButton) closeButton.onClick.RemoveListener(Hide);
             if (prevButton) prevButton.onClick.RemoveListener(OnPrevChapter);
             if (nextButton) nextButton.onClick.RemoveListener(OnNextChapter);
@@ -85,12 +83,13 @@ namespace GamePlay.UI
 
         private void OnLevelButtonClick(int levelButtonIndex)
         {
-            if (chaptersData == null || currentChapter >= chaptersData.Count) return;
-            
+            if (chaptersData == null || currentChapter > chaptersData.Count) return;
+
             ChapterData chapterData = chaptersData[currentChapter - 1];
             if (levelButtonIndex >= chapterData.levelData.Length) return;
-            
-            Debug.Log($"总章节数:{chaptersData.Count} 当前章节:{currentChapter} 当前关卡:{levelButtonIndex}");
+            if (!PlayerDataManager.Instance.IsLevelUnlocked(currentChapter, levelButtonIndex + 1)) return;
+
+            Debug.Log($"总章节数:{chaptersData.Count} 当前章节:{currentChapter} 当前关卡:{levelButtonIndex + 1}");
             OnLevelClicked?.Invoke(chapterData, chapterData.levelData[levelButtonIndex]);
         }
 
@@ -102,18 +101,38 @@ namespace GamePlay.UI
             ChapterData chapterData = chaptersData[chapter - 1];
 
             chapterLabel.text = $"第{chapter}章";
-            
+
             if (prevButton) prevButton.interactable = chapter > 1;
             if (nextButton) nextButton.interactable = chapter < chaptersData.Count;
-            
+
             RefreshDots();
+            RefreshLevelButtons(chapterData);
+        }
+
+        private void RefreshLevelButtons(ChapterData chapterData)
+        {
+            inhibitObjects ??= new List<GameObject>(levelButtons.Length);
             
+            foreach (GameObject obj in inhibitObjects) Destroy(obj);
+            inhibitObjects.Clear();
+
             for (int i = 0; i < levelButtons.Length; i++)
             {
                 if (levelButtons[i] == null) continue;
 
                 bool hasLevel = i < chapterData.levelData.Length;
                 levelButtons[i].gameObject.SetActive(hasLevel);
+
+                if (!hasLevel) continue;
+
+                bool isUnlocked = PlayerDataManager.Instance.IsLevelUnlocked(currentChapter, i + 1);
+                levelButtons[i].interactable = isUnlocked;
+
+                if (!isUnlocked && inhibitPrefab != null)
+                {
+                    GameObject inhibit = Instantiate(inhibitPrefab, levelButtons[i].transform);
+                    inhibitObjects.Add(inhibit);
+                }
             }
         }
 

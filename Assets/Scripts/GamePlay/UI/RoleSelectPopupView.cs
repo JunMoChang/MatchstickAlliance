@@ -11,7 +11,6 @@ namespace GamePlay.UI
 {
     public class RoleSelectPopupView : MonoBehaviour
     {
-        [SerializeField] GameObject rootPanel;
         [SerializeField] Button backgroundDismiss;
         [SerializeField] Button cancelButton;
         [SerializeField] Button ensureButton;
@@ -58,13 +57,13 @@ namespace GamePlay.UI
                 cardImages[i].sprite = entries[i].template.unSelectedIcon;
             }
 
-            rootPanel.SetActive(true);
+            gameObject.SetActive(true);
             UpdateHint();
         }
 
         private void Hide()
         {
-            rootPanel.SetActive(false);
+            gameObject.SetActive(false);
         }
 
         private void GenerateCards()
