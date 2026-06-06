@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using AssetLoad;
+using GamePlay.GameModel.Level;
 using GamePlay.Inventory.ScriptObjects;
 using GamePlay.Role.RoleData;
 using GamePlay.Role.RoleData.BaseData;
@@ -144,12 +145,45 @@ namespace GamePlay.PlayerDataHandle
             saveManager.Save(PlayerData);
         }
         
-        public bool IsFirstClear(int chapterIndex, int levelIndex)
+        ///<summary> 判断是否首次通过关卡 </summary>>
+        /// <param name="chapter">第几章(1-based)</param>
+        /// <param name="level">第几关((1-based))</param>
+        /// <returns>bool</returns>
+        public bool IsLeveFirstPass(int chapter, int level)
         {
-            int key = chapterIndex * 1000 + levelIndex;
-            if (PlayerData.firstClearedLevelIds.Contains(key)) return false;
-            PlayerData.firstClearedLevelIds.Add(key);
+            int currentChapter = PlayerData.passedChapters == 0 ? 1 : PlayerData.passedChapters + 1;
+            
+            if (chapter < currentChapter) return false;
+            
+            if (chapter == currentChapter && PlayerData.passedLevels >= level) return false;
+
+            if (chapter == currentChapter)
+            {
+                MarkLevelPassed(chapter, level);
+            }
+            
             return true;
+        }
+
+        private void MarkLevelPassed(int chapter, int level)
+        {
+            PlayerData.passedLevels = level;
+            if (LevelContext.CurrentChapter.levelData.Length == level) PlayerData.passedChapters = chapter;
+        }
+        
+        /// <param name="chapter">第几章((1-based))</param>
+        /// <param name="level">第几关(1-based)()</param>
+        /// <returns>bool</returns>
+        public bool IsLevelUnlocked(int chapter, int level)
+        {
+            int currentChapter = PlayerData.passedChapters == 0 ? 1 : PlayerData.passedChapters + 1;
+            
+            if (chapter > currentChapter) return false;
+            
+            if (chapter < currentChapter) return true;
+
+            if (level == 1) return true;
+            return PlayerData.passedLevels >= level - 1;
         }
 
         public void Save()
