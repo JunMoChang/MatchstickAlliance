@@ -33,11 +33,8 @@ namespace AssetLoad
             RoleRegistry = await LoadAsync<RoleRegistry>(nameof(RoleRegistry));
             EquipmentPool = await LoadAsync<EquipmentPool>(nameof(EquipmentPool));
 
-            if (EquipmentPool != null)
-            {
-                Debug.Log(EquipmentPool);
-                EquipmentPool.Initialize();
-            }
+            if (EquipmentPool != null) EquipmentPool.Initialize();
+            
 
             IsFailed = RoleRegistry == null || EquipmentPool == null;
             IsReady = true;

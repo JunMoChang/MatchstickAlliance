@@ -22,7 +22,7 @@ namespace GamePlay.UI.Inventory.View.SingleView
             RoleName = roleBaseData.roleName;
             roleNameText.text = roleBaseData.roleName.ToString();
             roleImage.sprite = roleBaseData.exhibitionIcon;
-            purchaseBtn.GetComponentInChildren<TextMeshProUGUI>().text = roleBaseData.price.ToString();
+            purchaseBtn.GetComponentInChildren<TextMeshProUGUI>().text = roleBaseData.lockPrice.ToString();
             if (isOwned)
             {
                 SetUnlocked();

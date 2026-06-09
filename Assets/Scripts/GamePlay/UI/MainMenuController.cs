@@ -11,7 +11,7 @@ namespace GamePlay.UI
     public class MainMenuController : MonoBehaviour
     {
         [Header("子视图")]
-        [SerializeField] TopBarView topBarView;
+        [SerializeField] BottomLeftView bottomLeftView;
         [SerializeField] NavBarView navBarView;
 
         [Header("弹窗视图")]

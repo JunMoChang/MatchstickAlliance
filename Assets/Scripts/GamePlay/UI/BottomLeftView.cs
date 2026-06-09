@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace GamePlay.UI
 {
-    public class TopBarView : MonoBehaviour
+    public class BottomLeftView : MonoBehaviour
     {
         [SerializeField] TextMeshProUGUI goldLabel;
         [SerializeField] TextMeshProUGUI diamondLabel;
@@ -12,23 +12,40 @@ namespace GamePlay.UI
 
         private PlayerDataManager playerDataManager;
 
-        void OnEnable()
+        void Start()
         {
             playerDataManager = PlayerDataManager.Instance;
+            if (playerDataManager == null) return;
             playerDataManager.OnCurrencyChanged += RefreshCurrency;
+            playerDataManager.OnPowerChanged += RefreshPower;
             RefreshCurrency();
+            RefreshPower(playerDataManager.TotalPower);
+        }
+
+        void OnEnable()
+        {
+            if (playerDataManager == null) return;
+            RefreshCurrency();
+            RefreshPower(playerDataManager.TotalPower);
         }
 
         void OnDisable()
         {
+            if (playerDataManager == null) return;
             playerDataManager.OnCurrencyChanged -= RefreshCurrency;
-            playerDataManager =  null;
+            playerDataManager.OnPowerChanged -= RefreshPower;
+            playerDataManager = null;
         }
 
         private void RefreshCurrency()
         {
             SetGold(playerDataManager.PlayerData.gameProps.gold);
             SetDiamond(playerDataManager.PlayerData.gameProps.diamonds);
+        }
+
+        private void RefreshPower(int totalPower)
+        {
+            SetPower(totalPower);
         }
 
         private void SetGold(int value)
