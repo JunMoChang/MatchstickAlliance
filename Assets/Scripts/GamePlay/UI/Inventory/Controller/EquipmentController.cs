@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using GamePlay.Inventory.ScriptObjects;
 using GamePlay.UI.Inventory.Model;
 using GamePlay.UI.Inventory.View.ContainerView;
 using UnityEngine;
@@ -19,10 +18,37 @@ namespace GamePlay.UI.Inventory.Controller
             Debug.Log("EquipmentController::Initialize");
             inventoryModel = _inventoryModel;
 
+            inventoryModel.OnItemEquipped += OnRefreshUnEquippedItem;
+            inventoryModel.OnItemUnequipped += OnRefreshUnEquippedItem;
+
             equipmentPopupView.Initialize();
             equipmentPopupView.OnSlotFunctionButtonClicked += OnSlotFunctionButtonClicked;
             equipmentPopupView.OnClosed += OnEquipmentPopupClosed;
 
+            RefreshView();
+        }
+
+        void OnDestroy()
+        {
+            if (inventoryModel != null)
+            {
+                inventoryModel.OnItemEquipped -= OnRefreshUnEquippedItem;
+                inventoryModel.OnItemUnequipped -= OnRefreshUnEquippedItem;
+            }
+
+            if (equipmentPopupView != null)
+            {
+                equipmentPopupView.OnSlotFunctionButtonClicked -= OnSlotFunctionButtonClicked;
+                equipmentPopupView.OnClosed -= OnEquipmentPopupClosed;
+            }
+        }
+
+        private void OnRefreshUnEquippedItem(ItemDataModel item)
+        {
+            RefreshView();
+        }
+        private void OnRefreshUnEquippedItem(ItemDataModel item, Role.RoleData.RoleName previousRole)
+        {
             RefreshView();
         }
 
@@ -64,7 +90,6 @@ namespace GamePlay.UI.Inventory.Controller
                         if (!roleInfoController.HasEmptyEquipmentSlot()) break;
                         inventoryModel.EquipItem(itemData, roleInfoController.CurrentRoleName);
                     }
-                    RefreshView();
                     break;
                 case FunctionButtonName.强化:
                     break;

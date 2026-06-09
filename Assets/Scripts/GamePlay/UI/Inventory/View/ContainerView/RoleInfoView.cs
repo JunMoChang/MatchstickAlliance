@@ -16,9 +16,11 @@ namespace GamePlay.UI.Inventory.View.ContainerView
         private struct RolePropertyText
         {
             public RoleProperty property;
-            public TMP_Text text;
+            public TMP_Text baseText;      // 基础值文本（黑色）
+            public TMP_Text bonusText;     // 装备加成文本（绿色）
+            public GameObject bonusObject; // 装备加成父节点，控制显隐
         }
-    
+
         [SerializeField] private Image roleImage;
         [SerializeField] private TMP_Text roleNameText;
         [SerializeField] private ItemSlotView[] equipmentSlots;
@@ -27,8 +29,9 @@ namespace GamePlay.UI.Inventory.View.ContainerView
 
         [SerializeField] private GameObject roleContext;
         [SerializeField] private GameObject roleLabelPrefab;
+        [SerializeField] private RectTransform propertiesContentRect;
 
-        private Dictionary<RoleProperty, TMP_Text> rolePropertyDic;
+        private Dictionary<RoleProperty, RolePropertyText> rolePropertyDic;
         private readonly List<GameObject> roleLabelInstances = new();
 
         public event Action<ItemDataModel> OnUnequipClicked;
@@ -44,10 +47,12 @@ namespace GamePlay.UI.Inventory.View.ContainerView
 
             equipmentInfoView.OnUnequipClicked += OnEquipmentInfoUnequipClicked;
 
-            rolePropertyDic = new Dictionary<RoleProperty, TMP_Text>(rolePropertyTexts.Length);
+            rolePropertyDic = new Dictionary<RoleProperty, RolePropertyText>(rolePropertyTexts.Length);
             foreach (RolePropertyText property in rolePropertyTexts)
             {
-                rolePropertyDic.Add(property.property, property.text);
+                rolePropertyDic.Add(property.property, property);
+                
+                if (property.bonusObject != null) property.bonusObject.SetActive(false);
             }
         }
 
@@ -76,15 +81,15 @@ namespace GamePlay.UI.Inventory.View.ContainerView
         public void SetRoleLabels(IReadOnlyList<(RoleName name, RoleSaveData saveData)> roles)
         {
             ClearRoleLabels();
-            foreach ((RoleName name, RoleSaveData saveData) in roles)
+            foreach ((RoleName roleName, RoleSaveData saveData) in roles)
             {
                 GameObject label = Instantiate(roleLabelPrefab, roleContext.transform);
 
                 TMP_Text nameText = label.GetComponentInChildren<TMP_Text>();
-                if (nameText != null) nameText.text = $"{name} \n Lv:{saveData.roleLevel}";
+                if (nameText != null) nameText.text = $"{roleName} \n Lv:{saveData.roleLevel}";
 
                 Button btn = label.GetComponent<Button>();
-                if (btn != null) btn.onClick.AddListener(() => OnRoleLabelClicked?.Invoke(name, saveData));
+                if (btn != null) btn.onClick.AddListener(() => OnRoleLabelClicked?.Invoke(roleName, saveData));
                 
 
                 roleLabelInstances.Add(label);
@@ -98,18 +103,49 @@ namespace GamePlay.UI.Inventory.View.ContainerView
             roleNameText.text = roleData.roleName.ToString();
             roleImage.sprite = roleData.exhibitionIcon;
         }
-
+        
         /// <summary>
         /// 设置角色单个属性显示
         /// </summary>
-        public void SetRoleProperty(RoleProperty property, float value)
+        public void SetRoleProperty(RoleProperty property, float baseValue, float equipBonus)
         {
-            if (rolePropertyDic.TryGetValue(property, out TMP_Text text))
+            if (!rolePropertyDic.TryGetValue(property, out RolePropertyText text)) return;
+
+            bool isCrit = property == RoleProperty.暴击;
+            string format = isCrit ? "F2" : "F0";
+            string suffix = isCrit ? "%" : "";
+            
+            text.baseText.text = $"{property}: {baseValue.ToString(format)}";
+
+            if (text.bonusText == null) return;
+            
+            if (equipBonus != 0f)
             {
-                text.text = $"{property}: {value}";
+                text.bonusText.text = $"+ {equipBonus.ToString(format)}{suffix}";
+
+                if (text.bonusObject != null) text.bonusObject.SetActive(true);
+            }
+            else
+            {
+                if (text.bonusObject != null) text.bonusObject.SetActive(false);
             }
         }
         
+        /// <summary>
+        /// 解决首次激活时 ContentSizeFitter+HLG 排列错乱
+        /// </summary>
+        public void ForcePropertiesLayoutRebuild()
+        {
+            foreach (RolePropertyText text in rolePropertyTexts)
+            {
+                if (text.baseText != null) text.baseText.ForceMeshUpdate();
+                
+                if (text.bonusText != null) text.bonusText.ForceMeshUpdate();
+            }
+
+            LayoutRebuilder.ForceRebuildLayoutImmediate(propertiesContentRect);
+        }
+
         public void ClearAllEquipmentSlots()
         {
             foreach (ItemSlotView slotView in equipmentSlots)

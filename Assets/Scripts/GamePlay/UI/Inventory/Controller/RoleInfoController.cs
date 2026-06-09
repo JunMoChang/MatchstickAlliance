@@ -27,8 +27,8 @@ namespace GamePlay.UI.Inventory.Controller
         {
             Debug.Log("RoleInfoController::Initialize");
             inventoryModel = model;
-            inventoryModel.OnItemEquipped += OnItemEquippedRefresh;
-            inventoryModel.OnItemUnequipped += OnItemUnequippedRefresh;
+            inventoryModel.OnItemEquipped += OnRefreshEquippedItemAndRoleProperties;
+            inventoryModel.OnItemUnequipped += OnRefreshEquippedItemAndRoleProperties;
 
             roleInfoView.Init();
             roleInfoView.OnUnequipClicked += OnUnequipItem;
@@ -41,8 +41,8 @@ namespace GamePlay.UI.Inventory.Controller
         {
             if (inventoryModel != null)
             {
-                inventoryModel.OnItemEquipped -= OnItemEquippedRefresh;
-                inventoryModel.OnItemUnequipped -= OnItemUnequippedRefresh;
+                inventoryModel.OnItemEquipped -= OnRefreshEquippedItemAndRoleProperties;
+                inventoryModel.OnItemUnequipped -= OnRefreshEquippedItemAndRoleProperties;
             }
 
             if (roleInfoView != null)
@@ -54,9 +54,12 @@ namespace GamePlay.UI.Inventory.Controller
 
         /// <summary>
         /// 显示角色信息面板，保留上次选中的角色（首次则选第一个）
+        /// 先激活 GameObject 再设置内容，确保 ContentSizeFitter + HLG 能正确计算布局
         /// </summary>
         public void Show()
         {
+            roleInfoView.ShowPanel();
+
             Dictionary<RoleName, RoleSaveData> ownedRoles = PlayerDataManager.Instance.PlayerData.ownedRoles;
             if (curSaveData == null || !ownedRoles.ContainsKey(curRoleName))
             {
@@ -66,8 +69,6 @@ namespace GamePlay.UI.Inventory.Controller
                     break;
                 }
             }
-
-            roleInfoView.ShowPanel();
         }
 
         public void HidePopup()
@@ -94,24 +95,50 @@ namespace GamePlay.UI.Inventory.Controller
 
             RoleRegistry.RoleEntry? e = GameDataManager.RoleRegistry?.GetRoleEntry(curRoleName);
             roleInfoView.SetRoleBaseInfo(e?.template);
-            foreach (RoleProperty property in Enum.GetValues(typeof(RoleProperty)))
-            {
-                roleInfoView.SetRoleProperty(property, saveData.GetProperty(property));
-            }
-            
+
+            RefreshRoleProperties();
             RefreshEquipmentSlots();
 
             OnRoleChanged?.Invoke(roleName, saveData);
         }
-        
-        private void OnItemEquippedRefresh(ItemDataModel item)
+
+        /// <summary>
+        /// 从 curSaveData 重新读取属性并刷新 UI 显示
+        /// </summary>
+        private void RefreshRoleProperties()
         {
-            if (item.EquippedByRole == curRoleName) RefreshEquipmentSlots();
+            if (curSaveData == null) return;
+
+            foreach (RoleProperty property in Enum.GetValues(typeof(RoleProperty)))
+            {
+                if (property == RoleProperty.战力 || property == RoleProperty.经验)
+                {
+                    roleInfoView.SetRoleProperty(property, curSaveData.GetProperty(property), 0f);
+                }
+                else
+                {
+                    roleInfoView.SetRoleProperty(property, curSaveData.baseAttributes.GetProperty(property), curSaveData.equipmentBonus.GetProperty(property));
+                }
+            }
+
+            roleInfoView.ForcePropertiesLayoutRebuild();
         }
 
-        private void OnItemUnequippedRefresh(ItemDataModel item, RoleName previousRole)
+        private void OnRefreshEquippedItemAndRoleProperties(ItemDataModel item)
         {
-            if (previousRole == curRoleName) RefreshEquipmentSlots();
+            if (item.EquippedByRole == curRoleName)
+            {
+                RefreshRoleProperties();
+                RefreshEquipmentSlots();
+            }
+        }
+        private void OnRefreshEquippedItemAndRoleProperties(ItemDataModel item, RoleName previousRole)
+        {
+            if (previousRole == curRoleName)
+            {
+                RefreshRoleProperties();
+                RefreshEquipmentSlots();
+            }
         }
         
         private void RefreshEquipmentSlots()
@@ -120,7 +147,6 @@ namespace GamePlay.UI.Inventory.Controller
             if (inventoryModel == null) return;
 
             List<ItemDataModel> equippedItems = inventoryModel.GetEquippedItemsForRole(curRoleName);
-            Debug.Log(equippedItems.Count);
             foreach (ItemDataModel item in equippedItems)
             {
                 roleInfoView.SetEquipmentInfo(item);

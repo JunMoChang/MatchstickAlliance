@@ -67,24 +67,7 @@ namespace GamePlay.UI.Inventory.Model
             
             return currentItemDataModel;
         }
-
-        public bool UseItem(ItemDataModel item)
-        {
-            if (item == null || item.IsEmpty()) return false;
-
-            if (item.ItemSo.itemMaxSuperposition > 1)
-            {
-                if (item.DecreaseQuantity() <= 0)
-                {
-                    RemoveItem(item);
-                    item.ClearData();
-                }
-                return true;
-            }
-
-            return false;
-        }
-
+        
         public void EquipItem(ItemDataModel item, RoleName role)
         {
             if (item == null || item.IsEmpty() || item.IsEquipped) return;
