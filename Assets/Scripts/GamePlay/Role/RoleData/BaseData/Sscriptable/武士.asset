@@ -13,43 +13,46 @@ MonoBehaviour:
   m_Name: "\u6B66\u58EB"
   m_EditorClassIdentifier: Assembly-CSharp::GamePlay.Role.RoleData.BaseData.WuShiData
   roleName: 1
-  roleLevel: 0
-  defaultStar: 1
-  defaultHealth: 100
+  roleLevel: 1
+  defaultStar: 5
+  defaultHealth: 1207
+  healthGrowth: 1.57
+  defaultDefense: 57
+  defenseGrowth: 1.53
+  defaultDamage: 273
+  damageGrowth: 1.76
+  defaultCritRate: 0.1
   defaultSpeed: 3.5
-  defaultDamage: 10
-  healthGrowth: 0
-  damageGrowth: 0
-  skillDamageGrowth: []
   skillsBaseData:
-  - icon: {fileID: 21300000, guid: 4ea86551c7c85be49a881adefd0c3b2e, type: 3}
+  - icon: {fileID: 21300000, guid: 852d1fc973b57dd4aa3264a0fdf7c7e1, type: 3}
     level: 1
     baseDamage: 1.2
-    damage: 170
+    damage: 405
     baseCooldown: 3
     damageInterval: 0
-  - icon: {fileID: 21300000, guid: 0262a8b2e08647641ae3e1e17e1e0da2, type: 3}
+  - icon: {fileID: 21300000, guid: ddd9c0862b5033b4b882235d61ea663f, type: 3}
     level: 1
     baseDamage: 4
-    damage: 379
+    damage: 540
     baseCooldown: 4
-    damageInterval: 0.2
-  - icon: {fileID: 21300000, guid: 885ccba29c78c634fba001c0e0625704, type: 3}
+    damageInterval: 0.1
+  - icon: {fileID: 21300000, guid: e91e2ebaa6d32c440a46bce448b6514e, type: 3}
     level: 1
     baseDamage: 2.5
-    damage: 379
-    baseCooldown: 5
-    damageInterval: 0.14
-  - icon: {fileID: 21300000, guid: ba01c4f78398c4f478815528892cf675, type: 3}
+    damage: 405
+    baseCooldown: 3
+    damageInterval: 0
+  - icon: {fileID: 21300000, guid: 08c23efc3a932fe498c7b8899eb9dc10, type: 3}
     level: 1
     baseDamage: 13
-    damage: 1862
-    baseCooldown: 20
+    damage: 1890
+    baseCooldown: 30
     damageInterval: 0.12
+  skillDamageGrowth: 00000000000000000000000000000000
   exhibitionIcon: {fileID: 21300000, guid: 5f4e1e41ec9d6d94d973ae5f8193985a, type: 3}
   unSelectedIcon: {fileID: 21300000, guid: ce9b61e078392324aaabd2b197d89ec7, type: 3}
   selectedIcon: {fileID: 21300000, guid: 8b48733e649764c4bb026c772dc8fa05, type: 3}
-  price: 2000
+  lockPrice: 2000
   maxCombos: 5
   skill2JumpForceX: 0.6
   skill2JumpForceY: 4.6

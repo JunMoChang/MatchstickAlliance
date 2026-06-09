@@ -13,40 +13,43 @@ MonoBehaviour:
   m_Name: "\u52AB"
   m_EditorClassIdentifier: Assembly-CSharp::GamePlay.Role.RoleData.BaseData.JieData
   roleName: 2
-  roleLevel: 0
-  defaultStar: 1
-  defaultHealth: 100
+  roleLevel: 1
+  defaultStar: 3
+  defaultHealth: 950
+  healthGrowth: 1.44
+  defaultDefense: 41
+  defenseGrowth: 1.37
+  defaultDamage: 216
+  damageGrowth: 1.84
+  defaultCritRate: 0.1
   defaultSpeed: 3.5
-  defaultDamage: 10
-  healthGrowth: 0
-  damageGrowth: 0
-  skillDamageGrowth: []
   skillsBaseData:
-  - icon: {fileID: 21300000, guid: 4ea86551c7c85be49a881adefd0c3b2e, type: 3}
+  - icon: {fileID: 21300000, guid: 7965613cb8a44f54f8118336b98b4e0d, type: 3}
     level: 1
     baseDamage: 1.2
     damage: 170
     baseCooldown: 3
     damageInterval: 0
-  - icon: {fileID: 21300000, guid: 0262a8b2e08647641ae3e1e17e1e0da2, type: 3}
+  - icon: {fileID: 21300000, guid: b2706e561c7d2b347b3903792636660b, type: 3}
     level: 1
     baseDamage: 4
     damage: 379
     baseCooldown: 4
     damageInterval: 0.2
-  - icon: {fileID: 21300000, guid: 885ccba29c78c634fba001c0e0625704, type: 3}
+  - icon: {fileID: 21300000, guid: 5860455c2bf7b8c4b81c2e03ef84800d, type: 3}
     level: 1
     baseDamage: 2.5
     damage: 379
     baseCooldown: 5
     damageInterval: 0.14
-  - icon: {fileID: 21300000, guid: ba01c4f78398c4f478815528892cf675, type: 3}
+  - icon: {fileID: 21300000, guid: 3da54c55fd8e0054aabb0a5744fcdcd6, type: 3}
     level: 1
     baseDamage: 13
     damage: 1862
     baseCooldown: 20
     damageInterval: 0.12
+  skillDamageGrowth: 2b020000c50100000902000028080000
   exhibitionIcon: {fileID: 21300000, guid: 91b2caab08142f44fa72caf0e00c3732, type: 3}
   unSelectedIcon: {fileID: 21300000, guid: ea74156f716bc4946b388f2f8b19a113, type: 3}
   selectedIcon: {fileID: 21300000, guid: b68d36afdfe1f004289aed2d9436d7fc, type: 3}
-  price: 500
+  lockPrice: 700
