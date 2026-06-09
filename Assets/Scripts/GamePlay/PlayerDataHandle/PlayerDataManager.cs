@@ -16,8 +16,12 @@ namespace GamePlay.PlayerDataHandle
 
         private readonly SaveManager saveManager = new();
         public PlayerData PlayerData { get; private set; }
-
+        
+        /// <summary> 所有已拥有角色战力之和 </summary>
+        public int TotalPower { get;  private set; }
+        
         public event Action OnCurrencyChanged;
+        public event Action<int> OnPowerChanged;
 
         private InventoryModel inventoryModel;
         private bool isInventoryInitializing;
@@ -25,15 +29,28 @@ namespace GamePlay.PlayerDataHandle
         void Awake()
         {
             if (Instance == null) Instance = this;
-            else Destroy(gameObject);
+            else if(Instance != this)Destroy(gameObject);
 
             PlayerData = saveManager.LoadData();
-            //GameDataManager.OnReady += Test;
+            foreach (RoleSaveData saveData in PlayerData.ownedRoles.Values)
+            {
+                UpdateRolePower(saveData);
+            }
+            CalculateTotalPower();
         }
 
-        void Test()
+        void OnEnable()
         {
-            UnLockNewRole(RoleName.武士);
+            if(GameDataManager.RoleRegistry == null) return;
+            foreach (RoleSaveData saveData in PlayerData.ownedRoles.Values)
+            {
+                GameDataManager.RoleRegistry.GetRoleEntry(saveData.roleName).Value.template.FirstLoadSaveData(saveData);
+            }
+            foreach (RoleSaveData saveData in PlayerData.ownedRoles.Values)
+            {
+                UpdateRolePower(saveData);
+            }
+            CalculateTotalPower();
         }
         void OnApplicationQuit()
         {
@@ -46,7 +63,7 @@ namespace GamePlay.PlayerDataHandle
             RoleRegistry.RoleEntry? roleEntry = GameDataManager.RoleRegistry.GetRoleEntry(roleName);
             if (roleEntry == null) return false;
 
-            if (!SpendDiamond(roleEntry.Value.template.price))
+            if (!SpendDiamond(roleEntry.Value.template.lockPrice))
             {
                 Debug.Log("钻石不足");
                 return false;
@@ -58,7 +75,14 @@ namespace GamePlay.PlayerDataHandle
             newRole.FirstLoadSaveData(newSaveData);
             bool success = PlayerData.ownedRoles.TryAdd(roleName, newSaveData);
 
-            if (!success) Debug.LogError($"添加角色:{roleName}失败");
+            if (!success)
+            {
+                Debug.LogError($"添加角色:{roleName}失败");
+            }
+            else
+            {
+                CalculateTotalPower(UpdateRolePower(newSaveData));
+            }
             return success;
         }
   
@@ -69,7 +93,6 @@ namespace GamePlay.PlayerDataHandle
             OnCurrencyChanged?.Invoke();
             saveManager.Save(PlayerData);
         }
-
         public void AddDiamond(int amount)
         {
             if (amount <= 0) return;
@@ -77,7 +100,6 @@ namespace GamePlay.PlayerDataHandle
             OnCurrencyChanged?.Invoke();
             saveManager.Save(PlayerData);
         }
-
         public bool SpendGold(int amount)
         {
             if (amount < 0 || PlayerData.gameProps.gold < amount) return false;
@@ -86,7 +108,6 @@ namespace GamePlay.PlayerDataHandle
             saveManager.Save(PlayerData);
             return true;
         }
-
         public bool SpendDiamond(int amount)
         {
             if (amount < 0 || PlayerData.gameProps.diamonds < amount) return false;
@@ -95,6 +116,58 @@ namespace GamePlay.PlayerDataHandle
             saveManager.Save(PlayerData);
             return true;
         }
+
+        /// <summary>
+        /// 更新单个角色的战力缓存
+        /// </summary>
+        /// <param name="saveData">角色数据</param>
+        /// <returns>增量</returns>
+        public int UpdateRolePower(RoleSaveData saveData)
+        {
+            if (saveData == null) return 0;
+            
+            int lastPower = saveData.power;
+            saveData.power = CalculateRolePower(saveData);
+            
+            return saveData.power - lastPower;
+        }
+        
+        /// <summary>
+        /// 计算单个角色的战力
+        /// </summary>
+        /// <param name="saveData">角色数据</param>
+        /// <returns>角色战力</returns>
+        private int CalculateRolePower(RoleSaveData saveData)
+        {
+            if (saveData == null) return 0;
+
+            TotalAttributes attr = saveData.TotalAttributes;
+            float power = attr.damage / 10f + attr.health / 100f + attr.defense / 5f + attr.critRate;
+
+            return (int)power;
+        }
+
+        /// <summary>
+        /// 计算已拥有角色总战力
+        /// </summary>
+        private void CalculateTotalPower(int increment = 0)
+        {
+            if (increment != 0)
+            {
+                TotalPower += increment;
+            }
+            else
+            {
+                TotalPower = 0;
+                foreach (RoleSaveData saveData in PlayerData.ownedRoles.Values)
+                {
+                    TotalPower += saveData.power;
+                }
+            }
+            
+            OnPowerChanged?.Invoke(TotalPower);
+        }
+
         public void AddInventoryItem(ItemScriptableObject itemSo, ItemRarityScriptObject.ItemRarity rarity, int quantity)
         {
             if (itemSo.itemMaxSuperposition > 1)
@@ -127,7 +200,6 @@ namespace GamePlay.PlayerDataHandle
             PlayerData.SetEquippedItemsForRole(role, items);
             saveManager.Save(PlayerData);
         }
-
         /// <summary>
         /// 获取指定角色的已装备物品
         /// </summary>
@@ -135,7 +207,6 @@ namespace GamePlay.PlayerDataHandle
         {
             return PlayerData.GetEquippedItemsForRole(role);
         }
-
         /// <summary>
         /// 清除指定角色的所有已装备物品
         /// </summary>
@@ -231,14 +302,14 @@ namespace GamePlay.PlayerDataHandle
         public void BindToModel(InventoryModel model)
         {
             inventoryModel = model;
-            model.OnItemEquipped += OnItemEquipped;
-            model.OnItemUnequipped += OnItemUnequipped;
+            model.OnItemEquipped += OnSaveEquippedItemForRole;
+            model.OnItemUnequipped += OnSaveUnequippedItemForRole;
         }
 
         public void UnbindFromModel(InventoryModel model)
         {
-            model.OnItemEquipped -= OnItemEquipped;
-            model.OnItemUnequipped -= OnItemUnequipped;
+            model.OnItemEquipped -= OnSaveEquippedItemForRole;
+            model.OnItemUnequipped -= OnSaveUnequippedItemForRole;
             inventoryModel = null;
         }
 
@@ -258,7 +329,7 @@ namespace GamePlay.PlayerDataHandle
             return result;
         }
 
-        private void OnItemEquipped(ItemDataModel item)
+        private void OnSaveEquippedItemForRole(ItemDataModel item)
         {
             if (isInventoryInitializing) return;
 
@@ -266,14 +337,20 @@ namespace GamePlay.PlayerDataHandle
 
             PlayerData.unequippedItems.RemoveAll(i => i.instanceId == item.InstanceId);
 
-            if (!PlayerData.roleEquippedItems.ContainsKey(role))
-                PlayerData.roleEquippedItems[role] = new List<PlayerData.ItemInstance>();
+            if (!PlayerData.roleEquippedItems.ContainsKey(role)) PlayerData.roleEquippedItems[role] = new List<PlayerData.ItemInstance>();
+
             PlayerData.roleEquippedItems[role].Add(CreateItemInstance(item));
+
+            if (PlayerData.ownedRoles.TryGetValue(role, out RoleSaveData roleSaveData))
+            {
+                ApplyEquipmentBonus(roleSaveData, item);
+                CalculateTotalPower(UpdateRolePower(roleSaveData));
+            }
 
             Save();
         }
 
-        private void OnItemUnequipped(ItemDataModel item, RoleName previousRole)
+        private void OnSaveUnequippedItemForRole(ItemDataModel item, RoleName previousRole)
         {
             if (isInventoryInitializing) return;
 
@@ -284,6 +361,13 @@ namespace GamePlay.PlayerDataHandle
             }
 
             SyncUnequippedItemsByType(item.ItemSo.itemType);
+
+            if (PlayerData.ownedRoles.TryGetValue(previousRole, out RoleSaveData roleSaveData))
+            {
+                RemoveEquipmentBonus(roleSaveData, item);
+                CalculateTotalPower(UpdateRolePower(roleSaveData));
+            }
+
             Save();
         }
 
@@ -296,7 +380,23 @@ namespace GamePlay.PlayerDataHandle
             });
 
             foreach (ItemDataModel item in inventoryModel.GetUnequippedItemsByType(type))
+            {
                 PlayerData.unequippedItems.Add(CreateItemInstance(item));
+            }
+        }
+
+        private static void ApplyEquipmentBonus(RoleSaveData saveData, ItemDataModel item)
+        {
+            if (saveData == null || item?.ItemSo == null) return;
+            EquipmentBonus bonus = EquipmentBonus.FromItemProperties(item.ItemSo.itemProperties);
+            saveData.equipmentBonus += bonus;
+        }
+
+        private static void RemoveEquipmentBonus(RoleSaveData saveData, ItemDataModel item)
+        {
+            if (saveData == null || item?.ItemSo == null) return;
+            EquipmentBonus bonus = EquipmentBonus.FromItemProperties(item.ItemSo.itemProperties);
+            saveData.equipmentBonus -= bonus;
         }
 
         private static PlayerData.ItemInstance CreateItemInstance(ItemDataModel item)

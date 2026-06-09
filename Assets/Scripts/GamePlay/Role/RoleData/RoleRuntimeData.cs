@@ -36,9 +36,10 @@ namespace GamePlay.Role.RoleData
 
         public void Init(RoleSaveData saveData, RoleBaseData template)
         {
-            maxHealth = saveData.maxHealth;
+            TotalAttributes attr = saveData.TotalAttributes;
+            maxHealth = attr.health;
             currentHealth = maxHealth;
-            damage = saveData.damage;
+            damage = attr.damage;
             speed = saveData.speed;
 
             SkillSaveData[] skillsData = saveData.skillsData;

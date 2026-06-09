@@ -9,53 +9,52 @@ namespace GamePlay.Role.RoleData.BaseData
     {
         public RoleName roleName;
         public int roleLevel;
-        public int defaultStar = 1;
+        public int defaultStar = 3;
+        
         public float defaultHealth = 100f;
-        public float defaultSpeed = 3.5f;
-        public float defaultDamage = 10f;
+        [Range(1f, 2f)]
         public float healthGrowth;
+        
+        public float defaultDefense;
+        [Range(1f, 2f)]
+        public float defenseGrowth;
+        
+        public float defaultDamage = 10f;
+        [Range(1f, 2f)]
         public float damageGrowth;
-        public float[] skillDamageGrowth;
+        
+        public float defaultCritRate = 0.1f;
+        
+        public float defaultSpeed = 3.5f;
+        
         public SkillData[] skillsBaseData;
+        public int[] skillDamageGrowth;
+        
         public Sprite exhibitionIcon;
         public Sprite unSelectedIcon;
         public Sprite selectedIcon;
-        public int price;
-        /// <summary>
-        /// 技能数据
-        /// </summary>
+        
+        public int lockPrice;
+        
+        /// <summary> 技能数据 </summary>
         [Serializable]
         public struct SkillData
         {
-            /// <summary>
-            /// 技能图标
-            /// </summary>
+            /// <summary> 技能图标 </summary>
             public Sprite icon;
-            /// <summary>
-            /// 技能等级
-            /// </summary>
-            public int level;
-            /// <summary>
-            /// 基础攻击
-            /// </summary>
+            /// <summary> 技能等级 </summary>
+            public int level;   
+            /// <summary> 基础攻击 </summary>
             public float baseDamage;
-            /// <summary>
-            /// 伤害
-            /// </summary>
+            /// <summary> 伤害 </summary>
             public int damage;
-            /// <summary>
-            /// 基础冷却
-            /// </summary>
+            /// <summary> 基础冷却 </summary>
             public float baseCooldown;
-            /// <summary>
-            /// 伤害间隔（秒）,0 = 仅进入时伤害一次
-            /// </summary>
+            /// <summary> 伤害间隔（秒）,0 = 仅进入时伤害一次 </summary>
             public float damageInterval;
         }
         
-        /// <summary>
-        /// 持续攻击碰撞检测数据
-        /// </summary>
+        /// <summary> 持续攻击碰撞检测数据 </summary>
         [Serializable]
         public struct ContinuousHitBoxData
         {
@@ -65,9 +64,7 @@ namespace GamePlay.Role.RoleData.BaseData
             public int skillIndex;
         }
         
-        /// <summary>
-        /// 瞬间攻击碰撞检测数据
-        /// </summary>
+        /// <summary> 瞬间攻击碰撞检测数据 </summary>
         [Serializable]
         public struct InstantHitBoxData
         {
@@ -87,125 +84,98 @@ namespace GamePlay.Role.RoleData.BaseData
             public MotionKeyframe[] keyframes;
         }
         
-         /// <summary>
-        /// 运动标识名称
-        /// </summary>
+         /// <summary> 运动标识名称 </summary>
         public enum MotionName
         {
-            Skill_1,
-            Skill_2,
-            Skill_3,
-            Skill_4,
-            Normal_1,
-            Normal_2,
-            Normal_3,
-            Normal_4,
-            Normal_5,
+            Skill_1, Skill_2, Skill_3, Skill_4,
+            Normal_1, Normal_2, Normal_3, Normal_4, Normal_5,
             SkillEnd
         }
          
-        /// <summary>
-        /// 运动的触发时机
-        /// </summary>
+        /// <summary> 运动的触发时机 </summary>
         [Serializable]
         public struct MotionKeyframe
         {
-            /// <summary>
-            /// 动画进度
-            /// </summary>
+            /// <summary> 动画进度 </summary>
             [Range(0f, 1f)]
             public float normalizedTime;
-            /// <summary>
-            /// 运动数据
-            /// </summary>
+            /// <summary> 运动数据 </summary>
             public MotionData motionData;
         }
         
-        /// <summary>
-        /// 运动数据
-        /// </summary>
-        [System.Serializable]
+        /// <summary> 运动数据 </summary>
+        [Serializable]
         public struct MotionData
         {
-            /// <summary>
-            /// 运动控制类型
-            /// </summary>
+            /// <summary>运动控制类型 </summary>
             public MotionType motionType;
-            /// <summary>
-            /// 设置速度
-            /// </summary>
+            /// <summary> 设置速度 </summary>
             public Vector2 velocity;
-            /// <summary>
-            /// 设置位移量
-            /// </summary>
+            /// <summary> 设置位移量</summary>
             public Vector2 offset;
-            /// <summary>
-            /// 设置冲力
-            /// </summary>
+            /// <summary> 设置冲力 </summary>
             public Vector2 force;
-            /// <summary>
-            /// 设置重力
-            /// </summary>
+            /// <summary> 设置重力 </summary>
             public float gravityScale;
             public bool playerControlledDirection;
             
-            /// <summary>
-            /// 运动控制类型
-            /// </summary>
+            /// <summary> 运动控制类型 </summary>
             public enum MotionType
             {
-                /// <summary>
-                /// 速度控制
-                /// </summary>
+                /// <summary> 速度控制 </summary>
                 LinearVelocity,
-                /// <summary>
-                /// 位置控制
-                /// </summary>
+                /// <summary> 位置控制 </summary>
                 MovePosition,
-                /// <summary>
-                /// 冲力控制
-                /// </summary>
+                /// <summary> 冲力控制 </summary>
                 AddForce,
-                /// <summary>
-                /// 重力控制
-                /// </summary>
+                /// <summary> 重力控制 </summary>
                 GravityScale,
-                /// <summary>
-                /// 清除控制
-                /// </summary>
+                /// <summary> 清除控制 </summary>
                 ClearVelocity
             }
         }
 
-        public void FirstLoadSaveData(RoleSaveData save)
+        public void FirstLoadSaveData(RoleSaveData saveData)
         {
-            save.maxHealth = defaultHealth;
-            save.damage = defaultDamage;
-            save.speed = defaultSpeed;
+            saveData.roleLevel = roleLevel;
+            saveData.baseAttributes = new BaseAttributes
+            {
+                health = defaultHealth,
+                damage = defaultDamage,
+                defense = defaultDefense,
+                critRate = defaultCritRate
+            };
+            saveData.speed = defaultSpeed;
 
             int length = skillsBaseData.Length;
-            save.skillsData = new SkillSaveData[length];
+            saveData.skillsData = new SkillSaveData[length];
             for (int i = 0; i < length; i++)
             {
-                save.skillsData[i] = new SkillSaveData
+                saveData.skillsData[i] = new SkillSaveData
                 {
                     level = skillsBaseData[i].level,
                     damage = skillsBaseData[i].damage
                 };
             }
         }
+        
         /// <summary>
         /// 更新角色属性
         /// </summary>
         /// <param name="saveData">持久化数据类</param>
         /// <param name="enhance">等级提升数量</param>
-        public void RefreshSaveData(RoleSaveData saveData, int enhance)
+        public void UpdateSaveData(RoleSaveData saveData, int enhance)
         {
             saveData.roleLevel += enhance;
-            saveData.maxHealth = defaultHealth * (1 + healthGrowth) * enhance;
-            saveData.damage = defaultDamage * (1 + damageGrowth) *  enhance;
+            saveData.baseAttributes = new BaseAttributes
+            {
+                health = defaultHealth * healthGrowth * enhance,
+                defense = defaultDefense * defenseGrowth * enhance,
+                damage = defaultDamage * damageGrowth * enhance,
+            };
             saveData.speed = defaultSpeed;
         }
+        
         /// <summary>
         /// 更新角色技能属性
         /// </summary>
@@ -214,15 +184,10 @@ namespace GamePlay.Role.RoleData.BaseData
         /// <param name="enhance">等级提升数量</param>
         public void UpdateSkillData(RoleSaveData saveData, int skillIndex, int enhance)
         {
-            if (saveData.skillsData == null) saveData.skillsData = new SkillSaveData[skillsBaseData.Length];
+            saveData.skillsData ??= new SkillSaveData[skillsBaseData.Length];
 
             saveData.skillsData[skillIndex].level += enhance;
-            saveData.skillsData[skillIndex].damage += Mathf.CeilToInt(skillsBaseData[skillIndex].baseDamage *
-                                                                  (1 + damageGrowth)
-                                                                  * (1 + (saveData.skillsData[skillIndex].level - 1) *
-                                                                      0.15f));
+            saveData.skillsData[skillIndex].damage += skillDamageGrowth[skillIndex] * enhance;
         }
     } 
-
-    
 }

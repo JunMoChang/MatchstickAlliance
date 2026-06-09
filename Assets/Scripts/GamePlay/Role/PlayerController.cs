@@ -65,12 +65,6 @@ namespace GamePlay.Role
             SpawnPoint sp = FindAnyObjectByType<SpawnPoint>();
             if(sp != null) transform.position = sp.transform.position;
         }
-
-        public void UnlockRole(RoleSaveData saveData)
-        {
-            bool isRepeat = playerDataManager.PlayerData.ownedRoles.TryAdd(saveData.roleName, saveData);
-            Debug.Log($"是否重复添加:{isRepeat}");
-        }
         
         private void Cleanup()
         {

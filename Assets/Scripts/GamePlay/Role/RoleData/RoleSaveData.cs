@@ -6,10 +6,16 @@ namespace GamePlay.Role.RoleData
     {
         public RoleName roleName;
         public int roleLevel;
-        public float maxHealth;
-        public float damage;
-        public float defense;
-        public float critRate;
+
+        /// <summary> 角色基础属性 </summary>
+        public BaseAttributes baseAttributes;
+
+        /// <summary> 装备带来的属性加成 </summary>
+        public EquipmentBonus equipmentBonus;
+
+        /// <summary> 总属性 = 基础 + 装备 </summary>
+        public TotalAttributes TotalAttributes => baseAttributes + equipmentBonus;
+
         public int power;
         public int maxExperience;
         public int currentExperience;
@@ -19,14 +25,15 @@ namespace GamePlay.Role.RoleData
 
         public float GetProperty(RoleProperty property)
         {
+            TotalAttributes total = TotalAttributes;
             return property switch
             {
                 RoleProperty.战力 => power,
                 RoleProperty.经验 => currentExperience,
-                RoleProperty.生命 => maxHealth,
-                RoleProperty.防御 => defense,
-                RoleProperty.攻击 => damage,
-                RoleProperty.暴击 => critRate,
+                RoleProperty.生命 => total.health,
+                RoleProperty.防御 => total.defense,
+                RoleProperty.攻击 => total.damage,
+                RoleProperty.暴击 => total.critRate,
                 _ => 0f
             };
         }

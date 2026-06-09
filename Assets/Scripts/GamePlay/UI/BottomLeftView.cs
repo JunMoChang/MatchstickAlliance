@@ -22,6 +22,7 @@ namespace GamePlay.UI
         void OnDisable()
         {
             playerDataManager.OnCurrencyChanged -= RefreshCurrency;
+            playerDataManager =  null;
         }
 
         private void RefreshCurrency()
