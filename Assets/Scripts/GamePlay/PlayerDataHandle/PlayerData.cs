@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using GamePlay.Inventory.ScriptObjects;
 using GamePlay.Role.RoleData;
+using GamePlay.UI.Inventory.ScriptObjects;
 using Newtonsoft.Json;
 
 namespace GamePlay.PlayerDataHandle

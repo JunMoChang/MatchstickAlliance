@@ -1,12 +1,11 @@
 ﻿using System.Collections.Generic;
 using GamePlay.GameModel.Level;
-using GamePlay.PlayerDataHandle;
 using GamePlay.Role.RoleData;
 using GamePlay.Role.RoleStrategy;
 using GamePlay.Scene;
 using UnityEngine;
 
-namespace GamePlay.Role
+namespace GamePlay.PlayerDataHandle
 {
     public class PlayerController : MonoBehaviour
     {

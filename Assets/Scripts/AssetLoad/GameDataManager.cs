@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using GamePlay.Inventory.ScriptObjects;
 using GamePlay.Role.RoleData;
 using GamePlay.UI.Inventory.ScriptObjects;
 using UnityEngine;
@@ -12,6 +13,7 @@ namespace AssetLoad
     {
         public static RoleRegistry RoleRegistry { get; private set; }
         public static EquipmentPool EquipmentPool { get; private set; }
+        public static ItemRarityScriptObject ItemRarityTable { get; private set; }
 
         public static bool IsReady { get; private set; }
         public static bool IsFailed { get; private set; }
@@ -32,11 +34,12 @@ namespace AssetLoad
 
             RoleRegistry = await LoadAsync<RoleRegistry>(nameof(RoleRegistry));
             EquipmentPool = await LoadAsync<EquipmentPool>(nameof(EquipmentPool));
+            ItemRarityTable = await LoadAsync<ItemRarityScriptObject>(nameof(ItemRarityTable));
 
             if (EquipmentPool != null) EquipmentPool.Initialize();
-            
 
-            IsFailed = RoleRegistry == null || EquipmentPool == null;
+
+            IsFailed = RoleRegistry == null || EquipmentPool == null || ItemRarityTable == null;
             IsReady = true;
             _isLoading = false;
 

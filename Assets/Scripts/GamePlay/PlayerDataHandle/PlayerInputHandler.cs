@@ -3,7 +3,7 @@ using GamePlay.Role.RoleStrategy;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace GamePlay.Role
+namespace GamePlay.PlayerDataHandle
 {
     public class PlayerInputHandler : MonoBehaviour
     {

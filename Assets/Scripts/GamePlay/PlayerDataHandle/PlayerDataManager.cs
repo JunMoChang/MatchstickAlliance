@@ -6,6 +6,7 @@ using GamePlay.Inventory.ScriptObjects;
 using GamePlay.Role.RoleData;
 using GamePlay.Role.RoleData.BaseData;
 using GamePlay.UI.Inventory.Model;
+using GamePlay.UI.Inventory.ScriptObjects;
 using UnityEngine;
 
 namespace GamePlay.PlayerDataHandle
@@ -32,16 +33,27 @@ namespace GamePlay.PlayerDataHandle
             else if(Instance != this)Destroy(gameObject);
 
             PlayerData = saveManager.LoadData();
+
+            /*// 清除存档中可能残留的脏数据：没有装备物品的角色，equipmentBonus 应为零
+            foreach (RoleSaveData saveData in PlayerData.ownedRoles.Values)
+            {
+                if (!PlayerData.roleEquippedItems.ContainsKey(saveData.roleName))
+                {
+                    saveData.equipmentBonus = default;
+                }
+            }
+
             foreach (RoleSaveData saveData in PlayerData.ownedRoles.Values)
             {
                 UpdateRolePower(saveData);
             }
-            CalculateTotalPower();
+            CalculateOwnedTotalPower();*/
         }
-
+        
+        
         void OnEnable()
         {
-            if(GameDataManager.RoleRegistry == null) return;
+            /*if(GameDataManager.RoleRegistry == null) return;
             foreach (RoleSaveData saveData in PlayerData.ownedRoles.Values)
             {
                 GameDataManager.RoleRegistry.GetRoleEntry(saveData.roleName).Value.template.FirstLoadSaveData(saveData);
@@ -50,14 +62,20 @@ namespace GamePlay.PlayerDataHandle
             {
                 UpdateRolePower(saveData);
             }
-            CalculateTotalPower();
+            CalculateOwnedTotalPower();*/
         }
+        
         void OnApplicationQuit()
         {
             saveManager.Save(PlayerData);
             Debug.Log("退出保存完成");
         }
-
+        
+        public void Save()
+        {
+            saveManager.Save(PlayerData);
+        }
+        
         public bool UnLockNewRole(RoleName roleName)
         {
             RoleRegistry.RoleEntry? roleEntry = GameDataManager.RoleRegistry.GetRoleEntry(roleName);
@@ -81,7 +99,7 @@ namespace GamePlay.PlayerDataHandle
             }
             else
             {
-                CalculateTotalPower(UpdateRolePower(newSaveData));
+                CalculateOwnedTotalPower(UpdateRolePower(newSaveData));
             }
             return success;
         }
@@ -116,58 +134,7 @@ namespace GamePlay.PlayerDataHandle
             saveManager.Save(PlayerData);
             return true;
         }
-
-        /// <summary>
-        /// 更新单个角色的战力缓存
-        /// </summary>
-        /// <param name="saveData">角色数据</param>
-        /// <returns>增量</returns>
-        public int UpdateRolePower(RoleSaveData saveData)
-        {
-            if (saveData == null) return 0;
-            
-            int lastPower = saveData.power;
-            saveData.power = CalculateRolePower(saveData);
-            
-            return saveData.power - lastPower;
-        }
         
-        /// <summary>
-        /// 计算单个角色的战力
-        /// </summary>
-        /// <param name="saveData">角色数据</param>
-        /// <returns>角色战力</returns>
-        private int CalculateRolePower(RoleSaveData saveData)
-        {
-            if (saveData == null) return 0;
-
-            TotalAttributes attr = saveData.TotalAttributes;
-            float power = attr.damage / 10f + attr.health / 100f + attr.defense / 5f + attr.critRate;
-
-            return (int)power;
-        }
-
-        /// <summary>
-        /// 计算已拥有角色总战力
-        /// </summary>
-        private void CalculateTotalPower(int increment = 0)
-        {
-            if (increment != 0)
-            {
-                TotalPower += increment;
-            }
-            else
-            {
-                TotalPower = 0;
-                foreach (RoleSaveData saveData in PlayerData.ownedRoles.Values)
-                {
-                    TotalPower += saveData.power;
-                }
-            }
-            
-            OnPowerChanged?.Invoke(TotalPower);
-        }
-
         public void AddInventoryItem(ItemScriptableObject itemSo, ItemRarityScriptObject.ItemRarity rarity, int quantity)
         {
             if (itemSo.itemMaxSuperposition > 1)
@@ -235,16 +202,75 @@ namespace GamePlay.PlayerDataHandle
             
             return true;
         }
+        
+        /// <summary>
+        /// 更新单个角色的战力缓存
+        /// </summary>
+        /// <param name="saveData">角色数据</param>
+        /// <returns>增量</returns>
+        private int UpdateRolePower(RoleSaveData saveData)
+        {
+            if (saveData == null) return 0;
+            
+            int lastPower = saveData.power;
+            saveData.power = CalculateRolePower(saveData);
+            
+            return saveData.power - lastPower;
+        }
+        
+        /// <summary>
+        /// 计算单个角色的战力
+        /// </summary>
+        /// <param name="saveData">角色数据</param>
+        /// <returns>角色战力</returns>
+        private int CalculateRolePower(RoleSaveData saveData)
+        {
+            if (saveData == null) return 0;
 
+            TotalAttributes attr = saveData.TotalAttributes;
+            float power = attr.damage / 10f + attr.health / 100f + attr.defense / 5f + attr.critRate;
+
+            return (int)power;
+        }
+
+        /// <summary>
+        /// 计算已拥有角色总战力
+        /// </summary>
+        /// <param name="increment">增量（默认0）</param>
+        private void CalculateOwnedTotalPower(int increment = 0)
+        {
+            if (increment != 0)
+            {
+                TotalPower += increment;
+            }
+            else
+            {
+                TotalPower = 0;
+                foreach (RoleSaveData saveData in PlayerData.ownedRoles.Values)
+                {
+                    TotalPower += saveData.power;
+                }
+            }
+            
+            OnPowerChanged?.Invoke(TotalPower);
+        }
+        
+        /// <summary>
+        /// 标记通关的关卡
+        /// </summary>
+        /// <param name="chapter">第几章</param>
+        /// <param name="level">第几关</param>
         private void MarkLevelPassed(int chapter, int level)
         {
             PlayerData.passedLevels = level;
             if (LevelContext.CurrentChapter.levelData.Length == level) PlayerData.passedChapters = chapter;
         }
         
+        /// <summary>
+        /// 关卡是否解锁
+        /// </summary>
         /// <param name="chapter">第几章((1-based))</param>
         /// <param name="level">第几关(1-based)()</param>
-        /// <returns>bool</returns>
         public bool IsLevelUnlocked(int chapter, int level)
         {
             int currentChapter = PlayerData.passedChapters == 0 ? 1 : PlayerData.passedChapters + 1;
@@ -256,14 +282,9 @@ namespace GamePlay.PlayerDataHandle
             if (level == 1) return true;
             return PlayerData.passedLevels >= level - 1;
         }
-
-        public void Save()
-        {
-            saveManager.Save(PlayerData);
-        }
         
         /// <summary>
-        /// 从 PlayerData 填充 InventoryModel
+        /// 加载存档时从 PlayerData 填充 InventoryModel
         /// </summary>
         public void PopulateInventoryModel(InventoryModel model)
         {
@@ -271,26 +292,33 @@ namespace GamePlay.PlayerDataHandle
 
             foreach (PlayerData.ItemInstance itemInstance in PlayerData.unequippedItems)
             {
-                ItemScriptableObject so = GameDataManager.EquipmentPool?.FindItemScriptableObject(itemInstance.itemName);
-                ItemDataModel modelItem = model.AddItem(so, itemInstance.itemRarity, itemInstance.owenQuantities);
-                if (modelItem != null && !string.IsNullOrEmpty(itemInstance.instanceId))
-                    modelItem.InstanceId = itemInstance.instanceId;
+                ItemScriptableObject so = GameDataManager.EquipmentPool?.FindEquipmentScriptableObject(itemInstance.itemName);
+                ItemDataModel modelItem = model.AddItem(so, itemInstance.itemRarity, itemInstance.owenQuantities, itemInstance.level);
+                if (modelItem != null)
+                {
+                    if (!string.IsNullOrEmpty(itemInstance.instanceId)) modelItem.InstanceId = itemInstance.instanceId;
+                }
             }
 
             foreach (KeyValuePair<RoleName, List<PlayerData.ItemInstance>> kvp in PlayerData.roleEquippedItems)
             {
                 foreach (PlayerData.ItemInstance equippedInstance in kvp.Value)
                 {
-                    ItemScriptableObject so = GameDataManager.EquipmentPool?.FindItemScriptableObject(equippedInstance.itemName);
+                    ItemScriptableObject so = GameDataManager.EquipmentPool?.FindEquipmentScriptableObject(equippedInstance.itemName);
                     if (so == null) continue;
 
-                    ItemDataModel newItem = model.AddItem(so, equippedInstance.itemRarity, equippedInstance.owenQuantities);
+                    ItemDataModel newItem = model.AddItem(so, equippedInstance.itemRarity, equippedInstance.owenQuantities, equippedInstance.level);
                     if (newItem != null)
                     {
                         newItem.InstanceId = equippedInstance.instanceId;
                         model.EquipItem(newItem, kvp.Key);
                     }
                 }
+            }
+            
+            foreach (RoleSaveData saveData in PlayerData.ownedRoles.Values)
+            {
+                RefreshEquipmentBonusFromModel(model, saveData);
             }
 
             isInventoryInitializing = false;
@@ -328,26 +356,56 @@ namespace GamePlay.PlayerDataHandle
             }
             return result;
         }
+        
+        /// <summary>
+        /// 装备强化后更新角色装备加成
+        /// </summary>
+        public void UpdateRoleEquippedBonus(RoleName role)
+        {
+            if (!PlayerData.ownedRoles.TryGetValue(role, out RoleSaveData saveData) || inventoryModel == null) return;
 
+            RefreshEquipmentBonusFromModel(inventoryModel, saveData);
+
+            CalculateOwnedTotalPower(UpdateRolePower(saveData));
+            Save();
+        }
+
+        /// <summary>
+        /// 根据 InventoryModel 中实际装备的物品重算 saveData.equipmentBonus
+        /// 用于加载存档时清除可能残留的脏数据
+        /// </summary>
+        private void RefreshEquipmentBonusFromModel(InventoryModel model, RoleSaveData saveData)
+        {
+            saveData.equipmentBonus = default;
+            IReadOnlyList<ItemDataModel> equippedItems = model.GetEquippedItemsForRole(saveData.roleName);
+            foreach (ItemDataModel item in equippedItems)
+            {
+                saveData.equipmentBonus += item.CachedBonus;
+            }
+        }
+        
         private void OnSaveEquippedItemForRole(ItemDataModel item)
         {
             if (isInventoryInitializing) return;
 
-            RoleName role = item.EquippedByRole.Value;
-
-            PlayerData.unequippedItems.RemoveAll(i => i.instanceId == item.InstanceId);
-
-            if (!PlayerData.roleEquippedItems.ContainsKey(role)) PlayerData.roleEquippedItems[role] = new List<PlayerData.ItemInstance>();
-
-            PlayerData.roleEquippedItems[role].Add(CreateItemInstance(item));
-
-            if (PlayerData.ownedRoles.TryGetValue(role, out RoleSaveData roleSaveData))
+            if (item.EquippedByRole != null)
             {
-                ApplyEquipmentBonus(roleSaveData, item);
-                CalculateTotalPower(UpdateRolePower(roleSaveData));
-            }
+                RoleName role = item.EquippedByRole.Value;
 
-            Save();
+                PlayerData.unequippedItems.RemoveAll(i => i.instanceId == item.InstanceId);
+
+                if (!PlayerData.roleEquippedItems.ContainsKey(role)) PlayerData.roleEquippedItems[role] = new List<PlayerData.ItemInstance>();
+
+                PlayerData.roleEquippedItems[role].Add(CreateItemInstance(item));
+
+                if (PlayerData.ownedRoles.TryGetValue(role, out RoleSaveData roleSaveData))
+                {
+                    ApplyEquipmentBonus(roleSaveData, item);
+                    CalculateOwnedTotalPower(UpdateRolePower(roleSaveData));
+                }
+                
+                Save();
+            }
         }
 
         private void OnSaveUnequippedItemForRole(ItemDataModel item, RoleName previousRole)
@@ -365,17 +423,17 @@ namespace GamePlay.PlayerDataHandle
             if (PlayerData.ownedRoles.TryGetValue(previousRole, out RoleSaveData roleSaveData))
             {
                 RemoveEquipmentBonus(roleSaveData, item);
-                CalculateTotalPower(UpdateRolePower(roleSaveData));
+                CalculateOwnedTotalPower(UpdateRolePower(roleSaveData));
             }
 
             Save();
         }
-
+        
         private void SyncUnequippedItemsByType(ItemScriptableObject.ItemType type)
         {
             PlayerData.unequippedItems.RemoveAll(i =>
             {
-                ItemScriptableObject so = GameDataManager.EquipmentPool?.FindItemScriptableObject(i.itemName);
+                ItemScriptableObject so = GameDataManager.EquipmentPool?.FindEquipmentScriptableObject(i.itemName);
                 return so != null && so.itemType == type;
             });
 
@@ -384,19 +442,17 @@ namespace GamePlay.PlayerDataHandle
                 PlayerData.unequippedItems.Add(CreateItemInstance(item));
             }
         }
-
+        
         private static void ApplyEquipmentBonus(RoleSaveData saveData, ItemDataModel item)
         {
             if (saveData == null || item?.ItemSo == null) return;
-            EquipmentBonus bonus = EquipmentBonus.FromItemProperties(item.ItemSo.itemProperties);
-            saveData.equipmentBonus += bonus;
+            saveData.equipmentBonus += item.CachedBonus;
         }
 
         private static void RemoveEquipmentBonus(RoleSaveData saveData, ItemDataModel item)
         {
             if (saveData == null || item?.ItemSo == null) return;
-            EquipmentBonus bonus = EquipmentBonus.FromItemProperties(item.ItemSo.itemProperties);
-            saveData.equipmentBonus -= bonus;
+            saveData.equipmentBonus -= item.CachedBonus;
         }
 
         private static PlayerData.ItemInstance CreateItemInstance(ItemDataModel item)
