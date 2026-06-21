@@ -5788,7 +5788,7 @@ GameObject:
   - component: {fileID: 473745348}
   - component: {fileID: 473745347}
   m_Layer: 5
-  m_Name: btn
+  m_Name: unequipBtn
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8698,6 +8698,7 @@ MonoBehaviour:
   itemImage: {fileID: 838064100}
   nullSprite: {fileID: 5508725064705088119, guid: a85969a453fa52d4da98d8a506a7c7b9, type: 3}
   itemQuantityText: {fileID: 0}
+  enhanceBg: {fileID: 0}
 --- !u!114 &775082410
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -17364,6 +17365,7 @@ MonoBehaviour:
   itemQuantityText: {fileID: 1301435036}
   itemPriceText: {fileID: 1568723091}
   itemPropertiesText: {fileID: 7466627159138155235}
+  closeButton: {fileID: 0}
   deleteButton: {fileID: 1289460514}
   addButton: {fileID: 376518214}
   maxButton: {fileID: 1096387704}
@@ -19694,6 +19696,7 @@ MonoBehaviour:
   itemQuantityText: {fileID: 194563367}
   itemPriceText: {fileID: 1693414951}
   itemPropertiesText: {fileID: 562499800}
+  closeButton: {fileID: 513255675}
   deleteButton: {fileID: 0}
   addButton: {fileID: 0}
   maxButton: {fileID: 0}
@@ -21729,6 +21732,7 @@ MonoBehaviour:
   itemImage: {fileID: 6504960217827798403}
   nullSprite: {fileID: 5508725064705088119, guid: a85969a453fa52d4da98d8a506a7c7b9, type: 3}
   itemQuantityText: {fileID: 0}
+  enhanceBg: {fileID: 0}
 --- !u!1 &7237697534611694727
 GameObject:
   m_ObjectHideFlags: 0
