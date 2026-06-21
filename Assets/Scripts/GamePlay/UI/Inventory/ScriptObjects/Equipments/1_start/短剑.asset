@@ -15,12 +15,10 @@ MonoBehaviour:
   itemName: 1
   itemType: 1
   itemStar: 1
-  itemRarity: 0
   itemProperties:
   - itemPropertyType: 2
-    baseValue: 52
-  - itemPropertyType: 0
-    baseValue: 540
+    baseValue: 10
+    maxValue: 52
   itemSprites:
   - rarity: 0
     sprite: {fileID: 8561368130231944860, guid: a85969a453fa52d4da98d8a506a7c7b9, type: 3}
@@ -31,3 +29,4 @@ MonoBehaviour:
   - rarity: 3
     sprite: {fileID: -7922772116564282560, guid: a85969a453fa52d4da98d8a506a7c7b9, type: 3}
   itemMaxSuperposition: 100
+  maxEnhancementLevel: 10

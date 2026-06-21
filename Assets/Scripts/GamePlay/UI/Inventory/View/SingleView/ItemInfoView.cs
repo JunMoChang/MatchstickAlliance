@@ -1,6 +1,7 @@
 using System;
 using GamePlay.Inventory.ScriptObjects;
 using GamePlay.UI.Inventory.Model;
+using GamePlay.UI.Inventory.ScriptObjects;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,6 +17,7 @@ namespace GamePlay.UI.Inventory.View.SingleView
         [SerializeField] private TMP_Text itemPriceText;
         [SerializeField] private TMP_Text itemPropertiesText;
 
+        [SerializeField] private Button closeButton;
         [SerializeField] private Button deleteButton;
         [SerializeField] private Button addButton;
         [SerializeField] private Button maxButton;
@@ -36,11 +38,13 @@ namespace GamePlay.UI.Inventory.View.SingleView
 
         void OnEnable()
         {
+            if(closeButton != null) closeButton.onClick.AddListener(Hide);
             if (unequipButton) unequipButton.onClick.AddListener(OnUnequipButtonClick);
         }
 
         void OnDisable()
         {
+            if (closeButton != null) closeButton.onClick.RemoveListener(Hide);
             if (unequipButton) unequipButton.onClick.RemoveListener(OnUnequipButtonClick);
         }
 
@@ -61,11 +65,12 @@ namespace GamePlay.UI.Inventory.View.SingleView
             System.Text.StringBuilder sb = new System.Text.StringBuilder();
             foreach (ItemScriptableObject.ItemProperty prop in so.itemProperties)
             {
-                sb.AppendLine($"{prop.itemPropertyType.ToString()}: {prop.baseValue}");
+                float currentValue = dataModel.CachedBonus.GetProperty(prop.itemPropertyType);
+                sb.AppendLine($"{prop.itemPropertyType.ToString()}: {currentValue:F0}");
             }
             itemPropertiesText.text = sb.ToString();
 
-            if (unequipButton != null) unequipButton.gameObject.SetActive(dataModel.IsEquipped);
+            if (unequipButton != null) unequipButton.gameObject.SetActive(dataModel.EquippedByRole.HasValue);
 
             panel.SetActive(true);
         }
@@ -73,7 +78,7 @@ namespace GamePlay.UI.Inventory.View.SingleView
         public void Hide()
         {
             panel.SetActive(false);
-
+            currentDataModel = null;
             if(RectTransform != null) RectTransform.anchoredPosition = originalPosition;
         }
 

@@ -54,7 +54,7 @@ namespace GamePlay.UI.Inventory.Controller
 
         /// <summary>
         /// 显示角色信息面板，保留上次选中的角色（首次则选第一个）
-        /// 先激活 GameObject 再设置内容，确保 ContentSizeFitter + HLG 能正确计算布局
+        /// 先激活 GameObject 再设置内容，确保正确布局
         /// </summary>
         public void Show()
         {
@@ -146,7 +146,7 @@ namespace GamePlay.UI.Inventory.Controller
             roleInfoView.ClearAllEquipmentSlots();
             if (inventoryModel == null) return;
 
-            List<ItemDataModel> equippedItems = inventoryModel.GetEquippedItemsForRole(curRoleName);
+            IReadOnlyList<ItemDataModel> equippedItems = inventoryModel.GetEquippedItemsForRole(curRoleName);
             foreach (ItemDataModel item in equippedItems)
             {
                 roleInfoView.SetEquipmentInfo(item);

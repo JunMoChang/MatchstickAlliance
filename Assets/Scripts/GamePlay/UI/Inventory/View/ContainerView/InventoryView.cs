@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using GamePlay.Inventory.ScriptObjects;
 using GamePlay.UI.Inventory.Model;
+using GamePlay.UI.Inventory.ScriptObjects;
 using GamePlay.UI.Inventory.View.ScrollView;
 using GamePlay.UI.Inventory.View.SingleView;
 using UnityEngine;
@@ -60,7 +61,7 @@ namespace GamePlay.UI.Inventory.View.ContainerView
             {
                 items.Add(item);
             }
-            scrollView.SetData(items, inventoryModel.GetItemCapacity(CurrentCategoryType));
+            scrollView.SetData(items, items.Count);
         }
 
         public void SwitchCategory(ItemScriptableObject.ItemType categoryType)

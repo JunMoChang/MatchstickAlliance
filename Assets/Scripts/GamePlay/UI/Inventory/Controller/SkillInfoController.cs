@@ -119,7 +119,7 @@ namespace GamePlay.UI.Inventory.Controller
             RefreshAllSkills();
         }
 
-        private static int CalcEnhanceCost(int currentLevel)
+        private int CalcEnhanceCost(int currentLevel)
         {
             return 100 + currentLevel * 50;
         }

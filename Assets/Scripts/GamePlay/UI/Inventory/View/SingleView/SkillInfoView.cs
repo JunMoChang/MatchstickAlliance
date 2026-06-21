@@ -44,7 +44,7 @@ namespace GamePlay.UI.Inventory.View.SingleView
             SkillIndex = skillIndex;
 
             skillIcon.sprite = config.icon;
-            skillInfoText.text = $"Lv.{saveData.level} \n 基础攻击: {config.baseDamage:P0} 伤害: {saveData.damage}";
+            skillInfoText.text = $"Lv.{saveData.level} \n 基础攻击: {config.baseDamage:P0} \n 伤害: {saveData.damage}";
             enhancedPayText.text = enhanceCost.ToString();
             Debug.Log($"{SkillIndex} {config.icon}");
         }

@@ -10,28 +10,26 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e480bc1d9c924fdba98ae6ccf9f4932f, type: 3}
-  m_Name: "\u51B0\u7259"
+  m_Name: "\u591A\u5170\u5251"
   m_EditorClassIdentifier: Assembly-CSharp::GamePlay.Inventory.ScriptObjects.ItemScriptableObject
-  itemName: 3
+  itemName: 0
   itemType: 1
   itemStar: 1
-  itemRarity: 0
   itemProperties:
-  - itemPropertyType: 0
-    baseValue: 810
-  - itemPropertyType: 1
-    baseValue: 810
   - itemPropertyType: 2
-    baseValue: 144
-  - itemPropertyType: 3
-    baseValue: 144
+    baseValue: 210
+    maxValue: 556
+  - itemPropertyType: 1
+    baseValue: 42
+    maxValue: 77
   itemSprites:
   - rarity: 0
-    sprite: {fileID: 95058772833327676, guid: a85969a453fa52d4da98d8a506a7c7b9, type: 3}
+    sprite: {fileID: 2634581254100188468, guid: a85969a453fa52d4da98d8a506a7c7b9, type: 3}
   - rarity: 1
-    sprite: {fileID: -303773854570714582, guid: a85969a453fa52d4da98d8a506a7c7b9, type: 3}
+    sprite: {fileID: 6068373614614089934, guid: a85969a453fa52d4da98d8a506a7c7b9, type: 3}
   - rarity: 2
-    sprite: {fileID: -3753784414763703992, guid: a85969a453fa52d4da98d8a506a7c7b9, type: 3}
+    sprite: {fileID: 8344717679193547042, guid: a85969a453fa52d4da98d8a506a7c7b9, type: 3}
   - rarity: 3
-    sprite: {fileID: 7419183496887217242, guid: a85969a453fa52d4da98d8a506a7c7b9, type: 3}
+    sprite: {fileID: 3158488010477605343, guid: a85969a453fa52d4da98d8a506a7c7b9, type: 3}
   itemMaxSuperposition: 100
+  maxEnhancementLevel: 10

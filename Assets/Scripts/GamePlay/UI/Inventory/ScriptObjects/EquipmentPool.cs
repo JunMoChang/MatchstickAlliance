@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using GamePlay.Inventory.ScriptObjects;
 using UnityEngine;
 
 namespace GamePlay.UI.Inventory.ScriptObjects
@@ -63,7 +62,7 @@ namespace GamePlay.UI.Inventory.ScriptObjects
             return null;
         }
         
-        public ItemScriptableObject FindItemScriptableObject(ItemScriptableObject.ItemName itemName)
+        public ItemScriptableObject FindEquipmentScriptableObject(ItemScriptableObject.ItemName itemName)
         {
             return equipmentsDictionary.GetValueOrDefault(itemName);
         }

@@ -2,6 +2,7 @@ using System;
 using GamePlay.Inventory.ScriptObjects;
 using GamePlay.PlayerDataHandle;
 using GamePlay.UI.Inventory.Model;
+using GamePlay.UI.Inventory.ScriptObjects;
 using GamePlay.UI.Inventory.View.ContainerView;
 using UnityEngine;
 using UnityEngine.UI;

@@ -1,7 +1,8 @@
 using System;
+using GamePlay.Inventory.ScriptObjects;
 using UnityEngine;
 
-namespace GamePlay.Inventory.ScriptObjects
+namespace GamePlay.UI.Inventory.ScriptObjects
 {
     [CreateAssetMenu(fileName = "NewItem", menuName = "Inventory/Item",  order = 0)]
     public class ItemScriptableObject : ScriptableObject
@@ -14,6 +15,22 @@ namespace GamePlay.Inventory.ScriptObjects
 
         [Header("堆叠")]
         public int itemMaxSuperposition = 1;
+
+        [Header("强化")]
+        public int maxEnhancementLevel = 10;
+
+        /// <summary>
+        /// 是否有可强化的属性，有则返回 true
+        /// </summary>
+        public bool CanEnhance(float baseValueMult = 1f, float maxValueMult = 1f)
+        {
+            if (itemProperties == null || maxEnhancementLevel <= 0) return false;
+            for (int i = 0; i < itemProperties.Length; i++)
+            {
+                if (itemProperties[i].maxValue * maxValueMult > itemProperties[i].baseValue * baseValueMult) return true;
+            }
+            return false;
+        }
         
         [Serializable]
         public struct RaritySprite
@@ -22,13 +39,14 @@ namespace GamePlay.Inventory.ScriptObjects
             public Sprite sprite;
         }
         /// <summary>
-        /// 物品属性
+        /// 物品属性：baseValue 为强化 0 级初始值，maxValue 为满强化时的值
         /// </summary>
         [Serializable]
         public struct ItemProperty
         {
             public ItemPropertyType itemPropertyType;
             public float baseValue;
+            public float maxValue;
         }
         public enum ItemType
         {
@@ -47,8 +65,6 @@ namespace GamePlay.Inventory.ScriptObjects
             ItemType.Weapon,
             ItemType.Armor,
             ItemType.Accessory,
-            ItemType.Material,
-            ItemType.Rune,
         };
         
         public enum ItemPropertyType

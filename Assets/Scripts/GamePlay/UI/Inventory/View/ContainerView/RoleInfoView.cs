@@ -4,7 +4,6 @@ using GamePlay.Role.RoleData;
 using GamePlay.Role.RoleData.BaseData;
 using GamePlay.UI.Inventory.Model;
 using GamePlay.UI.Inventory.View.SingleView;
-using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -16,13 +15,13 @@ namespace GamePlay.UI.Inventory.View.ContainerView
         private struct RolePropertyText
         {
             public RoleProperty property;
-            public TMP_Text baseText;      // 基础值文本（黑色）
-            public TMP_Text bonusText;     // 装备加成文本（绿色）
-            public GameObject bonusObject; // 装备加成父节点，控制显隐
+            public TMPro.TMP_Text baseText; //基础值文本
+            public TMPro.TMP_Text bonusText; //装备加成文本
+            public GameObject bonusObject; //装备加成Text，控制显隐
         }
 
         [SerializeField] private Image roleImage;
-        [SerializeField] private TMP_Text roleNameText;
+        [SerializeField] private TMPro.TMP_Text roleNameText;
         [SerializeField] private ItemSlotView[] equipmentSlots;
         [SerializeField] private RolePropertyText[] rolePropertyTexts;
         [SerializeField] private ItemInfoView equipmentInfoView;
@@ -85,7 +84,7 @@ namespace GamePlay.UI.Inventory.View.ContainerView
             {
                 GameObject label = Instantiate(roleLabelPrefab, roleContext.transform);
 
-                TMP_Text nameText = label.GetComponentInChildren<TMP_Text>();
+                TMPro.TMP_Text nameText = label.GetComponentInChildren<TMPro.TMP_Text>();
                 if (nameText != null) nameText.text = $"{roleName} \n Lv:{saveData.roleLevel}";
 
                 Button btn = label.GetComponent<Button>();
@@ -112,8 +111,7 @@ namespace GamePlay.UI.Inventory.View.ContainerView
             if (!rolePropertyDic.TryGetValue(property, out RolePropertyText text)) return;
 
             bool isCrit = property == RoleProperty.暴击;
-            string format = isCrit ? "F2" : "F0";
-            string suffix = isCrit ? "%" : "";
+            string format = isCrit ? "P2" : "F0";
             
             text.baseText.text = $"{property}: {baseValue.ToString(format)}";
 
@@ -121,7 +119,7 @@ namespace GamePlay.UI.Inventory.View.ContainerView
             
             if (equipBonus != 0f)
             {
-                text.bonusText.text = $"+ {equipBonus.ToString(format)}{suffix}";
+                text.bonusText.text = $"+{equipBonus.ToString(format)}";
 
                 if (text.bonusObject != null) text.bonusObject.SetActive(true);
             }

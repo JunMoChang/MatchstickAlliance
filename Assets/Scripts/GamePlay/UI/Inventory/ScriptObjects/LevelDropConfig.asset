@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 272bd4342d854ff18e19eaf8406a23b5, type: 3}
   m_Name: LevelDropConfig
   m_EditorClassIdentifier: Assembly-CSharp::GamePlay.GameModel.Level.LevelDrapConfig
-  baseEquipDropChance: 1
+  baseEquipDropChance: 0.1
   equipDropChancePerLevel: 0.02
   maxEquipDropChance: 1
   stars:

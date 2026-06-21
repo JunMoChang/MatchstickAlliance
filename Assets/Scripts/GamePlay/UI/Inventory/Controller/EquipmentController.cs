@@ -77,7 +77,7 @@ namespace GamePlay.UI.Inventory.Controller
             switch (curFunBtnNm)
             {
                 case FunctionButtonName.装备:
-                    if (itemData.IsEquipped) break;
+                    if (itemData.EquippedByRole.HasValue) break;
 
                     if (itemData.StorageItemQuantity > 1)
                     {
@@ -92,6 +92,11 @@ namespace GamePlay.UI.Inventory.Controller
                     }
                     break;
                 case FunctionButtonName.强化:
+                    if (!itemData.EquippedByRole.HasValue) break;
+                    if (!itemData.Enhance()) break;
+
+                    PlayerDataHandle.PlayerDataManager.Instance.UpdateRoleEquippedBonus(itemData.EquippedByRole.Value);
+                    RefreshView();
                     break;
             }
         }
@@ -104,8 +109,7 @@ namespace GamePlay.UI.Inventory.Controller
 
         private void RefreshView()
         {
-            IReadOnlyList<ItemDataModel> items = curFunBtnNm == FunctionButtonName.装备
-                ? (IReadOnlyList<ItemDataModel>)inventoryModel.GetUnequippedEquipment()
+            IReadOnlyList<ItemDataModel> items = curFunBtnNm == FunctionButtonName.装备 ? inventoryModel.GetUnequippedItems()
                 : inventoryModel.GetEquippedItemsForRole(roleInfoController.CurrentRoleName);
 
             equipmentPopupView.RefreshEquipmentView(curFunBtnNm, items);
