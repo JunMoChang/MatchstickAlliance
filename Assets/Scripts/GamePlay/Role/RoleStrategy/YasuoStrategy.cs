@@ -47,5 +47,10 @@ namespace GamePlay.Role.RoleStrategy
         {
             
         }
+
+        public void Death()
+        {
+            
+        }
     }
 }

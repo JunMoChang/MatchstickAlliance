@@ -163,7 +163,12 @@ namespace GamePlay.Role.RoleStrategy
                 case 3: Skill4Logic(); break;
             }
         }
-        
+
+        public void Death()
+        {
+            
+        }
+
         private void Skill1Logic()
         {
             animator.SetTrigger(AnimationParameters.Skill_1);

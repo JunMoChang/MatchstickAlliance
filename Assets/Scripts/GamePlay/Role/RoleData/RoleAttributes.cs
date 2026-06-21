@@ -1,5 +1,6 @@
 using System;
 using GamePlay.Inventory.ScriptObjects;
+using GamePlay.UI.Inventory.ScriptObjects;
 
 namespace GamePlay.Role.RoleData
 {
@@ -61,6 +62,18 @@ namespace GamePlay.Role.RoleData
             };
         }
 
+        public float GetProperty(ItemScriptableObject.ItemPropertyType type)
+        {
+            return type switch
+            {
+                ItemScriptableObject.ItemPropertyType.Health => health,
+                ItemScriptableObject.ItemPropertyType.Defense => defense,
+                ItemScriptableObject.ItemPropertyType.Damage => damage,
+                ItemScriptableObject.ItemPropertyType.Critical => critRate,
+                _ => 0f
+            };
+        }
+
         public static EquipmentBonus operator +(EquipmentBonus a, EquipmentBonus b)
         {
             return new EquipmentBonus
@@ -83,29 +96,52 @@ namespace GamePlay.Role.RoleData
             };
         }
 
+        
+        /// <summary>
+        /// 强化曲线：t²，给定属性基础/最大值和当前强化等级，返回当前属性
+        /// </summary>
+        /// <returns>强化后数值</returns>
+        public static float CalculatePropertyValue(float baseValue, float maxValue, int enhancementLevel, int maxEnhancementLevel)
+        {
+            if (maxValue <= baseValue) return baseValue;
+            if (maxEnhancementLevel < 1) maxEnhancementLevel = 1;
+            float t = (float)enhancementLevel / maxEnhancementLevel;
+            float curve = t * t;
+            return baseValue + (maxValue - baseValue) * curve;
+        }
+
         /// <summary>
         /// 从装备属性数组中提取加成值
         /// </summary>
-        public static EquipmentBonus FromItemProperties(ItemScriptableObject.ItemProperty[] properties)
+        /// <param name="properties">装备拥有的属性</param>
+        /// <param name="enhancementLevel">当前强化次数</param>
+        /// <param name="maxEnhancementLevel">最多强化次数</param>
+        /// <param name="baseValueMult">不同稀有度的属性基础数值与 White稀有度的倍率（White为 1）</param>
+        /// <param name="maxValueMult">不同稀有度的属性最大值数值与 White稀有度的倍率（White为 1）</param>
+        /// <returns></returns>
+        public static EquipmentBonus FromItemProperties(ItemScriptableObject.ItemProperty[] properties, int enhancementLevel = 0, int maxEnhancementLevel = 1, float baseValueMult = 1f, float maxValueMult = 1f)
         {
             EquipmentBonus bonus = default;
-            if (properties == null) return bonus;
 
             foreach (ItemScriptableObject.ItemProperty prop in properties)
             {
+                float scaledBase = prop.baseValue * baseValueMult;
+                float scaledMax = prop.maxValue * maxValueMult;
+                float value = CalculatePropertyValue(scaledBase, scaledMax, enhancementLevel, maxEnhancementLevel);
+                
                 switch (prop.itemPropertyType)
                 {
                     case ItemScriptableObject.ItemPropertyType.Health:
-                        bonus.health += prop.baseValue;
+                        bonus.health += value;
                         break;
                     case ItemScriptableObject.ItemPropertyType.Defense:
-                        bonus.defense += prop.baseValue;
+                        bonus.defense += value;
                         break;
                     case ItemScriptableObject.ItemPropertyType.Damage:
-                        bonus.damage += prop.baseValue;
+                        bonus.damage += value;
                         break;
                     case ItemScriptableObject.ItemPropertyType.Critical:
-                        bonus.critRate += prop.baseValue;
+                        bonus.critRate += value;
                         break;
                 }
             }

@@ -21,30 +21,30 @@ MonoBehaviour:
   defenseGrowth: 1.68
   defaultDamage: 311
   damageGrowth: 1.57
-  defaultCritRate: 0.1
+  defaultCritRate: 0.001
   defaultSpeed: 3.5
   skillsBaseData:
   - icon: {fileID: 21300000, guid: 4ea86551c7c85be49a881adefd0c3b2e, type: 3}
     level: 1
-    baseDamage: 120
+    baseDamage: 1.2
     damage: 170
     baseCooldown: 2
     damageInterval: 0
   - icon: {fileID: 21300000, guid: 0262a8b2e08647641ae3e1e17e1e0da2, type: 3}
     level: 1
-    baseDamage: 400
+    baseDamage: 4
     damage: 379
     baseCooldown: 4
     damageInterval: 0.2
   - icon: {fileID: 21300000, guid: 885ccba29c78c634fba001c0e0625704, type: 3}
     level: 1
-    baseDamage: 250
+    baseDamage: 2.5
     damage: 379
     baseCooldown: 6
     damageInterval: 0.14
   - icon: {fileID: 21300000, guid: ba01c4f78398c4f478815528892cf675, type: 3}
     level: 1
-    baseDamage: 1300
+    baseDamage: 13
     damage: 1328
     baseCooldown: 20
     damageInterval: 0.12

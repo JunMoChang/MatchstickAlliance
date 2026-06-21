@@ -21,7 +21,7 @@ MonoBehaviour:
   defenseGrowth: 1.53
   defaultDamage: 273
   damageGrowth: 1.76
-  defaultCritRate: 0.1
+  defaultCritRate: 0.001
   defaultSpeed: 3.5
   skillsBaseData:
   - icon: {fileID: 21300000, guid: 852d1fc973b57dd4aa3264a0fdf7c7e1, type: 3}
