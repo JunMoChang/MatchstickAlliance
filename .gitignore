@@ -47,4 +47,5 @@ CLAUDE.md
 
 # Photon AppId 配置文件，含真实 AppId，不上传（本地保留，运行不受影响）
 /[Aa]ssets/Photon/Fusion/Resources/PhotonAppSettings.asset
+/[Aa]ssets/Photon/Fusion/Resources/PhotonAppSettings.asset.meta
 
