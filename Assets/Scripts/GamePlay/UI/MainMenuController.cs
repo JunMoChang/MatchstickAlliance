@@ -21,6 +21,10 @@ namespace GamePlay.UI
         [Header("玩法模式入口")]
         [SerializeField] Button[] modeButtons;
 
+        [Header("PvP")]
+        [SerializeField] Button pvpModeButton;
+        [SerializeField] PvP.PvPLobbyPanel pvpLobbyPanel;
+
         [Header("导航按钮")]
         [SerializeField] FunctionButtonData[] navButtons;
 
@@ -58,6 +62,14 @@ namespace GamePlay.UI
             InitializeNavBar();
             InitializeLevelPopup();
             InitializeInventory();
+
+            // 从 PvP 战斗返回大厅：直接显示大厅面板（PvPResultPanel 设置的标志）
+            if (LevelContext.ReturnToPvPLobby)
+            {
+                LevelContext.ReturnToPvPLobby = false;
+                LevelContext.IsReturningToLobby = false;
+                pvpLobbyPanel?.Show();
+            }
         }
 
         private void InitializeModeButtons()
@@ -69,6 +81,11 @@ namespace GamePlay.UI
                 int index = i;
 
                 modeButtons[i].onClick.AddListener(() => OnModeClicked(index));
+            }
+
+            if (pvpModeButton != null)
+            {
+                pvpModeButton.onClick.AddListener(OnPvPModeClicked);
             }
 
             Debug.Log($"modeButtons count:{modeButtons.Length}");
@@ -108,6 +125,13 @@ namespace GamePlay.UI
         {
             Debug.Log("mode selected");
             levelPopupView?.Show(levelChapters);
+        }
+
+        private void OnPvPModeClicked()
+        {
+            Debug.Log("PvP mode selected");
+            LevelContext.IsPvPMode = true;
+            pvpLobbyPanel?.Show();
         }
 
         private void OnLevelClicked(ChapterData chapterData, LevelData level)
@@ -164,6 +188,8 @@ namespace GamePlay.UI
             {
                 if (btn) btn.onClick.RemoveAllListeners();
             }
+
+            if (pvpModeButton != null) pvpModeButton.onClick.RemoveListener(OnPvPModeClicked);
         }
     }
 }

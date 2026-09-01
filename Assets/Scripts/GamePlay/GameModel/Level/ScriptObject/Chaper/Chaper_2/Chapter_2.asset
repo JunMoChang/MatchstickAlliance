@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Chapter_2
   m_EditorClassIdentifier: Assembly-CSharp::GamePlay.GameModel.Level.ChapterData
   chapter: 2
-  sceneName: ChapterLevel
+  sceneName: Stage_2
   levelData:
   - {fileID: 11400000, guid: 92bd90f39f80ce24794034bae7fd3931, type: 2}
   - {fileID: 11400000, guid: d37c59c928c097a4fb938c3d04eb2855, type: 2}

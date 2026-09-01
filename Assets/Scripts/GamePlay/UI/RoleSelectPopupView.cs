@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using AssetLoad;
 using GamePlay.GameModel.Level;
@@ -19,11 +20,16 @@ namespace GamePlay.UI
         [SerializeField] private GameObject starPrefab;
         [SerializeField] private Transform heroCardContainer;
 
-        private const int MaxSelectCount = 2;
-        private readonly List<RoleRegistry.RoleEntry> selectedHeroes = new(MaxSelectCount);
+        private const int DefaultMaxSelectCount = 2;
+        private int maxSelectCount = DefaultMaxSelectCount;
+        private readonly List<RoleRegistry.RoleEntry> selectedHeroes = new(DefaultMaxSelectCount);
 
         private Image[] cardImages;
         private bool cardsGenerated;
+
+        private bool isPvPMode;
+        private Action<RoleRegistry.RoleEntry> onPvPRoleSelected;
+        private Action onPvPCancelled;
 
         void OnEnable()
         {
@@ -49,12 +55,48 @@ namespace GamePlay.UI
 
             if (!cardsGenerated) GenerateCards();
 
+            isPvPMode = false;
+            maxSelectCount = DefaultMaxSelectCount;
+            onPvPRoleSelected = null;
+            onPvPCancelled = null;
             selectedHeroes.Clear();
 
             RoleRegistry.RoleEntry[] entries = GameDataManager.RoleRegistry.entries;
             for (int i = 0; i < cardImages.Length && i < entries.Length; i++)
-            { 
+            {
+                cardImages[i].gameObject.SetActive(true);
                 cardImages[i].sprite = entries[i].template.unSelectedIcon;
+            }
+
+            gameObject.SetActive(true);
+            UpdateHint();
+        }
+
+        /// <summary>
+        /// PvP 大厅选角入口,展示玩家拥有的角色，确认后回调
+        /// </summary>
+        public void ShowForPvP(List<RoleRegistry.RoleEntry> ownedRoles, Action<RoleRegistry.RoleEntry> onSelected, Action onCancelled = null)
+        {
+            if (GameDataManager.RoleRegistry == null)
+            {
+                Debug.LogError("RoleRegistry 尚未加载");
+                return;
+            }
+
+            if (!cardsGenerated) GenerateCards();
+
+            isPvPMode = true;
+            maxSelectCount = 1;
+            onPvPRoleSelected = onSelected;
+            onPvPCancelled = onCancelled;
+            selectedHeroes.Clear();
+
+            RoleRegistry.RoleEntry[] allEntries = GameDataManager.RoleRegistry.entries;
+            for (int i = 0; i < cardImages.Length && i < allEntries.Length; i++)
+            {
+                bool owned = ownedRoles.Exists(r => r.roleName == allEntries[i].roleName);
+                cardImages[i].gameObject.SetActive(owned);
+                if (owned) cardImages[i].sprite = allEntries[i].template.unSelectedIcon;
             }
 
             gameObject.SetActive(true);
@@ -63,6 +105,11 @@ namespace GamePlay.UI
 
         private void Hide()
         {
+            if (isPvPMode)
+            {
+                onPvPCancelled?.Invoke();
+                isPvPMode = false;
+            }
             gameObject.SetActive(false);
         }
 
@@ -112,7 +159,7 @@ namespace GamePlay.UI
             bool isUnSelected = entries[index].template.selectedIcon != cardImages[index].sprite;
             if (isUnSelected)
             {
-                if (selectedHeroes.Count >= MaxSelectCount)
+                if (selectedHeroes.Count >= maxSelectCount)
                 {
                     Debug.Log("上场英雄已满！");
                     return;
@@ -132,7 +179,7 @@ namespace GamePlay.UI
 
         private void UpdateHint()
         {
-            if (hintLabel) hintLabel.text = $"人数限制:{selectedHeroes.Count}/{MaxSelectCount}";
+            if (hintLabel) hintLabel.text = $"人数限制:{selectedHeroes.Count}/{maxSelectCount}";
         }
 
         private void OnEnsureClicked()
@@ -140,6 +187,14 @@ namespace GamePlay.UI
             if (selectedHeroes.Count == 0)
             {
                 Debug.Log("至少选择一个上场的英雄！");
+                return;
+            }
+
+            if (isPvPMode)
+            {
+                onPvPRoleSelected?.Invoke(selectedHeroes[0]);
+                isPvPMode = false;
+                gameObject.SetActive(false);
                 return;
             }
 

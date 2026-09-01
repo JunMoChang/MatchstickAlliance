@@ -21,14 +21,17 @@ namespace GamePlay.UI
         
         private void Show()
         {
+            // PvP 模式不显示 PvE 奖励面板（由 PvPResultPanel 处理）
+            if (LevelContext.IsPvPMode) return;
+
             ChapterData chapterData = LevelContext.CurrentChapter;
             LevelData levelData = LevelContext.CurrentLevel;
-            
+
             expText.text = chapterData.GetExp(levelData.levelIndex).ToString();
             goldText.text = chapterData.GetGold(levelData.levelIndex).ToString();
             diamondPerText.text = chapterData.DiamondsPerLevel.ToString();
             diamondFirstText.text = chapterData.DiamondsFirstLevel.ToString();
-            
+
             endedPanel.SetActive(true);
         }
 

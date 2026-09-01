@@ -13,7 +13,11 @@ namespace GamePlay.GameModel
         public static readonly int Skill_2 = Animator.StringToHash("Skill_2");
         public static readonly int Skill_3 = Animator.StringToHash("Skill_3");
         public static readonly int Skill_4 = Animator.StringToHash("Skill_4");
-
+        public static readonly int Attacked_Trigger = Animator.StringToHash("Attacked");
+        public static readonly int Death_Bool = Animator.StringToHash("Death");
+        
+        public static readonly int[] SkillTriggers = { Skill_1, Skill_2, Skill_3, Skill_4 };
+        
         // 敌人动画参数
         public static readonly int EnemySpeed = Animator.StringToHash("Speed");
         public static readonly int Attack = Animator.StringToHash("Attack");

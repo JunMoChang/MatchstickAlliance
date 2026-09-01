@@ -23,7 +23,6 @@ namespace GamePlay
         }
 
         [SerializeField] private CoinEntry[] coinEntries;
-        private Dictionary<int, GameObject> coinPrefabMap;
         
         private int totalEnemies;
         private Stack<GameObject> coinStack;
@@ -37,9 +36,6 @@ namespace GamePlay
         {
             Instance = this;
             SceneLoader.OnLevelLoaded += OnLevelLoaded;   
-            
-            coinPrefabMap = new Dictionary<int, GameObject>(coinEntries.Length);
-            foreach (CoinEntry entry in coinEntries) coinPrefabMap[entry.denomination] = entry.prefab;
         }
         
         private void OnLevelLoaded()
@@ -164,6 +160,7 @@ namespace GamePlay
         
         public void CommitEquipmentsToInventory()
         {
+            if(DroppedEquipments == null) return;
             foreach ((ItemScriptableObject item, ItemRarityScriptObject.ItemRarity rarity) in DroppedEquipments)
             {
                 PlayerDataManager.Instance.AddInventoryItem(item, rarity, 1);

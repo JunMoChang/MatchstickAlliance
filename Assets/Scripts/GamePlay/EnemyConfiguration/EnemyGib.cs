@@ -23,7 +23,9 @@ namespace GamePlay.EnemyConfiguration
             gibContainer.SetActive(true);
 
             foreach (LimbData limb in limbs)
+            {
                 Detach(limb, hitDirection);
+            }
         }
 
         private void Detach(LimbData limb, Vector2 hitDir)

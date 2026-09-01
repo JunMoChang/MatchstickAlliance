@@ -1,4 +1,5 @@
 ﻿using GamePlay.GameModel.Level;
+using GamePlay.PlayerDataHandle;
 using GamePlay.Scene;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,6 +30,16 @@ namespace GamePlay.UI
         {
             bool isPaused = !pauseGo.activeInHierarchy;
             pauseGo.SetActive(isPaused);
+
+            // PvP 模式不暂停游戏时间（会破坏 Fusion 网络同步），改为仅隐藏输入
+            if (LevelContext.IsPvPMode)
+            {
+                // 禁用/启用输入
+                var playerInput = FindAnyObjectByType<PlayerInputHandler>();
+                if (playerInput != null) playerInput.enabled = !isPaused;
+                return;
+            }
+
             Time.timeScale = isPaused ? 0f : 1f;
         }
 
