@@ -39,3 +39,12 @@ CLAUDE.md
 项目分析报告.md
 /[Aa]ssets/_Recovery/
 
+# 个人笔记，不随项目发布
+/会话记录.md
+/PvP转向插值第三版研究.md
+/[Aa]ssets/PvP联机方案.md
+/[Aa]ssets/PvP联机方案.md.meta
+
+# Photon AppId 配置文件，含真实 AppId，不上传（本地保留，运行不受影响）
+/[Aa]ssets/Photon/Fusion/Resources/PhotonAppSettings.asset
+
