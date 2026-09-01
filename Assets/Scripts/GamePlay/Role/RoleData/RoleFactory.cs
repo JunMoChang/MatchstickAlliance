@@ -8,8 +8,8 @@ namespace GamePlay.Role.RoleData
         {
             IRoleStrategy strategy = roleName switch
             {
-                RoleName.猴子 => new SunWuKongStrategy(),
-                RoleName.武士 => new YasuoStrategy(),
+                RoleName.猴子 => new MonkeyStrategy(),
+                RoleName.武士 => new WarriorStrategy(),
                 _ => throw new System.Exception($"未注册的角色: {roleName}")
             };
             

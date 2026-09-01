@@ -30,134 +30,389 @@ MonoBehaviour:
     damage: 170
     baseCooldown: 2
     damageInterval: 0
+    canMoveWhileCasting: 0
+    freeMoveEndProgress: 1
   - icon: {fileID: 21300000, guid: 0262a8b2e08647641ae3e1e17e1e0da2, type: 3}
     level: 1
     baseDamage: 4
     damage: 379
     baseCooldown: 4
-    damageInterval: 0.2
+    damageInterval: 0.06
+    canMoveWhileCasting: 0
+    freeMoveEndProgress: 1
   - icon: {fileID: 21300000, guid: 885ccba29c78c634fba001c0e0625704, type: 3}
     level: 1
     baseDamage: 2.5
     damage: 379
     baseCooldown: 6
-    damageInterval: 0.14
+    damageInterval: 0.08
+    canMoveWhileCasting: 0
+    freeMoveEndProgress: 1
   - icon: {fileID: 21300000, guid: ba01c4f78398c4f478815528892cf675, type: 3}
     level: 1
     baseDamage: 13
     damage: 1328
     baseCooldown: 20
-    damageInterval: 0.12
+    damageInterval: 0.045
+    canMoveWhileCasting: 1
+    freeMoveEndProgress: 0.78
   skillDamageGrowth: b6000000ef010000ef0100004d070000
   exhibitionIcon: {fileID: 21300000, guid: e3e85dd653fd49a468b1a9fa734c1508, type: 3}
   unSelectedIcon: {fileID: 21300000, guid: 9e917782210c1364c9af3f6569d60354, type: 3}
   selectedIcon: {fileID: 21300000, guid: 4e73d610257f9ae40ae7b16d9fa7b8d4, type: 3}
   lockPrice: 1200
   maxCombos: 5
-  skill2JumpForceX: 0.6
-  skill2JumpForceY: 4.6
   motionCommands:
-  - motionName: 0
+  - actionName: 0
     keyframes:
-    - normalizedTime: 0.22
+    - normalizedTime: 0.25
       motionData:
-        motionType: 1
-        velocity: {x: 0, y: 0}
-        offset: {x: 0.25, y: 0.1}
+        motionType: 0
+        velocity: {x: 1.2, y: 0}
+        offset: {x: 0, y: 0}
         force: {x: 0, y: 0}
         gravityScale: 0
-        playerControlledDirection: 0
-  - motionName: 1
+    - normalizedTime: 0.3
+      motionData:
+        motionType: 4
+        velocity: {x: 0, y: 0}
+        offset: {x: 0, y: 0}
+        force: {x: 0, y: 0}
+        gravityScale: 0
+  - actionName: 1
     keyframes:
     - normalizedTime: 0
       motionData:
         motionType: 0
-        velocity: {x: 1.6, y: 5.2}
+        velocity: {x: 3.3, y: 0}
         offset: {x: 0, y: 0}
         force: {x: 0, y: 0}
         gravityScale: 0
-        playerControlledDirection: 1
-    - normalizedTime: 0.149
-      motionData:
-        motionType: 0
-        velocity: {x: 2.1, y: 0}
-        offset: {x: 0, y: 0}
-        force: {x: 0, y: 0}
-        gravityScale: 0
-        playerControlledDirection: 1
-    - normalizedTime: 0.736
+    - normalizedTime: 0.16
       motionData:
         motionType: 4
         velocity: {x: 0, y: 0}
         offset: {x: 0, y: 0}
         force: {x: 0, y: 0}
         gravityScale: 0
-        playerControlledDirection: 0
-    - normalizedTime: 0.736
-      motionData:
-        motionType: 2
-        velocity: {x: 0, y: 0}
-        offset: {x: 0, y: 0}
-        force: {x: 0, y: -2.6}
-        gravityScale: 0
-        playerControlledDirection: 0
-  - motionName: 2
+  - actionName: 2
     keyframes:
-    - normalizedTime: 0.5277
-      motionData:
-        motionType: 1
-        velocity: {x: 0, y: 0}
-        offset: {x: 2.2, y: 0}
-        force: {x: 0, y: 0}
-        gravityScale: 0
-        playerControlledDirection: 0
-    - normalizedTime: 0.5277
+    - normalizedTime: 0
       motionData:
         motionType: 0
-        velocity: {x: 1.5, y: 2.6}
+        velocity: {x: 1.5, y: 0}
         offset: {x: 0, y: 0}
         force: {x: 0, y: 0}
         gravityScale: 0
-        playerControlledDirection: 0
-  - motionName: 8
-    keyframes:
-    - normalizedTime: 0.0824
-      motionData:
-        motionType: 1
-        velocity: {x: 0, y: 0}
-        offset: {x: 0, y: 0.8}
-        force: {x: 0, y: 0}
-        gravityScale: 0
-        playerControlledDirection: 0
-    - normalizedTime: 0.0824
-      motionData:
-        motionType: 0
-        velocity: {x: 1.6, y: 0}
-        offset: {x: 0, y: 0}
-        force: {x: 0, y: 0}
-        gravityScale: 0
-        playerControlledDirection: 1
-    - normalizedTime: 0.434
+    - normalizedTime: 0.16
       motionData:
         motionType: 4
         velocity: {x: 0, y: 0}
         offset: {x: 0, y: 0}
         force: {x: 0, y: 0}
         gravityScale: 0
-        playerControlledDirection: 0
-    - normalizedTime: 0.434
+    - normalizedTime: 0.795
+      motionData:
+        motionType: 0
+        velocity: {x: -3, y: 0}
+        offset: {x: 0, y: 0}
+        force: {x: 0, y: 0}
+        gravityScale: 0
+    - normalizedTime: 1
+      motionData:
+        motionType: 4
+        velocity: {x: 0, y: 0}
+        offset: {x: 0, y: 0}
+        force: {x: 0, y: 0}
+        gravityScale: 0
+  - actionName: 3
+    keyframes:
+    - normalizedTime: 0
+      motionData:
+        motionType: 0
+        velocity: {x: 2.4, y: 0}
+        offset: {x: 0, y: 0}
+        force: {x: 0, y: 0}
+        gravityScale: 0
+    - normalizedTime: 0.18
+      motionData:
+        motionType: 4
+        velocity: {x: 0, y: 0}
+        offset: {x: 0, y: 0}
+        force: {x: 0, y: 0}
+        gravityScale: 0
+  - actionName: 4
+    keyframes:
+    - normalizedTime: 0
+      motionData:
+        motionType: 0
+        velocity: {x: 2.1, y: 3.4}
+        offset: {x: 0, y: 0}
+        force: {x: 0, y: 0}
+        gravityScale: 0
+    - normalizedTime: 0.243
+      motionData:
+        motionType: 0
+        velocity: {x: 1.05, y: 1.1}
+        offset: {x: 0, y: 0}
+        force: {x: 0, y: 0}
+        gravityScale: 0
+    - normalizedTime: 0.347
+      motionData:
+        motionType: 0
+        velocity: {x: 1.3, y: 0.3}
+        offset: {x: 0, y: 0}
+        force: {x: 0, y: 0}
+        gravityScale: 0
+    - normalizedTime: 0.4826
+      motionData:
+        motionType: 0
+        velocity: {x: 0, y: -3}
+        offset: {x: 0, y: 0}
+        force: {x: 0, y: 0}
+        gravityScale: 0
+    - normalizedTime: 1
+      motionData:
+        motionType: 4
+        velocity: {x: 0, y: 0}
+        offset: {x: 0, y: 0}
+        force: {x: 0, y: 0}
+        gravityScale: 0
+  - actionName: 5
+    keyframes:
+    - normalizedTime: 0.181
+      motionData:
+        motionType: 0
+        velocity: {x: 1.5, y: 0.4}
+        offset: {x: 0, y: 0}
+        force: {x: 0, y: 0}
+        gravityScale: 0
+    - normalizedTime: 0.363
+      motionData:
+        motionType: 4
+        velocity: {x: 0, y: 0}
+        offset: {x: 0, y: 0}
+        force: {x: 0, y: 0}
+        gravityScale: 0
+  - actionName: 6
+    keyframes:
+    - normalizedTime: 0.08
+      motionData:
+        motionType: 0
+        velocity: {x: 2, y: 7}
+        offset: {x: 0, y: 0}
+        force: {x: 0, y: 0}
+        gravityScale: 0
+    - normalizedTime: 0.206
+      motionData:
+        motionType: 0
+        velocity: {x: 2, y: 0}
+        offset: {x: 0, y: 0}
+        force: {x: 0, y: 0}
+        gravityScale: 0
+    - normalizedTime: 0.231
+      motionData:
+        motionType: 0
+        velocity: {x: 2, y: 0}
+        offset: {x: 0, y: 0}
+        force: {x: 0, y: 0}
+        gravityScale: 0
+    - normalizedTime: 0.515
+      motionData:
+        motionType: 0
+        velocity: {x: 0.5, y: 0}
+        offset: {x: 0, y: 0}
+        force: {x: 0, y: 0}
+        gravityScale: 0
+    - normalizedTime: 0.742
       motionData:
         motionType: 2
         velocity: {x: 0, y: 0}
         offset: {x: 0, y: 0}
-        force: {x: 0.1, y: 1.8}
+        force: {x: -0.5, y: -4}
         gravityScale: 0
-        playerControlledDirection: 0
-    - normalizedTime: 0.5
+    - normalizedTime: 1
       motionData:
-        motionType: 2
+        motionType: 4
         velocity: {x: 0, y: 0}
         offset: {x: 0, y: 0}
-        force: {x: 0, y: -4.6}
+        force: {x: 0, y: 0}
         gravityScale: 0
-        playerControlledDirection: 0
+  - actionName: 7
+    keyframes:
+    - normalizedTime: 0.903
+      motionData:
+        motionType: 1
+        velocity: {x: 0, y: 0}
+        offset: {x: 1.53, y: 0}
+        force: {x: 0, y: 0}
+        gravityScale: 0
+  hitBoxCommands:
+  - actionName: 5
+    keyframes:
+    - normalizedTime: 0.45
+      action: 2
+      boxName: 5
+      windowSeconds: 0.16
+      boxData:
+        offset: {x: 1.01, y: 1.75}
+        size: {x: 2.4, y: 2.2}
+        radius: 0
+        useCircle: 0
+        skillIndex: 0
+  - actionName: 6
+    keyframes:
+    - normalizedTime: 0.081
+      action: 0
+      boxName: 6
+      windowSeconds: 0
+      boxData:
+        offset: {x: -0.78, y: 1.02}
+        size: {x: 0, y: 0}
+        radius: 0.85
+        useCircle: 1
+        skillIndex: 1
+    - normalizedTime: 0.515
+      action: 1
+      boxName: 6
+      windowSeconds: 0
+      boxData:
+        offset: {x: -0.78, y: 1.02}
+        size: {x: 0, y: 0}
+        radius: 0.85
+        useCircle: 1
+        skillIndex: 1
+    - normalizedTime: 0.583
+      action: 2
+      boxName: 6
+      windowSeconds: 0.24
+      boxData:
+        offset: {x: -0.26, y: 1.31}
+        size: {x: 0, y: 0}
+        radius: 0.92
+        useCircle: 1
+        skillIndex: 1
+  - actionName: 7
+    keyframes:
+    - normalizedTime: 0.18
+      action: 0
+      boxName: 7
+      windowSeconds: 0
+      boxData:
+        offset: {x: 1.17, y: 1.06}
+        size: {x: 2.74, y: 1}
+        radius: 0
+        useCircle: 0
+        skillIndex: 2
+    - normalizedTime: 0.594
+      action: 1
+      boxName: 7
+      windowSeconds: 0
+      boxData:
+        offset: {x: 1.17, y: 1.06}
+        size: {x: 2.74, y: 1}
+        radius: 0
+        useCircle: 0
+        skillIndex: 2
+    - normalizedTime: 0.594
+      action: 2
+      boxName: 7
+      windowSeconds: 0.15
+      boxData:
+        offset: {x: 2.07, y: 1.4}
+        size: {x: 0.95, y: 1.33}
+        radius: 0
+        useCircle: 0
+        skillIndex: 2
+  - actionName: 8
+    keyframes:
+    - normalizedTime: 0
+      action: 0
+      boxName: 8
+      windowSeconds: 0
+      boxData:
+        offset: {x: -0.9, y: 1.3}
+        size: {x: 3.26, y: 1}
+        radius: 0
+        useCircle: 0
+        skillIndex: 3
+    - normalizedTime: 0.78
+      action: 1
+      boxName: 8
+      windowSeconds: 0
+      boxData:
+        offset: {x: -0.9, y: 1.3}
+        size: {x: 3.26, y: 1}
+        radius: 0
+        useCircle: 0
+        skillIndex: 3
+  - actionName: 0
+    keyframes:
+    - normalizedTime: 0.254
+      action: 2
+      boxName: 0
+      windowSeconds: 0.11
+      boxData:
+        offset: {x: -0.13, y: 1.08}
+        size: {x: 1.72, y: 0.5}
+        radius: 0
+        useCircle: 0
+        skillIndex: -1
+  - actionName: 1
+    keyframes:
+    - normalizedTime: 0.201
+      action: 2
+      boxName: 1
+      windowSeconds: 0.1
+      boxData:
+        offset: {x: -0.19, y: 1.05}
+        size: {x: 1.45, y: 1}
+        radius: 0
+        useCircle: 0
+        skillIndex: -1
+  - actionName: 2
+    keyframes:
+    - normalizedTime: 0.181
+      action: 0
+      boxName: 2
+      windowSeconds: 0
+      boxData:
+        offset: {x: -0.8, y: 1.4}
+        size: {x: 0, y: 0}
+        radius: 0.69
+        useCircle: 1
+        skillIndex: -1
+    - normalizedTime: 0.454
+      action: 1
+      boxName: 2
+      windowSeconds: 0
+      boxData:
+        offset: {x: -0.8, y: 1.4}
+        size: {x: 0, y: 0}
+        radius: 0.69
+        useCircle: 1
+        skillIndex: -1
+  - actionName: 3
+    keyframes:
+    - normalizedTime: 0.179
+      action: 2
+      boxName: 3
+      windowSeconds: 0.14
+      boxData:
+        offset: {x: -0.46, y: 1.39}
+        size: {x: 0, y: 0}
+        radius: 0.64
+        useCircle: 1
+        skillIndex: -1
+  - actionName: 4
+    keyframes:
+    - normalizedTime: 0.277
+      action: 2
+      boxName: 4
+      windowSeconds: 0.1
+      boxData:
+        offset: {x: 0.17, y: 1}
+        size: {x: 0, y: 0}
+        radius: 1
+        useCircle: 1
+        skillIndex: -1

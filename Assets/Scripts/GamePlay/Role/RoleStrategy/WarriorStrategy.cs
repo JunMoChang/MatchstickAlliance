@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 
 namespace GamePlay.Role.RoleStrategy
 {
-    public class YasuoStrategy : IRoleStrategy
+    public class WarriorStrategy : IRoleStrategy
     {
         private RoleContext roleContext;
         

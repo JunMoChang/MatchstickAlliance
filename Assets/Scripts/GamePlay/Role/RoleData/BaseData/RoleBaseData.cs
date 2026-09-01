@@ -1,27 +1,27 @@
 ﻿using System;
 using GamePlay.Role.RoleBoxCollider;
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace GamePlay.Role.RoleData.BaseData
 {
     [Serializable]
     public abstract class RoleBaseData : ScriptableObject
     {
+        #region 角色基本属性
+
         public RoleName roleName;
         public int roleLevel;
         public int defaultStar = 3;
         
         public float defaultHealth = 100f;
-        [Range(1f, 2f)]
-        public float healthGrowth;
+        [Range(1f, 2f)] public float healthGrowth;
         
         public float defaultDefense;
-        [Range(1f, 2f)]
-        public float defenseGrowth;
+        [Range(1f, 2f)] public float defenseGrowth;
         
         public float defaultDamage = 10f;
-        [Range(1f, 2f)]
-        public float damageGrowth;
+        [Range(1f, 2f)] public float damageGrowth;
         
         public float defaultCritRate = 0.1f;
         
@@ -35,6 +35,8 @@ namespace GamePlay.Role.RoleData.BaseData
         public Sprite selectedIcon;
         
         public int lockPrice;
+
+        #endregion
         
         /// <summary> 技能数据 </summary>
         [Serializable]
@@ -52,23 +54,16 @@ namespace GamePlay.Role.RoleData.BaseData
             public float baseCooldown;
             /// <summary> 伤害间隔（秒）,0 = 仅进入时伤害一次 </summary>
             public float damageInterval;
+            /// <summary> 释放期间是否允许自由移动（释放中不冻结输入移动） </summary>
+            public bool canMoveWhileCasting;
+            /// <summary> 自由移动允许的结束动画进度 </summary>
+            [Range(0f, 1f)] public float freeMoveEndProgress;
         }
         
-        /// <summary> 持续攻击碰撞检测数据 </summary>
+        /// <summary> 攻击盒几何数据 </summary>
         [Serializable]
-        public struct ContinuousHitBoxData
+        public struct HitBoxData
         {
-            public BoxColliderManager.BoxColliderName boxColliderName;
-            public Collider2D collider;
-            [Tooltip("技能索引，-1 使用默认伤害")]
-            public int skillIndex;
-        }
-        
-        /// <summary> 瞬间攻击碰撞检测数据 </summary>
-        [Serializable]
-        public struct InstantHitBoxData
-        {
-            public BoxColliderManager.InstantBoxColliderName instantBoxName;
             public Vector2 offset;
             public Vector2 size;
             public float radius;
@@ -77,21 +72,20 @@ namespace GamePlay.Role.RoleData.BaseData
             public int skillIndex;
         }
         
+        /// <summary> 行为名称 </summary>
+        public enum ActionName
+        {
+            Normal_1, Normal_2, Normal_3, Normal_4, Normal_5,
+            Skill_1, Skill_2, Skill_3, Skill_4
+        }
+        
+        /// <summary> 运动触发命令 </summary>
         [Serializable]
         public struct MotionCommand
         {
-            public MotionName motionName;
+            public ActionName actionName;
             public MotionKeyframe[] keyframes;
         }
-        
-         /// <summary> 运动标识名称 </summary>
-        public enum MotionName
-        {
-            Skill_1, Skill_2, Skill_3, Skill_4,
-            Normal_1, Normal_2, Normal_3, Normal_4, Normal_5,
-            SkillEnd
-        }
-         
         /// <summary> 运动的触发时机 </summary>
         [Serializable]
         public struct MotionKeyframe
@@ -102,7 +96,6 @@ namespace GamePlay.Role.RoleData.BaseData
             /// <summary> 运动数据 </summary>
             public MotionData motionData;
         }
-        
         /// <summary> 运动数据 </summary>
         [Serializable]
         public struct MotionData
@@ -117,7 +110,6 @@ namespace GamePlay.Role.RoleData.BaseData
             public Vector2 force;
             /// <summary> 设置重力 </summary>
             public float gravityScale;
-            public bool playerControlledDirection;
             
             /// <summary> 运动控制类型 </summary>
             public enum MotionType
@@ -134,7 +126,40 @@ namespace GamePlay.Role.RoleData.BaseData
                 ClearVelocity
             }
         }
+        
+        /// <summary> 碰撞盒触发命令 </summary>
+        [Serializable]
+        public struct HitBoxCommand
+        {
+            public ActionName actionName;
+            public HitBoxKeyframe[] keyframes;
+        }
+        /// <summary> 碰撞盒触发时机 </summary>
+        [Serializable]
+        public struct HitBoxKeyframe
+        {
+            /// <summary> 动画进度 </summary>
+            [Range(0f, 1f)]
+            public float normalizedTime;
+            /// <summary> 触发动作 </summary>
+            public HitBoxAction action;
+            /// <summary> 攻击盒逻辑标识 </summary>
+            public BoxColliderManager.HitBoxName boxName;
+            /// <summary> 瞬时盒伤害检测窗口时长 </summary>
+            public float windowSeconds;
+            /// <summary> 攻击盒几何配置 </summary>
+            [FormerlySerializedAs("data")] public HitBoxData boxData;
+        }
 
+        /// <summary> 碰撞盒触发动作类型 </summary>
+        public enum HitBoxAction
+        {
+            EnableBox,
+            DisableBox,
+            InstantHit
+        }
+
+        
         public void FirstLoadSaveData(RoleSaveData saveData)
         {
             saveData.roleLevel = roleLevel;

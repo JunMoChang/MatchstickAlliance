@@ -184,7 +184,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2641989884856927061}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -310,7 +310,7 @@ SpriteRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_MaskInteraction: 0
-  m_Sprite: {fileID: 5253107903009680608, guid: 80613a7ce8dea31458b19a2799285972, type: 3}
+  m_Sprite: {fileID: -5283618269098331843, guid: 5427b5cac74bf40448696722f0c02e8a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -394,6 +394,10 @@ MonoBehaviour:
   animator: {fileID: 1200332532548362406}
   rb: {fileID: 3109188866320550263}
   boxColliderManager: {fileID: 1954295177290003997}
+  groundLayer:
+    serializedVersion: 2
+    m_Bits: 8
+  groundCheckDistance: 0.02
 --- !u!114 &1954295177290003997
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -406,65 +410,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dd3b761390cf469b9c2f88eb48b28754, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GamePlay.Role.RoleBoxCollider.BoxColliderManager
-  continuousBoxesConfig:
-  - boxColliderName: 1
-    collider: {fileID: 7797440312827658987}
-    skillIndex: 1
-  - boxColliderName: 7
-    collider: {fileID: 4168218438371692575}
-    skillIndex: 2
-  - boxColliderName: 8
-    collider: {fileID: 750816529770936481}
-    skillIndex: 3
-  instantBoxesConfig:
-  - instantBoxName: 0
-    offset: {x: 1.01, y: 1.75}
-    size: {x: 2.4, y: 2.2}
-    radius: 0
-    useCircle: 0
-    skillIndex: 0
-  - instantBoxName: 1
-    offset: {x: -0.4, y: 0.9}
-    size: {x: 0, y: 0}
-    radius: 0.88
-    useCircle: 1
-    skillIndex: 1
-  - instantBoxName: 2
-    offset: {x: -0.35, y: 1.3}
-    size: {x: 0.95, y: 1.33}
-    radius: 0
-    useCircle: 0
-    skillIndex: 2
-  - instantBoxName: 3
-    offset: {x: -0.13, y: 1.08}
-    size: {x: 1.8, y: 0.5}
-    radius: 0
-    useCircle: 0
-    skillIndex: -1
-  - instantBoxName: 4
-    offset: {x: -0.19, y: 1.05}
-    size: {x: 1.45, y: 1}
-    radius: 0
-    useCircle: 0
-    skillIndex: -1
-  - instantBoxName: 5
-    offset: {x: -0.8, y: 1.4}
-    size: {x: 0, y: 0}
-    radius: 0.72
-    useCircle: 1
-    skillIndex: -1
-  - instantBoxName: 6
-    offset: {x: -0.46, y: 1.39}
-    size: {x: 0, y: 0}
-    radius: 0.64
-    useCircle: 1
-    skillIndex: -1
-  - instantBoxName: 7
-    offset: {x: 0.09, y: 1}
-    size: {x: 0, y: 0}
-    radius: 1
-    useCircle: 1
-    skillIndex: -1
 --- !u!1 &2991568384591207541
 GameObject:
   m_ObjectHideFlags: 0
@@ -560,7 +505,7 @@ BoxCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -638,12 +583,12 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
   m_Offset: {x: -0.8, y: 1.4}
-  m_Radius: 0.72
+  m_Radius: 0.69
 --- !u!1 &4010939859288580430
 GameObject:
   m_ObjectHideFlags: 0
@@ -653,7 +598,9 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 7513774595400382903}
+  - component: {fileID: 5693173217959009368}
   - component: {fileID: 3109188866320550263}
+  - component: {fileID: -4940458601467525976}
   m_Layer: 6
   m_Name: "\u5B59\u609F\u7A7A"
   m_TagString: Player
@@ -677,6 +624,25 @@ Transform:
   - {fileID: 6990760273217302344}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &5693173217959009368
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4010939859288580430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: -1552182283, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkObject
+  SortKey: 3234877653
+  ObjectInterest: 1
+  Flags: 262145
+  NestedObjects: []
+  NetworkedBehaviours:
+  - {fileID: -4940458601467525976}
+  ForceRemoteRenderTimeframe: 0
 --- !u!50 &3109188866320550263
 Rigidbody2D:
   serializedVersion: 5
@@ -685,7 +651,7 @@ Rigidbody2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4010939859288580430}
-  m_BodyType: 0
+  m_BodyType: 1
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
@@ -704,6 +670,24 @@ Rigidbody2D:
   m_SleepingMode: 0
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!114 &-4940458601467525976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4010939859288580430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5c202fdcf1698d1498850ee7f5e4bb7e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GamePlay.PvP.PvPRoleSetup
+  roleContext: {fileID: 4527723505307518246}
+  animator: {fileID: 1200332532548362406}
+  _SyncedRoleName:
+    _length: 0
+    _data:
+      Data: 0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 --- !u!1 &5071213927710427095
 GameObject:
   m_ObjectHideFlags: 0
@@ -743,7 +727,7 @@ BoxCollider2D:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5071213927710427095}
-  m_Enabled: 0
+  m_Enabled: 1
   serializedVersion: 3
   m_Density: 1
   m_Material: {fileID: 0}
@@ -780,7 +764,7 @@ BoxCollider2D:
     drawMode: 0
     adaptiveTiling: 0
   m_AutoTiling: 0
-  m_Size: {x: 1.8, y: 0.5}
+  m_Size: {x: 1.72, y: 0.5}
   m_EdgeRadius: 0
 --- !u!1 &6253426290037451354
 GameObject:
@@ -844,7 +828,7 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
@@ -860,7 +844,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1882573393498662387}
   - component: {fileID: 7797440312827658987}
-  - component: {fileID: 8658315484120862596}
+  - component: {fileID: 5313309453335703950}
   m_Layer: 6
   m_Name: HitBox_Skill_2
   m_TagString: Untagged
@@ -917,9 +901,9 @@ CircleCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.88, y: 1.02}
-  m_Radius: 0.83
---- !u!58 &8658315484120862596
+  m_Offset: {x: -0.78, y: 1.02}
+  m_Radius: 0.85
+--- !u!58 &5313309453335703950
 CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -949,12 +933,12 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.4, y: 0.9}
-  m_Radius: 0.88
+  m_Offset: {x: -0.26, y: 1.31}
+  m_Radius: 0.92
 --- !u!1 &7519877283611245382
 GameObject:
   m_ObjectHideFlags: 0
@@ -1052,11 +1036,11 @@ CircleCollider2D:
   m_CallbackLayers:
     serializedVersion: 2
     m_Bits: 4294967295
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: 0.09, y: 1}
+  m_Offset: {x: 0.17, y: 1}
   m_Radius: 1
 --- !u!1 &8950422712591794046
 GameObject:
@@ -1171,7 +1155,7 @@ BoxCollider2D:
   m_UsedByEffector: 0
   m_CompositeOperation: 0
   m_CompositeOrder: 0
-  m_Offset: {x: -0.35, y: 1.3}
+  m_Offset: {x: 2.07, y: 1.4}
   m_SpriteTilingProperty:
     border: {x: 0, y: 0, z: 0, w: 0}
     pivot: {x: 0, y: 0}

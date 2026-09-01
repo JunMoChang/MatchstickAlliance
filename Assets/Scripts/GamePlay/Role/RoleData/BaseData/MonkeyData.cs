@@ -7,9 +7,7 @@ namespace GamePlay.Role.RoleData.BaseData
     {
         public int maxCombos = 5;
 
-        public float skill2JumpForceX = 0.6f;
-        public float skill2JumpForceY = 4.6f;
-
         public MotionCommand[] motionCommands;
+        public HitBoxCommand[] hitBoxCommands;
     }
 }
