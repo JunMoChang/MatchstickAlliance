@@ -98,6 +98,19 @@ namespace GamePlay.Scene
             StopAllCoroutines();
             StartCoroutine(LoadWithTransition(chapter.sceneName));
         }
+        
+        /// <summary>
+        /// 加载 PvP 擂台场景
+        /// </summary>
+        public void LoadPvPScene()
+        {
+            LevelContext.IsPvPMode = true;
+            isReturningToMenu = false;
+            OnLevelExit?.Invoke();
+            StopAllCoroutines();
+            StartCoroutine(LoadWithTransition("PVPBattleScene"));
+        }
+
         public void LoadMainMenu()
         {
             isReturningToMenu = true;
@@ -105,37 +118,46 @@ namespace GamePlay.Scene
             StopAllCoroutines();
             StartCoroutine(LoadWithTransition("Main"));
         }
-        
+
+        public void LoadScene(string sceneName)
+        {
+            StopAllCoroutines();
+            StartCoroutine(LoadWithTransition(sceneName));
+        }
         private IEnumerator LoadWithTransition(string sceneName)
         {
             SceneManager.LoadScene(loadingSceneName);
             yield return null; 
             AsyncOperation op = SceneManager.LoadSceneAsync(sceneName);
-            op.allowSceneActivation = false;
-            
-            while (op.progress < 0.9f)
+            if (op != null)
             {
-                OnLoadProgress?.Invoke(op.progress / 0.9f);
-                yield return new WaitForSeconds(0.5f);
-            }
-            
-            OnLoadProgress?.Invoke(1f);
-            yield return new WaitForSeconds(0.5f); 
-            
-            if (isReturningToMenu)
-            {
-                pendingReadyCount = totalMainMenuSubscribers;
-                TriggerPrepare(prepareMainMenu);
-            }
-            else
-            {
-                pendingReadyCount = totalLevelSubscribers;
-                TriggerPrepare(prepareLevel);
-            }
-            
-            yield return new WaitUntil(() => pendingReadyCount <= 0);
+                op.allowSceneActivation = false;
 
-            op.allowSceneActivation = true;
+                while (op.progress < 0.9f)
+                {
+                    OnLoadProgress?.Invoke(op.progress / 0.9f);
+                    yield return new WaitForSeconds(0.5f);
+                }
+
+                OnLoadProgress?.Invoke(1f);
+                yield return new WaitForSeconds(0.5f);
+
+                if (isReturningToMenu)
+                {
+                    pendingReadyCount = totalMainMenuSubscribers;
+                    TriggerPrepare(prepareMainMenu);
+                }
+                else
+                {
+                    pendingReadyCount = totalLevelSubscribers;
+                    TriggerPrepare(prepareLevel);
+                }
+
+                yield return new WaitUntil(() => pendingReadyCount <= 0);
+
+                op.allowSceneActivation = true;
+            }
+
             yield return null;
             if(!isReturningToMenu)
                 OnLevelLoaded?.Invoke();
