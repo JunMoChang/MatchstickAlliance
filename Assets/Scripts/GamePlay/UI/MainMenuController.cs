@@ -42,7 +42,8 @@ namespace GamePlay.UI
         {
             if (GameDataManager.IsReady)
             {
-                InitializeAll();
+                // 复用同一入口：加载失败时同样走降级（原实现直接 InitializeAll，会绕过 IsFailed 检查）
+                OnDataReady();
             }
             else
             {
@@ -63,7 +64,7 @@ namespace GamePlay.UI
             InitializeLevelPopup();
             InitializeInventory();
 
-            // 从 PvP 战斗返回大厅：直接显示大厅面板（PvPResultPanel 设置的标志）
+            // 从 PvP 战斗返回大厅：直接显示大厅面板
             if (LevelContext.ReturnToPvPLobby)
             {
                 LevelContext.ReturnToPvPLobby = false;

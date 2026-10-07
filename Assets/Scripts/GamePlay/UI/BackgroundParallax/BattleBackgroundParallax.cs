@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using GamePlay.Scene;
 using UnityEngine;
 
 namespace GamePlay.UI.BackgroundParallax
@@ -17,7 +16,7 @@ namespace GamePlay.UI.BackgroundParallax
         [Header("Layer References")]
         [SerializeField] private RectTransform backgroundRect;
         [SerializeField] private RectTransform mountainContainer;
-        [SerializeField] private RectTransform groundRect;
+        [SerializeField] private Transform groundVisual;
 
         [Header("Parallax Factors")]
         [SerializeField] private MountainLayerConfig farMountain = new() { parallaxFactor = 0.15f };
@@ -37,7 +36,7 @@ namespace GamePlay.UI.BackgroundParallax
         private float minScrollOffset;
 
         private Vector2 backgroundInitialPos;
-        private Vector2 groundInitialPos;
+        private Vector3 groundInitialPos;
 
         private readonly List<MountainEntry> farMountains = new ();
         private readonly List<MountainEntry> middleMountains = new ();
@@ -58,10 +57,7 @@ namespace GamePlay.UI.BackgroundParallax
             Camera cam = Camera.main;
             float orthoSize = cam != null? cam.orthographicSize : 5f;
             worldToCanvasUnit = refHeight / (2f * orthoSize);
-
-            SpawnPoint sp = FindAnyObjectByType<SpawnPoint>();
-            spawnX = sp != null ? sp.transform.position.x : 0f;
-
+            spawnX = cam != null ? cam.ViewportToWorldPoint(new Vector3(0f, 0.5f, 0f)).x : 0f;
             CacheInitialPositions();
             CalculateBackgroundExtent();
             GroupMountains();
@@ -88,10 +84,11 @@ namespace GamePlay.UI.BackgroundParallax
                 backgroundRect.anchoredPosition = pos;
             }
             
+            if (groundVisual != null)
             {
-                Vector2 pos = groundInitialPos;
-                pos.x += baseScroll;
-                groundRect.anchoredPosition = pos;
+                Vector3 pos = groundInitialPos;
+                pos.x += baseScroll / worldToCanvasUnit;
+                groundVisual.position = pos;
             }
 
             ApplyMountainOffset(farMountains, baseScroll * farMountain.parallaxFactor);
@@ -112,7 +109,7 @@ namespace GamePlay.UI.BackgroundParallax
         private void CacheInitialPositions()
         {
             if (backgroundRect != null) backgroundInitialPos = backgroundRect.anchoredPosition;
-            if (groundRect != null) groundInitialPos = groundRect.anchoredPosition;
+            if (groundVisual != null) groundInitialPos = groundVisual.position;
         }
 
         private void CalculateBackgroundExtent()

@@ -1,23 +1,33 @@
-﻿using UnityEngine;
-using UnityEngine.UIElements;
+using UnityEngine;
 
 namespace GamePlay.Scene
 {
     public class LoadingSceneController : MonoBehaviour
     {
-        [SerializeField] UIDocument uiDocument;
-        private ProgressBar progressBar;
+        [SerializeField] RectTransform progressFill;
+        private float lastT;
         
         private void OnEnable()
         {
-            progressBar = uiDocument.rootVisualElement.Q<ProgressBar>("progress-bar");
+            progressFill.anchorMin = Vector2.zero;
+            progressFill.offsetMin = Vector2.zero;
+            progressFill.offsetMax = Vector2.zero;
+            
             SceneLoader.OnLoadProgress += UpdateProgress;
         }
-        private void OnDisable() => SceneLoader.OnLoadProgress -= UpdateProgress;
 
+        private void OnDisable()
+        {
+            SceneLoader.OnLoadProgress -= UpdateProgress;
+        }
+        
         private void UpdateProgress(float t)
         {
-            progressBar.value = t * 100f;
-        } 
+            if (progressFill == null) return;
+            if(Mathf.Approximately(lastT, t)) return;
+            
+            lastT = t;
+            progressFill.anchorMax = new Vector2(Mathf.Clamp01(t), 1f);
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using GamePlay.Inventory.ScriptObjects;
 using GamePlay.Role.RoleData;
@@ -15,36 +15,63 @@ namespace AssetLoad
         public static EquipmentPool EquipmentPool { get; private set; }
         public static ItemRarityScriptObject ItemRarityTable { get; private set; }
 
+        /// <summary> 加载流程已结束（成功或失败都算结束），结果看 IsFailed </summary>
         public static bool IsReady { get; private set; }
+        /// <summary> 加载流程已结束但存在失败项，消费者应据此降级 </summary>
         public static bool IsFailed { get; private set; }
+        /// <summary> 正在加载中（用于需要轮询进度的场合） </summary>
+        public static bool IsLoading { get; private set; }
+
+        /// <summary> 加载流程结束时触发（成功与失败）</summary>
         public static event Action OnReady;
 
-        private static bool _isLoading;
         
-        [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
-        private static void AutoInit()
+        public static void LoadResources()
         {
-            if (!IsReady && !_isLoading) InitAsync();
+            if (IsReady || IsLoading) return;
+            
+            _ = LoadAsyncResource();
+        }
+
+        private static async Task LoadAsyncResource()
+        {
+            if (IsReady || IsLoading) return;
+            IsLoading = true;
+
+            try
+            {
+                RoleRegistry = await LoadAsync<RoleRegistry>(nameof(RoleRegistry));
+                EquipmentPool = await LoadAsync<EquipmentPool>(nameof(EquipmentPool));
+                ItemRarityTable = await LoadAsync<ItemRarityScriptObject>(nameof(ItemRarityTable));
+
+                if (EquipmentPool != null) EquipmentPool.Initialize();
+
+                IsFailed = RoleRegistry == null || EquipmentPool == null || ItemRarityTable == null;
+            }
+            catch (Exception e)
+            {
+                // 检查 LoadAssetAsync 的同步异常与 Initialize() 内部异常
+                Debug.LogError($"[GameDataManager] 配置表加载抛出异常: {e}");
+                IsFailed = true;
+            }
+            finally
+            {
+                IsLoading = false;
+                IsReady = true;
+                NotifyReady();
+            }
         }
         
-        public static async void InitAsync()
+        private static void NotifyReady()
         {
-            if (IsReady || _isLoading) return;
-            _isLoading = true;
-
-            RoleRegistry = await LoadAsync<RoleRegistry>(nameof(RoleRegistry));
-            EquipmentPool = await LoadAsync<EquipmentPool>(nameof(EquipmentPool));
-            ItemRarityTable = await LoadAsync<ItemRarityScriptObject>(nameof(ItemRarityTable));
-
-            if (EquipmentPool != null) EquipmentPool.Initialize();
-
-
-            IsFailed = RoleRegistry == null || EquipmentPool == null || ItemRarityTable == null;
-            IsReady = true;
-            _isLoading = false;
-
-            OnReady?.Invoke();
-            
+            try
+            {
+                OnReady?.Invoke();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError($"[GameDataManager] OnReady 订阅者抛出异常: {e}");
+            }
         }
 
         private static async Task<T> LoadAsync<T>(string address) where T : UnityEngine.Object

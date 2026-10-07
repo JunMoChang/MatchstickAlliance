@@ -1,20 +1,12 @@
-﻿using AssetLoad;
+using AssetLoad;
 using UnityEngine;
 
-public class GameBootstrap : MonoBehaviour
+public static class GameBootstrap
 {
-    private static bool _sExists;
-
-    private void Awake()
+    [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.BeforeSceneLoad)]
+    private static void InitGame()
     {
-        if (_sExists)
-        {
-            Destroy(gameObject);
-            return;
-        }
-        _sExists = true;
-        DontDestroyOnLoad(gameObject);
-        
-        GameDataManager.InitAsync();
+        // 只负责点火：加载结果通过 GameDataManager.IsReady / IsFailed / OnReady 获取
+        GameDataManager.LoadResources();
     }
 }

@@ -29,40 +29,15 @@ namespace GamePlay.PlayerDataHandle
         
         void Awake()
         {
-            if (Instance == null) Instance = this;
-            else if(Instance != this)Destroy(gameObject);
-
-            PlayerData = saveManager.LoadData();
-
-            /*// 清除存档中可能残留的脏数据：没有装备物品的角色，equipmentBonus 应为零
-            foreach (RoleSaveData saveData in PlayerData.ownedRoles.Values)
+            if (Instance == null)
             {
-                if (!PlayerData.roleEquippedItems.ContainsKey(saveData.roleName))
-                {
-                    saveData.equipmentBonus = default;
-                }
+                Instance = this;
+                PlayerData = saveManager.LoadData();
             }
-
-            foreach (RoleSaveData saveData in PlayerData.ownedRoles.Values)
+            else if (Instance != this)
             {
-                UpdateRolePower(saveData);
+                Destroy(gameObject);
             }
-            CalculateOwnedTotalPower();*/
-        }
-        
-        
-        void OnEnable()
-        {
-            /*if(GameDataManager.RoleRegistry == null) return;
-            foreach (RoleSaveData saveData in PlayerData.ownedRoles.Values)
-            {
-                GameDataManager.RoleRegistry.GetRoleEntry(saveData.roleName).Value.template.FirstLoadSaveData(saveData);
-            }
-            foreach (RoleSaveData saveData in PlayerData.ownedRoles.Values)
-            {
-                UpdateRolePower(saveData);
-            }
-            CalculateOwnedTotalPower();*/
         }
         
         void OnApplicationQuit()

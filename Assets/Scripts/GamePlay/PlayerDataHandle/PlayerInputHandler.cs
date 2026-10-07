@@ -11,7 +11,7 @@ namespace GamePlay.PlayerDataHandle
     public class PlayerInputHandler : MonoBehaviour
     {
         private PlayerInput playerInput;
-        private IRoleStrategy[] strategies = new IRoleStrategy[2];
+        private IRoleStrategy[] strategies;
         private List<GameObject> roleInstances;
         private IRoleStrategy currentStrategy;
         private int currentIndex;
