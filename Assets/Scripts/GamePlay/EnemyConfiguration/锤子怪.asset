@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GamePlay.EnemyData
   enemyPrefab: {fileID: 904316566479198444, guid: 61a44b01b2cd9474e8944fb12f4d21f7, type: 3}
   enemyName: "\u9524\u5B50\u602A"
-  baseHp: 100
+  baseHp: 5000
   baseDamage: 10
   hpGrowthRate: 0.2
   damageGrowthRate: 0.2

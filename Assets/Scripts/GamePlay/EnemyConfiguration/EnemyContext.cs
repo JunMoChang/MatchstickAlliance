@@ -1,9 +1,18 @@
 using System;
 using GamePlay.GameModel;
+using GamePlay.Scene;
 using UnityEngine;
+using Random = UnityEngine.Random;
+using Vector2 = UnityEngine.Vector2;
+using Vector3 = UnityEngine.Vector3;
 
 namespace GamePlay.EnemyConfiguration
 {
+    enum EnemyState
+    {
+        Idle, Chase, Attack, HitReaction, Dead
+    }
+    
     public class EnemyContext : MonoBehaviour, IDamageable
     {
         public float Hp { get; private set; }
@@ -17,10 +26,23 @@ namespace GamePlay.EnemyConfiguration
         [SerializeField] private SpriteRenderer mainSpriteRenderer;
         [SerializeField] private EnemyGib gibSystem;
         private Vector2 lastHitDirection = Vector2.right;
-        private enum EnemyState { Idle, Chase, Attack, HitReaction, Dead }
+        
+        private CircleCollider2D attackBox;
+        private float attackRange;
+        /// <summary> 起手余量, 挥锤到命中帧间玩家可能移动</summary>
+        private const float AttackLeadBonus = 0.15f;
+        private readonly Collider2D[] targets = new Collider2D[8];
+        
+        private LayerMask groundLayer;
+        private float groundDetectionDistance =  0.3f;
+        private float changeDelay = 2.5f; // 状态切换延迟时间 
+        private float changeTimer;
+        private ContactFilter2D filter;
+        
         private EnemyState state;
         private float attackCooldownTimer;
         private bool hasDealtDamageThisAttack;
+        private bool isOnGround;
         private float DistanceToPlayer => Vector2.Distance(transform.position, player.position);
         private bool CooldownReady => attackCooldownTimer <= 0f;
         public event Action<Vector2> OnEnemyDied;
@@ -33,6 +55,20 @@ namespace GamePlay.EnemyConfiguration
             state = EnemyState.Idle;
             attackCooldownTimer = 0f;
             hasDealtDamageThisAttack = false;
+            groundLayer =  LayerMask.GetMask("Ground");
+            attackBox = GetComponentInChildren<CircleCollider2D>();
+            
+            if (attackBox == null)
+            {
+                Debug.LogError($"{name}: 缺少攻击盒", this);
+                return;
+            }
+
+            attackRange = Mathf.Abs(attackBox.offset.x) + attackBox.radius + AttackLeadBonus;
+            filter.SetLayerMask(LayerMask.GetMask("Role"));
+            filter.useLayerMask = true;
+
+            SnapToGround();
         }
 
         void Update()
@@ -61,29 +97,47 @@ namespace GamePlay.EnemyConfiguration
         {
             animator.SetFloat(AnimationParameters.EnemySpeed, -1f);
             
-            float dist = DistanceToPlayer;
-            if (dist <= enemyData.attackRange && CooldownReady)
-                TransitionTo(EnemyState.Attack);
-            else if(dist > enemyData.attackRange) TransitionTo(EnemyState.Chase);
+            changeTimer -= Time.deltaTime;
+            if (changeTimer <= 0)
+            {
+                changeTimer = Random.Range(0.5f, changeDelay);
+                
+                float dist = DistanceToPlayer;
+                if (dist <= attackRange && CooldownReady)
+                {
+                    ChangeState(EnemyState.Attack);
+                }
+                else if (dist > attackRange)
+                {
+                    ChangeState(EnemyState.Chase);
+                }
+            }
         }
 
         private void ChaseUpdate()
         {
             float dist = DistanceToPlayer;
-            if (dist <= enemyData.attackRange)
+            if (dist <= attackRange)
             {
-                TransitionTo(CooldownReady ? EnemyState.Attack : EnemyState.Idle);
+                ChangeState(CooldownReady ? EnemyState.Attack : EnemyState.Idle);
             }
         }
 
         private void ChaseMove()
         {
-            Vector2 dir = (player.position - transform.position).normalized;
-            FaceDirection(dir.x);
-            
-            animator.SetFloat(AnimationParameters.EnemySpeed, 1f);
-        
-            rb.MovePosition(rb.position + enemyData.moveSpeed * Time.fixedDeltaTime * dir);
+            float dx = player.position.x - transform.position.x;
+            bool hasHorizontalOffset = Mathf.Abs(dx) > 0.1f;
+
+            animator.SetFloat(AnimationParameters.EnemySpeed, hasHorizontalOffset ? 1f : -1f);
+
+            if (hasHorizontalOffset)
+            {
+                FaceDirection(dx);
+
+                Vector2 target = GroundConstraint(rb.position + enemyData.moveSpeed * Time.fixedDeltaTime * new Vector2(Mathf.Sign(dx), 0f));
+                target.x = LevelBounds.ClampX(target.x);
+                rb.MovePosition(target);
+            }
         }
 
         private void AttackUpdate()
@@ -98,17 +152,25 @@ namespace GamePlay.EnemyConfiguration
 
             if (stateInfo.normalizedTime >= 0.95f)
             {
-                TransitionTo(EnemyState.Idle);
+                ChangeState(EnemyState.Idle);
             }
         }
 
         private void DealDamage()
         {
             hasDealtDamageThisAttack = true;
-            if (DistanceToPlayer <= enemyData.attackRange + 0.5f)
+
+            if (attackBox == null) return;
+            
+            float facingX = transform.localScale.x < 0f ? -1f : 1f;
+            Vector2 center = (Vector2)transform.position + new Vector2(attackBox.offset.x * facingX, attackBox.offset.y);
+            int count = Physics2D.OverlapCircle(center, attackBox.radius, filter, targets);
+            for (int i = 0; i < count; i++)
             {
-                IDamageable target = player.GetComponentInChildren<IDamageable>();
-                target?.TakeDamage(Damage);
+                IDamageable target = targets[i].GetComponentInParent<IDamageable>();
+                if (target == null) continue;
+
+                target.TakeDamage(Damage);
             }
         }
 
@@ -119,7 +181,7 @@ namespace GamePlay.EnemyConfiguration
             if (!stateInfo.IsName("HitReaction")) return;
             if (stateInfo.normalizedTime >= 0.95f)
             {
-                TransitionTo(EnemyState.Idle);
+                ChangeState(EnemyState.Idle);
             }
         }
 
@@ -128,7 +190,7 @@ namespace GamePlay.EnemyConfiguration
             Destroy(gameObject);
         }
 
-        private void TransitionTo(EnemyState newState)
+        private void ChangeState(EnemyState newState)
         {
             state = newState;
 
@@ -194,10 +256,55 @@ namespace GamePlay.EnemyConfiguration
                 Hp = 0;
                 gibSystem.Explode(lastHitDirection);
                 Die();
-                TransitionTo(EnemyState.Dead);
+                ChangeState(EnemyState.Dead);
                 return;
             }
-            TransitionTo(EnemyState.HitReaction);
+            ChangeState(EnemyState.HitReaction);
+        }
+        
+        private RaycastHit2D GroundDetect()
+        {
+            Bounds bounds = bodyCollider.bounds;
+            Vector2 origin = new Vector2(bounds.center.x, bounds.min.y);
+            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, groundDetectionDistance, groundLayer);
+            
+            if(hit.collider != null) isOnGround = true;
+            else isOnGround = false;
+            
+            return hit;
+        }
+        
+        /// <summary>
+        /// 防止陷入地面
+        /// </summary>
+        /// <param name="currentPosition"></param>
+        /// <returns></returns>
+        private Vector2 GroundConstraint(Vector2 currentPosition)
+        {
+            RaycastHit2D hit = GroundDetect();
+
+            Bounds bounds = bodyCollider.bounds;
+            if (hit.collider != null)
+            {
+                float groundY = hit.point.y - (bounds.min.y - rb.position.y);
+                currentPosition.y = groundY;
+            }
+
+            return currentPosition;
+        }
+        
+        /// <summary>
+        /// 瞬间回到地面
+        /// </summary>
+        private void SnapToGround()
+        {
+            Bounds bounds = bodyCollider.bounds;
+            Vector2 origin = new Vector2(bounds.center.x, bounds.min.y);
+
+            RaycastHit2D hit = Physics2D.Raycast(origin, Vector2.down, Mathf.Infinity, groundLayer);
+            if (hit.collider == null) return;
+            
+            rb.position = new Vector2(rb.position.x, hit.point.y + (rb.position.y - bounds.min.y)); 
         }
     }
 }

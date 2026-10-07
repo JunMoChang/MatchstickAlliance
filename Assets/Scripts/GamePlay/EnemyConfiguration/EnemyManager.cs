@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using GamePlay.GameModel.Level;
 using GamePlay.Scene;
 using UnityEngine;
@@ -11,6 +10,7 @@ namespace GamePlay.EnemyConfiguration
     public class EnemyManager : MonoBehaviour
     {
         [SerializeField] private float maxOffset;
+        [SerializeField] private float spawnInterval = 0.3f;
         private Transform player;
         
         private Transform[] createPosition;
@@ -43,9 +43,9 @@ namespace GamePlay.EnemyConfiguration
                 
                 yield return WaitForPlayerTrigger(wave.triggerX);
                 
-                SpawnWave(wave);
+                yield return SpawnWave(wave);
                 waveInProgress = true;
-                
+
                 yield return WaitForWaveClear();
 
                 waveInProgress = false;
@@ -65,21 +65,26 @@ namespace GamePlay.EnemyConfiguration
             while (remainingEnemies > 0) yield return null;
         }
         
-        private void SpawnWave(WaveData wave)
+        private IEnumerator SpawnWave(WaveData wave)
         {
             int chapter = LevelContext.CurrentChapter.chapter;
-            
+            bool firstSpawn = true;
+
             foreach (LevelEnemyConfiguration cfg in wave.enemies)
             {
                 remainingEnemies += cfg.spawnCount;
-                
+
                 float factor = cfg.GetGrowthFactor(chapter);
                 float hp = LevelManager.LevelScaler.GetHp(cfg.enemyData, factor);
-                float damage = LevelManager.LevelScaler.GetDamage(cfg.enemyData, factor); 
+                float damage = LevelManager.LevelScaler.GetDamage(cfg.enemyData, factor);
 
                 for (int i = 0; i < cfg.spawnCount; i++)
                 {
+                    if (!firstSpawn && spawnInterval > 0f) yield return new WaitForSeconds(spawnInterval);
+                    firstSpawn = false;
+
                     Vector2 pos = new(player.position.x + Random.Range(-maxOffset, maxOffset), player.position.y);
+                    pos.x = LevelBounds.ClampX(pos.x);
                     GameObject enemy = Instantiate(cfg.enemyData.enemyPrefab, pos, Quaternion.identity);
                     EnemyContext context = enemy.GetComponent<EnemyContext>();
                     context.Init(hp, damage, player, cfg.enemyData);
