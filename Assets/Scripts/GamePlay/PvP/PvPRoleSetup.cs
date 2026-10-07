@@ -14,6 +14,8 @@ namespace GamePlay.PvP
         [Header("引用")]
         [SerializeField] private RoleContext roleContext;
         [SerializeField] private Animator animator;
+        /// <summary> Fusion 自带插值组件（挂根物体，须关闭 Sync Scale）。启用时自研快照插值自动让位 </summary>
+        [SerializeField] private NetworkTransform networkTransform;
 
         #region Networked
 
@@ -84,6 +86,19 @@ namespace GamePlay.PvP
         {
             if (roleContext == null) roleContext = GetComponentInChildren<RoleContext>();
             if (animator == null) animator = GetComponent<Animator>() ?? GetComponentInChildren<Animator>();
+            if (networkTransform == null) networkTransform = GetComponent<NetworkTransform>();
+        }
+
+        /// <summary> 位置插值是否交给 Fusion 的 NetworkTransform（组件存在且启用时） </summary>
+        private bool UseFusionInterpolation => networkTransform != null && networkTransform.enabled;
+
+        /// <summary>
+        /// 瞬移。挂了 NetworkTransform 必须走 Teleport，否则插值会把角色从旧位置平滑拖过去
+        /// </summary>
+        private void TeleportTo(Vector3 position)
+        {
+            if (UseFusionInterpolation) networkTransform.Teleport(position);
+            else transform.position = position;
         }
 
         public override void Spawned()
@@ -108,7 +123,8 @@ namespace GamePlay.PvP
             
             if (!Object.HasStateAuthority)
             {
-                transform.position = NetworkedPosition;
+                // 出生时对齐位置：走 Teleport，避免 NetworkTransform 从 prefab 默认位置插值过来
+                TeleportTo(NetworkedPosition);
                 roleContext?.Flip(NetworkedFacingRight);
             }
 
@@ -256,7 +272,7 @@ namespace GamePlay.PvP
         }
 
         /// <summary>
-        /// proxy 端位置插值：插值点落在历史区间（延迟约 1 tick），位置逐帧平滑滑过
+        /// proxy 端位置插值。插值点落在历史区间（延迟约 1 tick）
         /// </summary>
         private void ApplyInterpolatedVisual()
         {
@@ -277,14 +293,15 @@ namespace GamePlay.PvP
             PositionSnapshot b = positionSnapshots[Mathf.Min(i + 1, positionSnapshots.Count - 1)];
 
             float t = Mathf.InverseLerp(a.localReceiveTime, b.localReceiveTime, targetTime);
-            transform.position = Vector2.Lerp(a.position, b.position, Mathf.Clamp01(t));
+            transform.position = Vector2.Lerp(a.position, b.position, t);
         }
 
         public override void Render()
         {
             if (!Object.HasStateAuthority && !Object.HasInputAuthority)
             {
-                ApplyInterpolatedVisual();
+                // 由 NetworkTransform 插值时不能再自研插值，否则两边同时写 transform.position
+                if (!UseFusionInterpolation) ApplyInterpolatedVisual();
                 animator.SetFloat(AnimationParameters.Speed, NetworkedSpeed);
             }
             if (!Object.HasStateAuthority && roleContext != null && roleContext.RuntimeData != null)
@@ -314,14 +331,13 @@ namespace GamePlay.PvP
                         OnDeathTriggered();
                         break;
                     case nameof(RespawnTrigger):
-                        transform.position = spawnPosition;
-                        // 避免旧快照把位置从重生点拉回上一回合的位置
+                        TeleportTo(spawnPosition);
                         positionSnapshots.Clear();
                         // 客户端本地模拟也要复位物理/动作状态
                         Strategy?.OnRespawn();
                         break;
                     case nameof(NetworkedFacingRight):
-                        // 朝向翻转一次：网络值变化即翻转（host 端同一快照内已同步本地朝向）
+                        // 朝向翻转一次
                         if (!Object.HasStateAuthority && !Object.HasInputAuthority)
                             roleContext?.Flip(NetworkedFacingRight);
                         break;
@@ -372,7 +388,7 @@ namespace GamePlay.PvP
             
             NetworkedIsDead = false;
             RespawnTrigger++;
-            transform.position = position;
+            TeleportTo(position);
             NetworkedPosition = position;
             spawnPosition = position;
             

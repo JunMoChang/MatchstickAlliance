@@ -185,14 +185,15 @@ namespace GamePlay.PvP
         {
             overlay.gameObject.SetActive(true);
         }
-
-        private IEnumerator HideStatusTextAfterDelay(float delay)
+        
+        private readonly WaitForSeconds waitSeconds =  new (3f);
+        private IEnumerator HideStatusTextAfterDelay()
         {
             overlayText.gameObject.SetActive(true);
             float currentTimer = battleManager.RoundTimer;
             
             //countdownOverlayText.text = 
-            yield return new WaitForSeconds(delay);
+            yield return waitSeconds;
             
             overlayText.gameObject.SetActive(false);
         }

@@ -1,4 +1,5 @@
 using System;
+using System.Threading.Tasks;
 using AssetLoad;
 using Fusion;
 using GamePlay.GameModel.Level;
@@ -35,12 +36,26 @@ namespace GamePlay.PvP
         /// <summary> 比赛胜者 </summary>
         [Networked] public RoundResult MatchWinner { get; private set; }
         
-        [Networked] public NetworkObject NetworkedCharacterA { get; private set; }
-        [Networked] public NetworkObject NetworkedCharacterB {get; private set;}
+        [Networked] private NetworkObject NetworkedCharacterA { get; set; }
+        [Networked] private NetworkObject NetworkedCharacterB {get; set;}
 
         private PlayerRef playerA;
         private PlayerRef playerB;
         private bool rolesReported;
+
+        /// <summary> 角色 prefab 异步加载任务（仅 StateAuthority 使用） </summary>
+        private Task<GameObject[]> characterLoadTask;
+        /// <summary> 待生成的角色配置与名字 </summary>
+        private RoleRegistry.RoleEntry entryA;
+        private RoleRegistry.RoleEntry entryB;
+        private string  roleAName;
+        private string roleBName;
+        /// <summary>
+        /// 本地防重入标记（非网络状态，回滚重放不会重置）：避免 _BattleState 被回滚成 Waiting 时
+        /// 重复触发加载或重复生成角色
+        /// </summary>
+        private bool spawnInitiated;
+        private bool spawnCompleted;
         
         public BattleState CurrentState => (BattleState)_BattleState;
         public PvPRoleSetup CharacterA => NetworkedCharacterA != null ? NetworkedCharacterA.GetComponent<PvPRoleSetup>() : null;
@@ -83,6 +98,7 @@ namespace GamePlay.PvP
                     CheckPlayersReady();
                     break;
                 case BattleState.Loading:
+                    UpdateCharacterLoading();
                     break;
                 case BattleState.Fighting:
                     UpdateRound();
@@ -106,41 +122,87 @@ namespace GamePlay.PvP
             if (!PlayerAReady || !PlayerBReady) return;
             if (!rolesReported) return;
 
+            // 状态切换可安全重复执行（回滚重放会重跑本 tick），真正的加载只触发一次
             _BattleState = (byte)BattleState.Loading;
-            Debug.Log("[PvPBattleManager] Both players ready with roles. Spawning characters...");
-            SpawnCharacters();
+
+            if (spawnInitiated) return;
+            spawnInitiated = true;
+
+            Debug.Log("[PvPBattleManager] Both players ready with roles. Loading characters...");
+            BeginLoadCharacters();
         }
 
-        private void SpawnCharacters()
+        /// <summary>
+        /// 触发一次异步角色加载。这里之后不能直接 Spawn：await 续体运行在网络 tick 之外，
+        /// 生成与状态切换必须留在 FixedUpdateNetwork 里完成
+        /// </summary>
+        private void BeginLoadCharacters()
         {
-            if (Runner == null) return;
-
-            string roleAName = PlayerARole.ToString();
-            string roleBName = PlayerBRole.ToString();
-            if (string.IsNullOrEmpty(roleAName) || string.IsNullOrEmpty(roleBName))
+            if (Runner == null)
             {
-                Debug.LogError("[PvPBattleManager] Missing role names, cannot spawn.");
+                Debug.LogError("[PvPBattleManager] Runner 为空，取消角色加载");
                 return;
             }
 
+            roleAName = PlayerARole.ToString();
+            roleBName = PlayerBRole.ToString();
+            
             if (!Enum.TryParse(roleAName, out RoleName nameA) || !Enum.TryParse(roleBName, out RoleName nameB))
             {
                 Debug.LogError($"[PvPBattleManager] Invalid role names: {roleAName}, {roleBName}");
                 return;
             }
 
-            RoleRegistry.RoleEntry? entryA = GameDataManager.RoleRegistry?.GetRoleEntry(nameA);
-            RoleRegistry.RoleEntry? entryB = GameDataManager.RoleRegistry?.GetRoleEntry(nameB);
-            if (entryA == null || entryB == null)
+            RoleRegistry.RoleEntry? foundA = GameDataManager.RoleRegistry?.GetRoleEntry(nameA);
+            RoleRegistry.RoleEntry? foundB = GameDataManager.RoleRegistry?.GetRoleEntry(nameB);
+            if (foundA == null || foundB == null)
             {
                 Debug.LogError($"[PvPBattleManager] Role not found in registry: {roleAName} or {roleBName}");
                 return;
             }
 
+            entryA = foundA.Value;
+            entryB = foundB.Value;
+            // 异步加载；当前帧不让出，加载完成后由 UpdateCharacterLoading 在仿真帧内生成
+            characterLoadTask = Task.WhenAll(RoleRegistry.LoadPrefab(entryA), RoleRegistry.LoadPrefab(entryB));
+        }
+
+        /// <summary>
+        /// tick 内轮询加载任务，完成后回到仿真帧里生成角色
+        /// </summary>
+        private void UpdateCharacterLoading()
+        {
+            if (spawnCompleted) return;
+            if (characterLoadTask == null || !characterLoadTask.IsCompleted) return;
+
+            spawnCompleted = true;
+
+            if (characterLoadTask.IsFaulted)
+            {
+                Debug.LogError($"[PvPBattleManager] 角色 prefab 加载异常: {characterLoadTask.Exception}");
+                return;
+            }
+
+            GameObject[] prefabs = characterLoadTask.Result;
+            if (prefabs == null || prefabs.Length < 2 || prefabs[0] == null || prefabs[1] == null)
+            {
+                Debug.LogError($"[PvPBattleManager] 角色 prefab 加载失败: {roleAName} / {roleBName}，取消生成");
+                RoleRegistry.ReleasePrefab(entryA);
+                RoleRegistry.ReleasePrefab(entryB);
+                return;
+            }
+
+            SpawnCharacters(prefabs[0], prefabs[1]);
+        }
+
+        private void SpawnCharacters(GameObject prefabA, GameObject prefabB)
+        {
+            if (Runner == null) return;
+            
             try
             {
                 NetworkedCharacterA = Runner.Spawn(
-                    entryA.Value.prefab,
+                    prefabA,
                     spawnPointA.position,
                     Quaternion.identity,
                     playerA,
@@ -148,7 +210,7 @@ namespace GamePlay.PvP
                 );
 
                 NetworkedCharacterB = Runner.Spawn(
-                    entryB.Value.prefab,
+                    prefabB,
                     spawnPointB.position,
                     Quaternion.identity,
                     playerB,
@@ -274,7 +336,7 @@ namespace GamePlay.PvP
 
             Debug.Log($"[PvPBattleManager] Round {RoundNumber} ended. Winner: Player {winner}. Score: {ScoreA}-{ScoreB}");
 
-            // 检查是否比赛结束：先到 winsNeeded 分，或打满最大局数（winsNeeded*2-1）
+            // 检查是否比赛结束：先到 winsNeeded 分，或打满最大局
             RoundResult matchWinner = RoundResult.None;
             if (ScoreA >= winsNeeded || ScoreB >= winsNeeded || RoundNumber >= winsNeeded * 2 - 1)
             {

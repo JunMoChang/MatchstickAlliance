@@ -6,7 +6,6 @@ using GamePlay.GameModel.Level;
 using GamePlay.PlayerDataHandle;
 using GamePlay.PvP;
 using GamePlay.Role.RoleData;
-using GamePlay.Scene;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -29,7 +28,10 @@ namespace GamePlay.UI.PvP
         [SerializeField] private GameObject joinRoomPanel;
         [SerializeField] private TMP_InputField roomCodeInput;
         [SerializeField] private Button confirmJoinButton;
-
+        
+        [Header("关闭大厅")]
+        [SerializeField] private Button closeButton;
+        
         [Header("等待中")]
         [SerializeField] private GameObject loadingCoin;
         [SerializeField] private TextMeshProUGUI waitingStatusText;
@@ -96,7 +98,7 @@ namespace GamePlay.UI.PvP
             startBattleButton.onClick.AddListener(OnStartBattleClicked);
             roleASelectBtn.onClick.AddListener(OnRoleASelectClicked);
             roleBSelectBtn.onClick.AddListener(OnRoleBSelectClicked);
-            
+            closeButton.onClick.AddListener(Hide);
             RegisterPvPEvents();
         }
 
@@ -108,7 +110,7 @@ namespace GamePlay.UI.PvP
             startBattleButton.onClick.RemoveListener(OnStartBattleClicked);
             roleASelectBtn.onClick.RemoveListener(OnRoleASelectClicked);
             roleBSelectBtn.onClick.RemoveListener(OnRoleBSelectClicked);
-
+            closeButton.onClick.RemoveListener(Hide);
             UnregisterPvPEvents();
         }
 
