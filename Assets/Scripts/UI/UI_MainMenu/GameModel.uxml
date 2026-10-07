@@ -1,6 +1,0 @@
-<ui:UXML xmlns:ui="UnityEngine.UIElements" editor-extension-mode="False">
-    <Style src="project://database/Assets/Scripts/UI/UI_MainMenu/MainMenu.uss?fileID=7433441132597879392&amp;guid=f7f6f345480ea3d4ab554bf627d25bb6&amp;type=3#MainMenu"/>
-    <ui:VisualElement name="card-root" class="game-card">
-        <ui:VisualElement name="card-bg" class="card-bg"/>
-    </ui:VisualElement>
-</ui:UXML>
