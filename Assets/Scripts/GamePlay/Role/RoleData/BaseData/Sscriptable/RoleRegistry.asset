@@ -15,13 +15,33 @@ MonoBehaviour:
   entries:
   - roleName: 0
     template: {fileID: 11400000, guid: f845ec98e4498f14086e389f2db5458f, type: 2}
-    prefab: {fileID: 4010939859288580430, guid: a55f34be1f63b0c4e91a3af1aea9dd6e, type: 3}
+    prefab:
+      m_AssetGUID: a55f34be1f63b0c4e91a3af1aea9dd6e
+      m_SubObjectName:
+      m_SubObjectType:
+      m_SubObjectGUID:
+      m_EditorAssetChanged: 0
   - roleName: 1
     template: {fileID: 11400000, guid: d05782be68e7e8a48a657b829484860c, type: 2}
-    prefab: {fileID: 4010939859288580430, guid: b2ba686cc569f6e4198334fac13a49b8, type: 3}
+    prefab:
+      m_AssetGUID: b2ba686cc569f6e4198334fac13a49b8
+      m_SubObjectName:
+      m_SubObjectType:
+      m_SubObjectGUID:
+      m_EditorAssetChanged: 0
   - roleName: 2
     template: {fileID: 11400000, guid: 08b687963fd77c744bcb51c563e538d8, type: 2}
-    prefab: {fileID: 4010939859288580430, guid: 6cc37470e7b065d438c6ab26f9565029, type: 3}
+    prefab:
+      m_AssetGUID: 6cc37470e7b065d438c6ab26f9565029
+      m_SubObjectName:
+      m_SubObjectType:
+      m_SubObjectGUID:
+      m_EditorAssetChanged: 0
   - roleName: 3
     template: {fileID: 11400000, guid: e097a3e4ab58ac54585d556a7a7d45b0, type: 2}
-    prefab: {fileID: 4010939859288580430, guid: 6cc37470e7b065d438c6ab26f9565029, type: 3}
+    prefab:
+      m_AssetGUID: 6cc37470e7b065d438c6ab26f9565029
+      m_SubObjectName:
+      m_SubObjectType:
+      m_SubObjectGUID:
+      m_EditorAssetChanged: 0

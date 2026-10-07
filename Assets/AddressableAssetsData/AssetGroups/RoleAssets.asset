@@ -1,0 +1,38 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bbb281ee3bf0b054c82ac2347e9e782c, type: 3}
+  m_Name: RoleAssets
+  m_EditorClassIdentifier: Unity.Addressables.Editor::UnityEditor.AddressableAssets.Settings.AddressableAssetGroup
+  m_GroupName: RoleAssets
+  m_GUID: fb06c71d4291b744ca87458f2a953565
+  m_SerializeEntries:
+  - m_GUID: 6cc37470e7b065d438c6ab26f9565029
+    m_Address: "\u52AB.prefab"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: a55f34be1f63b0c4e91a3af1aea9dd6e
+    m_Address: "\u7334\u5B50.prefab"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  - m_GUID: b2ba686cc569f6e4198334fac13a49b8
+    m_Address: "\u6B66\u58EB.prefab"
+    m_ReadOnly: 0
+    m_SerializedLabels: []
+    FlaggedDuringContentUpdateRestriction: 0
+  m_ReadOnly: 0
+  m_Settings: {fileID: 11400000, guid: a51ced51aba0d9f46824787ae4fb8678, type: 2}
+  m_SchemaSet:
+    m_Schemas:
+    - {fileID: 11400000, guid: b97dde74121bb4640a8efead3c167931, type: 2}
+    - {fileID: 11400000, guid: 271573b20d2e372448fda901f0b2764b, type: 2}

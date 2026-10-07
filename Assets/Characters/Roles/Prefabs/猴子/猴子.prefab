@@ -308,7 +308,7 @@ SpriteRenderer:
   m_GlobalIlluminationMeshLod: 0
   m_SortingLayerID: 0
   m_SortingLayer: 0
-  m_SortingOrder: 0
+  m_SortingOrder: 2
   m_MaskInteraction: 0
   m_Sprite: {fileID: -5283618269098331843, guid: 5427b5cac74bf40448696722f0c02e8a, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -599,10 +599,11 @@ GameObject:
   m_Component:
   - component: {fileID: 7513774595400382903}
   - component: {fileID: 5693173217959009368}
+  - component: {fileID: 69016689459738143}
   - component: {fileID: 3109188866320550263}
   - component: {fileID: -4940458601467525976}
   m_Layer: 6
-  m_Name: "\u5B59\u609F\u7A7A"
+  m_Name: "\u7334\u5B50"
   m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -641,8 +642,26 @@ MonoBehaviour:
   Flags: 262145
   NestedObjects: []
   NetworkedBehaviours:
+  - {fileID: 69016689459738143}
   - {fileID: -4940458601467525976}
   ForceRemoteRenderTimeframe: 0
+--- !u!114 &69016689459738143
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4010939859288580430}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 158639473, guid: e725a070cec140c4caffb81624c8c787, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Fusion.Runtime.dll::Fusion.NetworkTransform
+  _stateAuthorityChangeErrorCorrectionDelta: 0
+  SyncScale: 0
+  SyncParent: 0
+  _autoAOIOverride: 1
+  DisableSharedModeInterpolation: 0
 --- !u!50 &3109188866320550263
 Rigidbody2D:
   serializedVersion: 5
@@ -684,6 +703,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GamePlay.PvP.PvPRoleSetup
   roleContext: {fileID: 4527723505307518246}
   animator: {fileID: 1200332532548362406}
+  networkTransform: {fileID: 0}
   _SyncedRoleName:
     _length: 0
     _data:
