@@ -185,7 +185,7 @@ namespace GamePlay.Role.RoleData.BaseData
         }
         
         /// <summary>
-        /// 更新角色属性
+        /// 更新角色属 (属性 = 基础值 × 成长率^(等级-1))，
         /// </summary>
         /// <param name="saveData">持久化数据类</param>
         /// <param name="enhance">等级提升数量</param>
@@ -194,9 +194,9 @@ namespace GamePlay.Role.RoleData.BaseData
             saveData.roleLevel += enhance;
             saveData.baseAttributes = new BaseAttributes
             {
-                health = defaultHealth * healthGrowth * enhance,
-                defense = defaultDefense * defenseGrowth * enhance,
-                damage = defaultDamage * damageGrowth * enhance,
+                health = defaultHealth * Mathf.Pow(healthGrowth, saveData.roleLevel - 1),
+                defense = defaultDefense * Mathf.Pow(defenseGrowth, saveData.roleLevel - 1),
+                damage = defaultDamage * Mathf.Pow(damageGrowth, saveData.roleLevel - 1),
             };
             saveData.speed = defaultSpeed;
         }

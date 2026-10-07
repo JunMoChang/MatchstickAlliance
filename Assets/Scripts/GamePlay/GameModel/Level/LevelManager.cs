@@ -36,14 +36,17 @@ namespace GamePlay.GameModel.Level
         }
         public static class LevelScaler
         {
+            /// <summary>
+            /// 敌人属性随章节成长，每章按 (1+rate) 累乘。
+            /// </summary>
             public static float GetHp(EnemyData data, float levelFactor)
             {
-                return data.baseHp * Mathf.Pow(data.hpGrowthRate, levelFactor);
+                return data.baseHp * Mathf.Pow(1f + data.hpGrowthRate, levelFactor - 1f);
             }
 
             public static float GetDamage(EnemyData data, float levelFactor)
             {
-                return data.baseDamage * Mathf.Pow(data.damageGrowthRate, levelFactor);
+                return data.baseDamage * Mathf.Pow(1f + data.damageGrowthRate, levelFactor - 1f);
             }
         }
 

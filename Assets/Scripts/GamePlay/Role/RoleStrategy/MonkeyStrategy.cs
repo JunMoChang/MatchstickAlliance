@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using GamePlay.GameModel;
+using GamePlay.Scene;
 using UnityEngine;
 using GamePlay.Role.RoleData;
 using GamePlay.Role.RoleData.BaseData;
@@ -59,6 +60,10 @@ namespace GamePlay.Role.RoleStrategy
         private float lastLinearTime;
         /// <summary>动作触发瞬间的朝向快照</summary>
         private float currentMotionDir = 1f;
+        /// <summary>
+        /// 普攻/技能动作进行中不可被受击打断
+        /// </summary>
+        public bool IsUninterruptible => isActionActive;
         
         public void Initialize(RoleContext context)
         {
@@ -132,6 +137,7 @@ namespace GamePlay.Role.RoleStrategy
 
             Vector2 newPosition = rb.position + currentVelocity * deltaTime;
             newPosition = ApplyGroundConstraint(newPosition);
+            newPosition.x = LevelBounds.ClampX(newPosition.x);
             rb.MovePosition(newPosition);
         }
         
@@ -164,7 +170,7 @@ namespace GamePlay.Role.RoleStrategy
         }
         
         /// <summary>
-        /// 地面约束
+        /// 地面约束，防止角色陷入地面。
         /// </summary>
         /// <param name="currentPosition">当前位置</param>
         /// <returns>地面位置</returns>
@@ -308,11 +314,6 @@ namespace GamePlay.Role.RoleStrategy
             animator.SetInteger(AnimationParameters.NormalCombos, -1);
             animator.SetTrigger(AnimationParameters.Attacked_Trigger);
         }
-
-        /// <summary>
-        /// 普攻/技能动作进行中不可被受击打断
-        /// </summary>
-        public bool IsUninterruptible => isActionActive;
 
         public void Death()
         {
@@ -468,7 +469,9 @@ namespace GamePlay.Role.RoleStrategy
                 case RoleBaseData.MotionData.MotionType.MovePosition:
                     if (canApplyPhysicalMotion)
                     {
-                        rb.position += new Vector2(currentMotionDir * motion.offset.x, motion.offset.y);
+                        rb.position = new Vector2(
+                            LevelBounds.ClampX(rb.position.x + currentMotionDir * motion.offset.x),
+                            rb.position.y + motion.offset.y);
                     }
                     break;
                 case RoleBaseData.MotionData.MotionType.AddForce:

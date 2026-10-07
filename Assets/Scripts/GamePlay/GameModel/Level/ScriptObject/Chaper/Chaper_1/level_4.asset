@@ -14,4 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::GamePlay.GameModel.Level.LevelData
   levelIndex: 3
   sprite: {fileID: 11400000, guid: f7bc75efa63832d41868fe251e3a0c87, type: 2}
-  waves: []
+  waves:
+  - {fileID: 11400000, guid: 46c643ec62216844ba0939ba9efce7ab, type: 2}
